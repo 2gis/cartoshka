@@ -1,5 +1,6 @@
 package com.github.tartakynov.cartoshka;
 
+import com.github.tartakynov.cartoshka.exceptions.UnexpectedTokenException;
 import com.metaweb.lessen.Utilities;
 import com.metaweb.lessen.tokenizers.Tokenizer;
 import com.metaweb.lessen.tokens.Token;
@@ -13,9 +14,56 @@ abstract class CartoScanner {
 
     private Tokenizer tokenizer;
 
+    // TODO: skip whitespaces
     protected CartoScanner(Reader input) {
         this.tokenizer = Utilities.open(input);
         this.nextToken = tokenizer.getToken();
+    }
+
+    protected Token peek() {
+        return nextToken;
+    }
+
+    protected Token accept(Token.Type type) {
+        if (nextToken != null && nextToken.type == type) {
+            return next();
+        }
+
+        return null;
+    }
+
+    protected Token accept(Token.Type type, String value) {
+        if (nextToken != null && nextToken.type == type && nextToken.text.equalsIgnoreCase(value)) {
+            return next();
+        }
+
+        return null;
+    }
+
+    protected Token expect(Token.Type type) {
+        Token token = next();
+        if (token != null) {
+            if (token.type == type) {
+                return token;
+            }
+
+            throw new UnexpectedTokenException(token.text, token.start);
+        }
+
+        throw new UnexpectedTokenException("EOF");
+    }
+
+    protected Token expect(Token.Type type, String value) {
+        Token token = next();
+        if (token != null) {
+            if (token.type == type && token.text.equalsIgnoreCase(value)) {
+                return token;
+            }
+
+            throw new UnexpectedTokenException(token.text, token.start);
+        }
+
+        throw new UnexpectedTokenException("EOF");
     }
 
     protected Token next() {
@@ -23,29 +71,5 @@ abstract class CartoScanner {
         tokenizer.next();
         this.nextToken = this.tokenizer.getToken();
         return this.currentToken;
-    }
-
-    protected Token.Type current() {
-        if (this.currentToken != null) {
-            return this.currentToken.type;
-        }
-
-        return null;
-    }
-
-    protected Token.Type peek() {
-        if (this.nextToken != null) {
-            return this.nextToken.type;
-        }
-
-        return null;
-    }
-
-    protected Token currentToken() {
-        return this.currentToken;
-    }
-
-    protected Token peekToken() {
-        return this.nextToken;
     }
 }
