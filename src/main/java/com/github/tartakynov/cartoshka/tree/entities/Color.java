@@ -7,7 +7,7 @@ public class Color extends Expression {
     private final int a;
 
     public Color(int r, int g, int b) {
-        this(r, g, b, 0);
+        this(r, g, b, -1);
     }
 
     public Color(int r, int g, int b, int a) {

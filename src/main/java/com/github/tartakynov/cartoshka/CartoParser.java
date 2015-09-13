@@ -7,7 +7,8 @@ import com.github.tartakynov.cartoshka.tree.Value;
 import com.github.tartakynov.cartoshka.tree.VariableDeclaration;
 import com.github.tartakynov.cartoshka.tree.entities.*;
 import com.github.tartakynov.cartoshka.tree.entities.Boolean;
-import com.metaweb.lessen.tokens.Token;
+import com.github.tartakynov.cartoshka.tree.entities.Color;
+import com.metaweb.lessen.tokens.*;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.io.Reader;
@@ -128,16 +129,17 @@ public final class CartoParser extends CartoScanner {
         switch (peek().type) {
             case Function:
                 // fname(
-                String func = next().text;
+                Token f = next();
+                String func = f.text;
                 result = new Call(func.substring(0, func.length() - 1), parseArgumentsExpression());
                 break;
 
             case Uri:
-                result = new Url(next().text);
+                result = new Url(((UriToken) next()).unquotedText);
                 break;
 
             case Number:
-                result = new Literal(next().text);
+                result = new Literal(((NumericToken) next()).n);
                 break;
 
             case Identifier:
@@ -174,15 +176,17 @@ public final class CartoParser extends CartoScanner {
                 break;
 
             case Color:
-                next();
-                throw new NotImplementedException();
+                ComponentColor colorToken = (ComponentColor) next();
+                result = new Color(colorToken.getR(), colorToken.getG(), colorToken.getB(), colorToken.getA());
+                break;
 
             case String:
-                result = new Quoted(next().text);
+                result = new Quoted(((StringValueToken) next()).unquotedText);
                 break;
 
             case Dimension:
-                result = new Dimension(next().text);
+                NumericWithUnitToken dimensionToken = (NumericWithUnitToken) next();
+                result = new Dimension(dimensionToken.n, dimensionToken.unit);
                 break;
 
             case Delimiter:

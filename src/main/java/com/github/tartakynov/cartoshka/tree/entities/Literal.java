@@ -1,9 +1,9 @@
 package com.github.tartakynov.cartoshka.tree.entities;
 
 public class Literal extends Expression {
-    private final String value;
+    private final Number value;
 
-    public Literal(String value) {
+    public Literal(Number value) {
         this.value = value;
     }
 }
