@@ -1,7 +1,9 @@
 package com.github.tartakynov.cartoshka.tree.entities;
 
 public class Quoted extends Expression {
-    public Quoted(String value) {
+    private final String value;
 
+    public Quoted(String value) {
+        this.value = value;
     }
 }

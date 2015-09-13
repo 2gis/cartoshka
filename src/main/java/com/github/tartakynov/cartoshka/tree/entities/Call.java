@@ -3,7 +3,11 @@ package com.github.tartakynov.cartoshka.tree.entities;
 import java.util.Collection;
 
 public class Call extends Expression {
-    public Call(String name, Collection<Expression> args) {
+    private final String function;
+    private final Collection<Expression> args;
 
+    public Call(String function, Collection<Expression> args) {
+        this.function = function;
+        this.args = args;
     }
 }

@@ -26,6 +26,7 @@ public class CartoParserTest {
 
     @Test
     public void x() {
-        Collection<Node> x = CartoParser.parse(new StringReader("@x:1+2;"));
+        Collection<Node> x = CartoParser.parse(new StringReader("   @x: her(1,2, 3);"));
+        x.toString();
     }
 }

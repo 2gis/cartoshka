@@ -1,7 +1,9 @@
 package com.github.tartakynov.cartoshka.tree;
 
 public class VariableDeclaration extends Node {
-    public VariableDeclaration(String name, Node value) {
+    private final Value value;
 
+    public VariableDeclaration(String name, Value value) {
+        this.value = value;
     }
 }

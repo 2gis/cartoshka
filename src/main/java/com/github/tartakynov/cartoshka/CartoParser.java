@@ -1,11 +1,12 @@
 package com.github.tartakynov.cartoshka;
 
 import com.github.tartakynov.cartoshka.exceptions.UnexpectedTokenException;
+import com.github.tartakynov.cartoshka.tree.Comment;
 import com.github.tartakynov.cartoshka.tree.Node;
 import com.github.tartakynov.cartoshka.tree.Value;
 import com.github.tartakynov.cartoshka.tree.VariableDeclaration;
-import com.github.tartakynov.cartoshka.tree.entities.Boolean;
 import com.github.tartakynov.cartoshka.tree.entities.*;
+import com.github.tartakynov.cartoshka.tree.entities.Boolean;
 import com.metaweb.lessen.tokens.Token;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
@@ -13,7 +14,7 @@ import java.io.Reader;
 import java.util.*;
 
 public final class CartoParser extends CartoScanner {
-    private static final Map<String, Integer> precedence = new HashMap<String, Integer>() {{
+    private static final Map<String, Integer> precedences = new HashMap<String, Integer>() {{
         put("+", 2);
         put("-", 2);
 
@@ -29,9 +30,9 @@ public final class CartoParser extends CartoScanner {
     }
 
     private static int getPrecedence(String token) {
-        Integer prec = precedence.get(token);
-        if (prec != null) {
-            return prec;
+        Integer precedence = precedences.get(token);
+        if (precedence != null) {
+            return precedence;
         }
 
         return 0;
@@ -48,14 +49,27 @@ public final class CartoParser extends CartoScanner {
         List<Node> root = new ArrayList<>();
         while (peek() != null) {
             Token token = peek();
-            if (token.type == Token.Type.AtIdentifier && token.text.startsWith("@")) {
-                root.add(parseVariable());
-            } else {
-                root.add(parseRuleSet());
+            switch (token.type) {
+                case AtIdentifier:
+                    root.add(parseVariable());
+                    break;
+                case Comment:
+                    root.add(parseComment());
+                    break;
+                default:
+                    root.add(parseRuleSet());
             }
         }
 
         return root;
+    }
+
+    // We create a Comment node for CSS comments `/* */`,
+    // but keep the LeSS comments `//` silent, by just skipping
+    // over them.
+    private Comment parseComment() {
+        Token token = expect(Token.Type.Comment);
+        return new Comment(token.text);
     }
 
     // The variable part of a variable definition.
@@ -93,7 +107,7 @@ public final class CartoParser extends CartoScanner {
             while (getPrecedence(peek().text) == prec1) {
                 Token operation = expect(Token.Type.Operator);
                 Expression right = parseBinaryExpression(prec1 + 1);
-                result = new Operation(operation.text, result, right);
+                result = new BinaryOperation(operation.text, result, right);
             }
         }
 
@@ -128,28 +142,31 @@ public final class CartoParser extends CartoScanner {
 
             case Identifier:
                 Token idToken = next();
-                if (idToken.text.startsWith("@")) {
-                    result = new Variable(idToken.text);
-                } else {
-                    switch (idToken.text) {
-                        case "true":
-                            result = new Boolean(true);
-                            break;
-                        case "false":
-                            result = new Boolean(false);
-                            break;
-                        default:
-                            result = Colors.Strings.get(idToken.text);
-                            if (result == null) {
-                                result = new Keyword(idToken.text);
-                            }
-                    }
+                switch (idToken.text) {
+                    case "true":
+                        result = new Boolean(true);
+                        break;
+                    case "false":
+                        result = new Boolean(false);
+                        break;
+                    default:
+                        result = Colors.Strings.get(idToken.text);
+                        if (result == null) {
+                            result = new Keyword(idToken.text);
+                        }
                 }
+                break;
 
+            case AtIdentifier:
+                result = new Variable(next().text);
                 break;
 
             case HashName:
                 Token hexToken = next();
+                if (hexToken.text.length() != 7) {
+                    throw new UnexpectedTokenException(hexToken.text);
+                }
+
                 int r = Integer.parseInt(hexToken.text.substring(1, 3), 16);
                 int g = Integer.parseInt(hexToken.text.substring(3, 5), 16);
                 int b = Integer.parseInt(hexToken.text.substring(5, 7), 16);

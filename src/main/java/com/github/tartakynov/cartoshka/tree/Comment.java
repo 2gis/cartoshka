@@ -1,7 +1,9 @@
 package com.github.tartakynov.cartoshka.tree;
 
 public class Comment extends Node {
-    public Comment(String value) {
+    private final String value;
 
+    public Comment(String value) {
+        this.value = value;
     }
 }

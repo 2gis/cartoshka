@@ -17,7 +17,7 @@ abstract class CartoScanner {
     // TODO: skip whitespaces
     protected CartoScanner(Reader input) {
         this.tokenizer = Utilities.open(input);
-        this.nextToken = tokenizer.getToken();
+        this.nextToken = skipWhitespace();
     }
 
     protected Token peek() {
@@ -69,7 +69,15 @@ abstract class CartoScanner {
     protected Token next() {
         this.currentToken = this.nextToken;
         tokenizer.next();
-        this.nextToken = this.tokenizer.getToken();
+        this.nextToken = skipWhitespace();
         return this.currentToken;
+    }
+
+    private Token skipWhitespace() {
+        while (this.tokenizer.getToken() != null && this.tokenizer.getToken().type == Token.Type.Whitespace) {
+            this.tokenizer.next();
+        }
+
+        return this.tokenizer.getToken();
     }
 }
