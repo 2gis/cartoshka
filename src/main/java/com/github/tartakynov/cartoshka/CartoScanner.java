@@ -14,7 +14,6 @@ abstract class CartoScanner {
 
     private Tokenizer tokenizer;
 
-    // TODO: skip whitespaces
     protected CartoScanner(Reader input) {
         this.tokenizer = Utilities.open(input);
         this.nextToken = skipWhitespace();
