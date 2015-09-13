@@ -220,110 +220,50 @@ public final class CartoParser extends CartoScanner {
         return args;
     }
 
-//    private Node parseInvalid() {
-//        throw new NotImplementedException();
-//    }
-//
-//    // We create a Comment node for CSS comments `/* */`,
-//    // but keep the LeSS comments `//` silent, by just skipping
-//    // over them.
-//    private Node parseComment() {
-//        Token token = accept(Token.Type.Comment);
-//        if (token != null) {
-//            return new Comment(token.text);
-//        }
-//
-//        return null;
-//    }
-
-    // Entities are tokens which can be found inside an Expression
-    // -----------------------------------------------------------------
-
-    // A string, which supports escaping " and ' "milky way" 'he\'s the one!'
-    private Node parseEntityQuoted() {
+    private Node parseRuleSet() {
         throw new NotImplementedException();
     }
 
-    // A reference to a Mapnik field, like [NAME]
-    // Behind the scenes, this has the same representation, but Carto
-    // needs to be careful to warn when unsupported operations are used.
-    private Node parseEntityField() {
-        throw new NotImplementedException();
+    // Selectors are made out of one or more Elements, see above.
+    private Collection<Node> parseSelectors() {
+        Collection<Node> selectors = new ArrayList<>();
+        while (true) {
+            selectors.add(parseSelector());
+            if (accept(Token.Type.Delimiter, ",") == null) {
+                break;
+            }
+        }
+
+        return selectors;
     }
 
-    // This is a comparison operator
-    private Node parseEntityComparison() {
-        // =~|=|!=|<=|>=|<|>
+    private Node parseSelector() {
+        // element
+        // zoom
+        // filter
+        // attachment
+        switch (peek().type) {
+            case Operator:
+            case Identifier:
+                // element
+                // subsequent
 
-        throw new NotImplementedException();
-    }
+            default:
+            case Delimiter:
+                // subsequent
 
-    // A catch-all word, such as: hard-light
-    // These can start with either a letter or a dash (-),
-    // and then contain numbers, underscores, and letters.
-    private Node parseEntityKeyword() {
-        throw new NotImplementedException();
-    }
+                //                if (accept(Token.Type.Delimiter, "[") != null) {
+                //                    parseFilter();
+                //                    // [ zoom
+                //                    // [ filter
+                //                } else if (accept(Token.Type.Delimiter, ":") != null) {
+                //                    // :: attachment
+                //                    parseAttachment();
+                //                }
 
-    // A function call like rgb(255, 0, 255)
-    // The arguments are parsed with the `entities.arguments` parser.
-    // url() is handled by the url parser instead
-    private Node parseEntityCall() {
-        throw new NotImplementedException();
-    }
+                break;
+        }
 
-    // Arguments are comma-separated expressions
-    private Node parseEntityArguments() {
-        throw new NotImplementedException();
-    }
-
-    private Node parseEntityExpressionList() {
-        throw new NotImplementedException();
-    }
-
-    private Node parseEntityLiteral() {
-        throw new NotImplementedException();
-    }
-
-    // Parse url() tokens
-    //
-    // We use a specific rule for urls, because they don't really behave like
-    // standard function calls. The difference is that the argument doesn't have
-    // to be enclosed within a string, so it can't be parsed as an Expression.
-    private Node parseEntityUrl() {
-        throw new NotImplementedException();
-    }
-
-    // A VariableDeclaration entity, such as `@fink`, in
-    //
-    //     width: @fink + 2px
-    //
-    // We use a different parser for variable definitions,
-    // see `parsers.variable`.
-    private Node parseEntityVariable() {
-        throw new NotImplementedException();
-    }
-
-    private Node parseEntityHexColor() {
-        throw new NotImplementedException();
-    }
-
-    private Node parseEntityKeywordColor() {
-        throw new NotImplementedException();
-    }
-
-    // A Dimension, that is, a number and a unit. The only
-    // unit that has an effect is %
-    private Node parseEntityDimension() {
-        throw new NotImplementedException();
-    }
-
-    // End of Entities
-    // -----------------------------------------------------------------
-
-    // Entities are the smallest recognized token,
-    // and can be found inside a rule's value.
-    private Node parseEntity() {
         throw new NotImplementedException();
     }
 
@@ -346,10 +286,6 @@ public final class CartoParser extends CartoScanner {
         throw new NotImplementedException();
     }
 
-    // Selectors are made out of one or more Elements, see above.
-    private Node parseSelector() {
-        throw new NotImplementedException();
-    }
 
     private Node parseFilter() {
         throw new NotImplementedException();
@@ -365,36 +301,11 @@ public final class CartoParser extends CartoScanner {
         throw new NotImplementedException();
     }
 
-    private Node parseRuleSet() {
-        throw new NotImplementedException();
-    }
-
     private Node parseRule() {
         throw new NotImplementedException();
     }
 
     private Node parseFont() {
-        throw new NotImplementedException();
-    }
-
-    // A sub-expression, contained by parenthensis
-    private Node parseSub() {
-        throw new NotImplementedException();
-    }
-
-    // This is a misnomer because it actually handles multiplication
-    // and division.
-    private Node parseMultiplication() {
-        throw new NotImplementedException();
-    }
-
-    private Node parseAddition() {
-        throw new NotImplementedException();
-    }
-
-    // An operand is anything that can be part of an operation,
-    // such as a Color, or a VariableDeclaration
-    private Node parseOperand() {
         throw new NotImplementedException();
     }
 
