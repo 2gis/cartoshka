@@ -7,6 +7,11 @@ public enum TokenType {
     /* Punctuators. */
     LPAREN("(", 0),
     RPAREN(")", 0),
+    LBRACK("[", 0),
+    RBRACK("]", 0),
+    LBRACE("{", 0),
+    RBRACE("}", 0),
+    COLON(":", 0),
     SEMICOLON(";", 0),
     COMMA(",", 1),
 
@@ -40,16 +45,18 @@ public enum TokenType {
     NULL_LITERAL("null", 0),
     TRUE_LITERAL("true", 0),
     FALSE_LITERAL("false", 0),
+    STRING_LITERAL(null, 0),
 
     /* Keywords. */
-    MAP("Map", 0),
-    ZOOM("zoom", 0),
+    MAP_KEYWORD("Map", 0),
+    ZOOM_KEYWORD("zoom", 0),
 
     /* Identifiers (not keywords or future reserved words). */
     IDENTIFIER(null, 0),
+    HASHNAME(null, 0),
+    VARIABLE(null, 0),
 
     /* Illegal token - not able to scan. */
-
     ILLEGAL("ILLEGAL", 0),
 
     /* Scanner-internal use only. */
