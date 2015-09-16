@@ -19,12 +19,39 @@ public abstract class Tokenizer {
         }
     }
 
-    private final StringBuilder literal = new StringBuilder();
+    private final StringBuilder literal;
+    protected Token next;
     protected Token current;
     protected char c0_;
 
+    protected Tokenizer() {
+        literal = new StringBuilder();
+        current = null;
+    }
+
     private static boolean isLineTerminator(char c) {
         return c == '\n' || c == '\r';
+    }
+
+    protected void initialize() {
+        advance();
+        skipWhiteSpace();
+        scan();
+    }
+
+    public Token peek() {
+        return next;
+    }
+
+    public Token next() {
+        current = next;
+        scan();
+
+        return current;
+    }
+
+    public Token current() {
+        return current;
     }
 
     private void expect(char expected) {
@@ -56,8 +83,7 @@ public abstract class Tokenizer {
                 case ' ':
                 case '\t':
                 case '\n':
-                    advance();
-                    token = TokenType.WHITESPACE;
+                    token = select(TokenType.WHITESPACE);
                     break;
 
                 case '"':
@@ -162,7 +188,7 @@ public abstract class Tokenizer {
 
                 case '@':
                 case '#':
-                    token = scanHashNameOrVariable();
+                    token = scanHashOrVariable();
                     break;
 
                 default:
@@ -180,13 +206,15 @@ public abstract class Tokenizer {
         } while (token == TokenType.WHITESPACE);
 
         posEnd = getCurrentPosition();
-        current = new Token(token, posStart, posEnd, literal.toString());
+        next = new Token(token, posStart, posEnd, literal.toString());
     }
 
     private TokenType skipSingleLineComment() {
         advance();
         while (!isLineTerminator(c0_)) {
-            advance();
+            if (!advance()) {
+                break;
+            }
         }
 
         return TokenType.WHITESPACE;
@@ -209,7 +237,11 @@ public abstract class Tokenizer {
 
     private boolean skipWhiteSpace() {
         int skipped = 0;
-        while (advance() && Character.isWhitespace(c0_)) {
+        while (Character.isWhitespace(c0_)) {
+            if (!advance()) {
+                break;
+            }
+
             skipped++;
         }
 
@@ -273,11 +305,13 @@ public abstract class Tokenizer {
     private void scanDecimalDigits() {
         while (Character.isDigit(c0_)) {
             literal.append(c0_);
-            advance();
+            if (!advance()) {
+                break;
+            }
         }
     }
 
-    private TokenType scanHashNameOrVariable() {
+    private TokenType scanHashOrVariable() {
         char first = c0_;
         advance(); // consume @ or #
 
