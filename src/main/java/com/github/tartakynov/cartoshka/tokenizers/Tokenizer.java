@@ -66,6 +66,8 @@ public abstract class Tokenizer {
 
     protected abstract boolean isEOS();
 
+    protected abstract void push(char c);
+
     protected void scan() {
         int posStart;
         int posEnd;
@@ -186,8 +188,8 @@ public abstract class Tokenizer {
                     token = select(TokenType.RBRACE);
                     break;
 
-                case '@':
                 case '#':
+                case '@':
                     token = scanHashOrVariable();
                     break;
 
@@ -315,7 +317,7 @@ public abstract class Tokenizer {
         char first = c0_;
         advance(); // consume @ or #
 
-        if (Character.isJavaIdentifierStart(c0_)) {
+        if (Character.isJavaIdentifierStart(c0_) || (first == '#' && Character.isDigit(c0_))) {
             literal.append(c0_);
             while (advance() && (Character.isJavaIdentifierPart(c0_) || c0_ == '-')) {
                 literal.append(c0_);

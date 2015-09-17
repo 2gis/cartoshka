@@ -1,11 +1,11 @@
 package com.github.tartakynov.cartoshka.exceptions;
 
-public abstract class CartoshkaException extends RuntimeException {
-    protected CartoshkaException(String message) {
+public class CartoshkaException extends RuntimeException {
+    public CartoshkaException(String message) {
         super(message);
     }
 
-    protected CartoshkaException(String message, Throwable cause) {
+    public CartoshkaException(String message, Throwable cause) {
         super(message, cause);
     }
 }

@@ -3,7 +3,54 @@ package com.github.tartakynov.cartoshka.tokenizers;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.Stack;
+
 public class TokenizerTest {
+    private static Tokenizer createTokenizer(final String str) {
+        return new Tokenizer() {
+            private final char[] source = str.toCharArray();
+            private final Stack<Character> stack = new Stack<Character>();
+            private int position = -1;
+
+            public Tokenizer init() {
+                initialize();
+                return this;
+            }
+
+            @Override
+            protected boolean advance() {
+                position++;
+                if (stack.isEmpty()) {
+                    if (position >= source.length) {
+                        return false;
+                    }
+
+                    this.c0_ = source[position];
+                } else {
+                    this.c0_ = stack.pop();
+                }
+
+                return true;
+            }
+
+            @Override
+            protected int getCurrentPosition() {
+                return position;
+            }
+
+            @Override
+            protected boolean isEOS() {
+                return position >= source.length;
+            }
+
+            @Override
+            protected void push(char c) {
+                stack.push(c);
+                position--;
+            }
+        }.init();
+    }
+
     @Test
     public void testQuotedText() {
         Tokenizer tokenizer = createTokenizer("\'abraca\' \"dabra\"");
@@ -42,12 +89,18 @@ public class TokenizerTest {
 
     @Test
     public void testHashNames() {
-        Tokenizer tokenizer = createTokenizer("#first-1 #second-2");
+        Tokenizer tokenizer = createTokenizer("#first-1 #second-2 #012 #012345");
         Assert.assertEquals(TokenType.HASHNAME, tokenizer.next().getType());
         Assert.assertEquals("first-1", tokenizer.current().getText());
 
         Assert.assertEquals(TokenType.HASHNAME, tokenizer.next().getType());
         Assert.assertEquals("second-2", tokenizer.current().getText());
+
+        Assert.assertEquals(TokenType.HASHNAME, tokenizer.next().getType());
+        Assert.assertEquals("012", tokenizer.current().getText());
+
+        Assert.assertEquals(TokenType.HASHNAME, tokenizer.next().getType());
+        Assert.assertEquals("012345", tokenizer.current().getText());
 
         Assert.assertEquals(TokenType.EOS, tokenizer.next.getType());
     }
@@ -101,38 +154,5 @@ public class TokenizerTest {
     public void testEmptySource() {
         Tokenizer tokenizer = createTokenizer("");
         Assert.assertEquals(TokenType.EOS, tokenizer.next.getType());
-    }
-
-    private static Tokenizer createTokenizer(final String str) {
-        return new Tokenizer() {
-            private char[] source = str.toCharArray();
-            private int position = -1;
-
-            public Tokenizer init() {
-                initialize();
-                return this;
-            }
-
-            @Override
-            protected boolean advance() {
-                position++;
-                if (position >= source.length) {
-                    return false;
-                }
-
-                this.c0_ = source[position];
-                return true;
-            }
-
-            @Override
-            protected int getCurrentPosition() {
-                return position;
-            }
-
-            @Override
-            protected boolean isEOS() {
-                return position >= source.length;
-            }
-        }.init();
     }
 }
