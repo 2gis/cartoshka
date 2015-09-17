@@ -97,6 +97,12 @@ public class TokenizerTest {
         Assert.assertEquals(TokenType.EOS, tokenizer.next.getType());
     }
 
+    @Test
+    public void testEmptySource() {
+        Tokenizer tokenizer = createTokenizer("");
+        Assert.assertEquals(TokenType.EOS, tokenizer.next.getType());
+    }
+
     private static Tokenizer createTokenizer(final String str) {
         return new Tokenizer() {
             private char[] source = str.toCharArray();
