@@ -1,4 +1,4 @@
-package com.github.tartakynov.cartoshka.tokenizers;
+package com.github.tartakynov.cartoshka.scanners;
 
 public enum TokenType {
     /* End of source indicator. */

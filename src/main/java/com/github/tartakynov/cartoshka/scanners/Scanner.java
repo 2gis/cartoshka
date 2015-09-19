@@ -1,10 +1,10 @@
-package com.github.tartakynov.cartoshka.tokenizers;
+package com.github.tartakynov.cartoshka.scanners;
 
 import com.github.tartakynov.cartoshka.exceptions.UnexpectedCharException;
 
 import java.util.*;
 
-public abstract class Tokenizer {
+public abstract class Scanner {
     protected static final Map<String, TokenType> KEYWORDS = new HashMap<>();
 
     protected static final Set<String> DIMENSION_UNITS = new HashSet<>(Arrays.asList("m", "cm", "in", "mm", "pt", "pc", "px", "%"));
@@ -25,7 +25,7 @@ public abstract class Tokenizer {
     private Token next;
     private Token current;
 
-    protected Tokenizer() {
+    protected Scanner() {
         literal = new StringBuilder();
         current = null;
     }

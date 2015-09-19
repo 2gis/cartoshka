@@ -2,8 +2,8 @@ package com.github.tartakynov.cartoshka;
 
 import com.github.tartakynov.cartoshka.exceptions.CartoshkaException;
 import com.github.tartakynov.cartoshka.exceptions.UnexpectedTokenException;
-import com.github.tartakynov.cartoshka.tokenizers.Token;
-import com.github.tartakynov.cartoshka.tokenizers.TokenType;
+import com.github.tartakynov.cartoshka.scanners.Token;
+import com.github.tartakynov.cartoshka.scanners.TokenType;
 import com.github.tartakynov.cartoshka.tree.Node;
 import com.github.tartakynov.cartoshka.tree.Value;
 import com.github.tartakynov.cartoshka.tree.VariableDeclaration;

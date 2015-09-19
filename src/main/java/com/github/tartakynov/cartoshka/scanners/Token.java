@@ -1,4 +1,4 @@
-package com.github.tartakynov.cartoshka.tokenizers;
+package com.github.tartakynov.cartoshka.scanners;
 
 public class Token {
     private final TokenType type;

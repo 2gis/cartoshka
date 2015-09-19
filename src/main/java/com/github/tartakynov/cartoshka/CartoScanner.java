@@ -1,12 +1,12 @@
 package com.github.tartakynov.cartoshka;
 
-import com.github.tartakynov.cartoshka.tokenizers.Tokenizer;
+import com.github.tartakynov.cartoshka.scanners.Scanner;
 
 import java.io.IOException;
 import java.io.Reader;
 import java.util.Stack;
 
-class CartoScanner extends Tokenizer {
+class CartoScanner extends Scanner {
     private final Reader source;
     private final Stack<Character> stack;
     private int position;
