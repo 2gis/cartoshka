@@ -121,6 +121,32 @@ public final class CartoParser extends CartoScanner {
                 return new Variable(next().getText());
             case DIMENSION_LITERAL:
                 return parseDimension();
+            case HASH:
+                return parseHexColor();
+            case IDENTIFIER:
+                Token identifier = next();
+                if (peek().getType() == TokenType.LPAREN) {
+                    if (identifier.getText().equals("url")) {
+
+                    }
+
+                    return new Call(identifier.getText(), parseArgumentsExpression());
+                } else if (Colors.Strings.containsKey(identifier.getText())) {
+                    return Colors.Strings.get(identifier.getText());
+                }
+
+                return new Keyword(identifier.getText());
+//            case Function:
+//                // fname(
+//                Token f = next();
+//                String func = f.text;
+//                result = new Call(func.substring(0, func.length() - 1), parseArgumentsExpression());
+//                break;
+//
+//            case Uri:
+//                result = new Url(((UriToken) next()).unquotedText);
+//                break;
+
         }
 
         throw new NotImplementedException();
@@ -140,115 +166,49 @@ public final class CartoParser extends CartoScanner {
         throw new CartoshkaException(String.format("Wrong unit for dimension at pos: %d", token.getStart()));
     }
 
-//    private Expression parsePrimaryExpression() {
-//        /*
-//            $(this.entities.call) ||
-//            $(this.entities.literal) ||
-//            $(this.entities.field) ||
-//            $(this.entities.variable) ||
-//            $(this.entities.url) ||
-//            $(this.entities.keyword);
-//         */
-//
-//        Expression result;
-//        switch (peek().getType()) {
-//            case Function:
-//                // fname(
-//                Token f = next();
-//                String func = f.text;
-//                result = new Call(func.substring(0, func.length() - 1), parseArgumentsExpression());
-//                break;
-//
-//            case Uri:
-//                result = new Url(((UriToken) next()).unquotedText);
-//                break;
-//
-//            case Number:
-//                result = new Literal(((NumericToken) next()).n);
-//                break;
-//
-//            case Identifier:
-//                Token idToken = next();
-//                switch (idToken.text) {
-//                    case "true":
-//                        result = new Boolean(true);
-//                        break;
-//                    case "false":
-//                        result = new Boolean(false);
-//                        break;
-//                    default:
-//                        result = Colors.Strings.get(idToken.text);
-//                        if (result == null) {
-//                            result = new Keyword(idToken.text);
-//                        }
-//                }
-//                break;
-//
-//            case VARIABLE:
-//                result = new Variable(next().text);
-//                break;
-//
-//            case HASHNAME:
-//                Token hexToken = next();
-//                if (hexToken.text.length() != 7) {
-//                    throw new UnexpectedTokenException(hexToken.text);
-//                }
-//
-//                int r = Integer.parseInt(hexToken.text.substring(1, 3), 16);
-//                int g = Integer.parseInt(hexToken.text.substring(3, 5), 16);
-//                int b = Integer.parseInt(hexToken.text.substring(5, 7), 16);
-//                result = new Color(r, g, b);
-//                break;
-//
-//            case Color:
-//                ComponentColor colorToken = (ComponentColor) next();
-//                result = new Color(colorToken.getR(), colorToken.getG(), colorToken.getB(), colorToken.getA());
-//                break;
-//
-//            case String:
-//                result = new Quoted(((StringValueToken) next()).unquotedText);
-//                break;
-//
-//            case Dimension:
-//                NumericWithUnitToken dimensionToken = (NumericWithUnitToken) next();
-//                result = new Dimension(dimensionToken.n, dimensionToken.unit);
-//                break;
-//
-//            case Delimiter:
-//                if (accept(Token.Type.Delimiter, "(") != null) {
-//                    Expression e = parseExpression();
-//                    expect(Token.Type.Delimiter, ")");
-//                    result = e;
-//                    break;
-//                }
-//
-//            default:
-//                throw new UnexpectedTokenException(peek().text);
-//        }
-//
-//        return result;
-//    }
-//
-//    private Collection<Expression> parseArgumentsExpression() {
-//        Collection<Expression> args = new ArrayList<>();
-//        expect(TokenType.LPAREN);
-//        boolean done = peek().getType() == TokenType.RPAREN;
-//        while (!done) {
-//            Expression argument = parseExpression();
-//            args.add(argument);
-//            if (args.size() > MaxArguments) {
-//                throw new CartoshkaException("too_many_arguments");
-//            }
-//
-//            done = peek().getType() == TokenType.RPAREN;
-//            if (!done) {
-//                expect(TokenType.COMMA);
-//            }
-//        }
-//
-//        expect(TokenType.RPAREN);
-//        return args;
-//    }
+    private Color parseHexColor() {
+        expect(TokenType.HASH);
+        Token token = expect(TokenType.NUMBER_LITERAL);
+        String text = token.getText();
+        try {
+            if (text.length() == 3) {
+                int r = Integer.parseInt(text.substring(0, 1) + text.substring(0, 1), 16);
+                int g = Integer.parseInt(text.substring(1, 2) + text.substring(1, 2), 16);
+                int b = Integer.parseInt(text.substring(2, 3) + text.substring(2, 3), 16);
+                return new Color(r, g, b);
+            } else if (text.length() == 7) {
+                int r = Integer.parseInt(text.substring(0, 2), 16);
+                int g = Integer.parseInt(text.substring(2, 4), 16);
+                int b = Integer.parseInt(text.substring(4, 6), 16);
+                return new Color(r, g, b);
+            }
+        } catch (NumberFormatException ex) {
+            // do nothing
+        }
+
+        throw new CartoshkaException(String.format("Wrong hex color %s at pos: %d", token.getText(), token.getStart()));
+    }
+
+    private Collection<Expression> parseArgumentsExpression() {
+        Collection<Expression> args = new ArrayList<>();
+        expect(TokenType.LPAREN);
+        boolean done = peek().getType() == TokenType.RPAREN;
+        while (!done) {
+            Expression argument = parseExpression();
+            args.add(argument);
+            if (args.size() > MaxArguments) {
+                throw new CartoshkaException("too_many_arguments");
+            }
+
+            done = peek().getType() == TokenType.RPAREN;
+            if (!done) {
+                expect(TokenType.COMMA);
+            }
+        }
+
+        expect(TokenType.RPAREN);
+        return args;
+    }
 
     private Node parseRuleSet() {
         throw new NotImplementedException();

@@ -190,8 +190,11 @@ public abstract class Tokenizer {
                     break;
 
                 case '#':
+                    token = select(TokenType.HASH);
+                    break;
+
                 case '@':
-                    token = scanHashOrVariable();
+                    token = scanVariable();
                     break;
 
                 default:
@@ -343,22 +346,16 @@ public abstract class Tokenizer {
         }
     }
 
-    private TokenType scanHashOrVariable() {
-        char first = c0_;
-        advance(); // consume @ or #
-
-        if (Character.isJavaIdentifierStart(c0_) || (first == '#' && Character.isDigit(c0_))) {
+    private TokenType scanVariable() {
+        expect('@');
+        advance(); // consume @
+        if (Character.isJavaIdentifierStart(c0_)) {
             literal.append(c0_);
             while (advance() && (Character.isJavaIdentifierPart(c0_) || c0_ == '-')) {
                 literal.append(c0_);
             }
 
-            switch (first) {
-                case '@':
-                    return TokenType.VARIABLE;
-                case '#':
-                    return TokenType.HASHNAME;
-            }
+            return TokenType.VARIABLE;
         }
 
         return TokenType.ILLEGAL;

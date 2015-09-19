@@ -88,18 +88,22 @@ public class TokenizerTest {
     }
 
     @Test
-    public void testHashNames() {
+    public void testHashes() {
         Tokenizer tokenizer = createTokenizer("#first-1 #second-2 #012 #012345");
-        Assert.assertEquals(TokenType.HASHNAME, tokenizer.next().getType());
+        Assert.assertEquals(TokenType.HASH, tokenizer.next().getType());
+        Assert.assertEquals(TokenType.IDENTIFIER, tokenizer.next().getType());
         Assert.assertEquals("first-1", tokenizer.current().getText());
 
-        Assert.assertEquals(TokenType.HASHNAME, tokenizer.next().getType());
+        Assert.assertEquals(TokenType.HASH, tokenizer.next().getType());
+        Assert.assertEquals(TokenType.IDENTIFIER, tokenizer.next().getType());
         Assert.assertEquals("second-2", tokenizer.current().getText());
 
-        Assert.assertEquals(TokenType.HASHNAME, tokenizer.next().getType());
+        Assert.assertEquals(TokenType.HASH, tokenizer.next().getType());
+        Assert.assertEquals(TokenType.NUMBER_LITERAL, tokenizer.next().getType());
         Assert.assertEquals("012", tokenizer.current().getText());
 
-        Assert.assertEquals(TokenType.HASHNAME, tokenizer.next().getType());
+        Assert.assertEquals(TokenType.HASH, tokenizer.next().getType());
+        Assert.assertEquals(TokenType.NUMBER_LITERAL, tokenizer.next().getType());
         Assert.assertEquals("012345", tokenizer.current().getText());
 
         Assert.assertEquals(TokenType.EOS, tokenizer.next().getType());

@@ -54,7 +54,7 @@ public enum TokenType {
 
     /* Identifiers (not keywords or future reserved words). */
     IDENTIFIER(null, 0),
-    HASHNAME(null, 0),
+    HASH(null, 0),
     VARIABLE(null, 0),
 
     /* Illegal token - not able to scan. */
