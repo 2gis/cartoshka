@@ -1,82 +1,59 @@
 package com.github.tartakynov.cartoshka;
 
-import com.github.tartakynov.cartoshka.exceptions.UnexpectedTokenException;
-import com.metaweb.lessen.Utilities;
-import com.metaweb.lessen.tokenizers.Tokenizer;
-import com.metaweb.lessen.tokens.Token;
+import com.github.tartakynov.cartoshka.scanners.Scanner;
 
+import java.io.IOException;
 import java.io.Reader;
+import java.util.Stack;
 
-abstract class CartoScanner {
-    private Token currentToken;
-
-    private Token nextToken;
-
-    private Tokenizer tokenizer;
+class CartoScanner extends Scanner {
+    private final Reader source;
+    private final Stack<Character> stack;
+    private int position;
+    private boolean eos;
 
     protected CartoScanner(Reader input) {
-        this.tokenizer = Utilities.open(input);
-        this.nextToken = skipWhitespace();
+        this.source = input;
+        this.position = -1;
+        this.eos = false;
+        this.stack = new Stack<>();
     }
 
-    protected Token peek() {
-        return nextToken;
-    }
+    @Override
+    protected boolean advance() {
+        try {
+            if (stack.isEmpty()) {
+                int c = this.source.read();
+                if (c < 0) {
+                    this.eos = true;
+                    return false;
+                }
 
-    protected Token accept(Token.Type type) {
-        if (nextToken != null && nextToken.type == type) {
-            return next();
-        }
-
-        return null;
-    }
-
-    protected Token accept(Token.Type type, String value) {
-        if (nextToken != null && nextToken.type == type && nextToken.text.equalsIgnoreCase(value)) {
-            return next();
-        }
-
-        return null;
-    }
-
-    protected Token expect(Token.Type type) {
-        Token token = next();
-        if (token != null) {
-            if (token.type == type) {
-                return token;
+                this.c0_ = (char) c;
+            } else {
+                this.c0_ = stack.pop();
             }
 
-            throw new UnexpectedTokenException(token.text, token.start);
+            this.position++;
+            return true;
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
         }
-
-        throw new UnexpectedTokenException("EOF");
     }
 
-    protected Token expect(Token.Type type, String value) {
-        Token token = next();
-        if (token != null) {
-            if (token.type == type && token.text.equalsIgnoreCase(value)) {
-                return token;
-            }
-
-            throw new UnexpectedTokenException(token.text, token.start);
-        }
-
-        throw new UnexpectedTokenException("EOF");
+    @Override
+    protected int getCurrentPosition() {
+        return this.position;
     }
 
-    protected Token next() {
-        this.currentToken = this.nextToken;
-        tokenizer.next();
-        this.nextToken = skipWhitespace();
-        return this.currentToken;
+    @Override
+    protected boolean isEOS() {
+        return this.eos;
     }
 
-    private Token skipWhitespace() {
-        while (this.tokenizer.getToken() != null && this.tokenizer.getToken().type == Token.Type.Whitespace) {
-            this.tokenizer.next();
-        }
-
-        return this.tokenizer.getToken();
+    @Override
+    protected void push(char c) {
+        stack.push(c);
+        position--;
     }
 }

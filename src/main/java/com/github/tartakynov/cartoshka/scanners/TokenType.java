@@ -1,4 +1,4 @@
-package com.github.tartakynov.cartoshka.tokenizers;
+package com.github.tartakynov.cartoshka.scanners;
 
 public enum TokenType {
     /* End of source indicator. */
@@ -13,7 +13,7 @@ public enum TokenType {
     RBRACE("}", 0),
     COLON(":", 0),
     SEMICOLON(";", 0),
-    COMMA(",", 1),
+    COMMA(",", 0),
 
     /* Binary operators sorted by precedence. */
     /* IsBinaryOp() relies on this block of enum values */
@@ -42,10 +42,11 @@ public enum TokenType {
 
     /* Literals. */
     NUMBER_LITERAL(null, 0),
-    NULL_LITERAL("null", 0),
+    STRING_LITERAL(null, 0),
+    DIMENSION_LITERAL(null, 0),
     TRUE_LITERAL("true", 0),
     FALSE_LITERAL("false", 0),
-    STRING_LITERAL(null, 0),
+    URL(null, 0),
 
     /* Keywords. */
     MAP_KEYWORD("Map", 0),
@@ -53,7 +54,7 @@ public enum TokenType {
 
     /* Identifiers (not keywords or future reserved words). */
     IDENTIFIER(null, 0),
-    HASHNAME(null, 0),
+    HASH(null, 0),
     VARIABLE(null, 0),
 
     /* Illegal token - not able to scan. */

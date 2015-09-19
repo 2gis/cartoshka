@@ -1,11 +1,11 @@
 package com.github.tartakynov.cartoshka.exceptions;
 
 public class UnexpectedTokenException extends CartoshkaException {
-    public UnexpectedTokenException(String token, int pos) {
-        super(String.format("Unexpected token [%s] at position %d", token, pos));
+    public UnexpectedTokenException(String expected, String found, int pos) {
+        super(String.format("Expected %s but found %s at position %d", expected, found, pos));
     }
 
-    public UnexpectedTokenException(String token) {
-        super(String.format("Unexpected token [%s]", token));
+    public UnexpectedTokenException(String expected, String found) {
+        super(String.format("Expected %s but found %s", expected, found));
     }
 }

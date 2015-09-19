@@ -1,46 +1,32 @@
 package com.github.tartakynov.cartoshka;
 
+import com.github.tartakynov.cartoshka.exceptions.CartoshkaException;
 import com.github.tartakynov.cartoshka.exceptions.UnexpectedTokenException;
-import com.github.tartakynov.cartoshka.tree.Comment;
+import com.github.tartakynov.cartoshka.scanners.Token;
+import com.github.tartakynov.cartoshka.scanners.TokenType;
 import com.github.tartakynov.cartoshka.tree.Node;
 import com.github.tartakynov.cartoshka.tree.Value;
 import com.github.tartakynov.cartoshka.tree.VariableDeclaration;
 import com.github.tartakynov.cartoshka.tree.entities.*;
 import com.github.tartakynov.cartoshka.tree.entities.Boolean;
-import com.github.tartakynov.cartoshka.tree.entities.Color;
-import com.metaweb.lessen.tokens.*;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.io.Reader;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 public final class CartoParser extends CartoScanner {
-    private static final Map<String, Integer> precedences = new HashMap<String, Integer>() {{
-        put("+", 2);
-        put("-", 2);
-
-        put("*", 3);
-        put("/", 3);
-
-        put("%", 3);
-        put("^", 3);
-    }};
+    private static final int MaxArguments = 32;
 
     private CartoParser(Reader input) {
         super(input);
     }
 
-    private static int getPrecedence(String token) {
-        Integer precedence = precedences.get(token);
-        if (precedence != null) {
-            return precedence;
-        }
-
-        return 0;
-    }
-
     public static Collection<Node> parse(Reader input) {
         CartoParser parser = new CartoParser(input);
+        parser.initialize();
+
         return parser.parsePrimary();
     }
 
@@ -48,14 +34,10 @@ public final class CartoParser extends CartoScanner {
     // The rules here can appear at any level of the parse tree.
     private Collection<Node> parsePrimary() {
         List<Node> root = new ArrayList<>();
-        while (peek() != null) {
-            Token token = peek();
-            switch (token.type) {
-                case AtIdentifier:
+        while (peek().getType() != TokenType.EOS) {
+            switch (peek().getType()) {
+                case VARIABLE:
                     root.add(parseVariable());
-                    break;
-                case Comment:
-                    root.add(parseComment());
                     break;
                 default:
                     root.add(parseRuleSet());
@@ -65,23 +47,15 @@ public final class CartoParser extends CartoScanner {
         return root;
     }
 
-    // We create a Comment node for CSS comments `/* */`,
-    // but keep the LeSS comments `//` silent, by just skipping
-    // over them.
-    private Comment parseComment() {
-        Token token = expect(Token.Type.Comment);
-        return new Comment(token.text);
-    }
-
     // The variable part of a variable definition.
     // Used in the `rule` parser. Like @fink:
     private VariableDeclaration parseVariable() {
-        Token name = expect(Token.Type.AtIdentifier);
-        expect(Token.Type.Delimiter, ":");
+        Token name = expect(TokenType.VARIABLE);
+        expect(TokenType.COLON);
         Value value = parseValue();
-        expect(Token.Type.Delimiter, ";");
+        expect(TokenType.SEMICOLON);
 
-        return new VariableDeclaration(name.text, value);
+        return new VariableDeclaration(name.getText(), value);
     }
 
     // A Value is a comma-delimited list of Expressions
@@ -89,9 +63,14 @@ public final class CartoParser extends CartoScanner {
     // and before the `;`.
     private Value parseValue() {
         Collection<Expression> expressions = new ArrayList<>();
-        do {
+        while (true) {
             expressions.add(parseExpression());
-        } while (accept(Token.Type.Delimiter, ",") != null);
+            if (peek().getType() != TokenType.COMMA) {
+                break;
+            }
+
+            next(); // consume comma
+        }
 
         return new Value(expressions);
     }
@@ -103,120 +82,123 @@ public final class CartoParser extends CartoScanner {
     }
 
     private Expression parseBinaryExpression(int prec) {
-        Expression result = parsePrimaryExpression();
-        for (int prec1 = getPrecedence(peek().text); prec1 >= prec; prec1--) {
-            while (getPrecedence(peek().text) == prec1) {
-                Token operation = expect(Token.Type.Operator);
+        Expression result = parseUnaryExpression();
+        for (int prec1 = peek().getType().getPrecedence(); prec1 >= prec; prec1--) {
+            while (peek().getType().getPrecedence() == prec1) {
+                Token op = next();
                 Expression right = parseBinaryExpression(prec1 + 1);
-                result = new BinaryOperation(operation.text, result, right);
+                result = new BinaryOperation(op.getType(), result, right);
             }
         }
 
         return result;
     }
 
-    private Expression parsePrimaryExpression() {
-        /*
-            $(this.entities.call) ||
-            $(this.entities.literal) ||
-            $(this.entities.field) ||
-            $(this.entities.variable) ||
-            $(this.entities.url) ||
-            $(this.entities.keyword);
-         */
+    private Expression parseUnaryExpression() {
+        switch (peek().getType()) {
+            case ADD:
+                next();
+                return parseUnaryExpression();
 
-        Expression result;
-        switch (peek().type) {
-            case Function:
-                // fname(
-                Token f = next();
-                String func = f.text;
-                result = new Call(func.substring(0, func.length() - 1), parseArgumentsExpression());
-                break;
-
-            case Uri:
-                result = new Url(((UriToken) next()).unquotedText);
-                break;
-
-            case Number:
-                result = new Literal(((NumericToken) next()).n);
-                break;
-
-            case Identifier:
-                Token idToken = next();
-                switch (idToken.text) {
-                    case "true":
-                        result = new Boolean(true);
-                        break;
-                    case "false":
-                        result = new Boolean(false);
-                        break;
-                    default:
-                        result = Colors.Strings.get(idToken.text);
-                        if (result == null) {
-                            result = new Keyword(idToken.text);
-                        }
-                }
-                break;
-
-            case AtIdentifier:
-                result = new Variable(next().text);
-                break;
-
-            case HashName:
-                Token hexToken = next();
-                if (hexToken.text.length() != 7) {
-                    throw new UnexpectedTokenException(hexToken.text);
-                }
-
-                int r = Integer.parseInt(hexToken.text.substring(1, 3), 16);
-                int g = Integer.parseInt(hexToken.text.substring(3, 5), 16);
-                int b = Integer.parseInt(hexToken.text.substring(5, 7), 16);
-                result = new Color(r, g, b);
-                break;
-
-            case Color:
-                ComponentColor colorToken = (ComponentColor) next();
-                result = new Color(colorToken.getR(), colorToken.getG(), colorToken.getB(), colorToken.getA());
-                break;
-
-            case String:
-                result = new Quoted(((StringValueToken) next()).unquotedText);
-                break;
-
-            case Dimension:
-                NumericWithUnitToken dimensionToken = (NumericWithUnitToken) next();
-                result = new Dimension(dimensionToken.n, dimensionToken.unit);
-                break;
-
-            case Delimiter:
-                if (accept(Token.Type.Delimiter, "(") != null) {
-                    Expression e = parseExpression();
-                    expect(Token.Type.Delimiter, ")");
-                    result = e;
-                    break;
-                }
+            case SUB:
+                Token op = next();
+                Expression expression = parseUnaryExpression();
+                return new UnaryOperation(op.getType(), expression);
 
             default:
-                throw new UnexpectedTokenException(peek().text);
+                return parsePrimaryExpression();
+        }
+    }
+
+    private Expression parsePrimaryExpression() {
+        switch (peek().getType()) {
+            case NUMBER_LITERAL:
+                return new Literal(Double.valueOf(next().getText()));
+            case STRING_LITERAL:
+                return new Quoted(next().getText());
+            case TRUE_LITERAL:
+                next();
+                return new Boolean(true);
+            case FALSE_LITERAL:
+                next();
+                return new Boolean(false);
+            case VARIABLE:
+                return new Variable(next().getText());
+            case DIMENSION_LITERAL:
+                return parseDimension();
+            case HASH:
+                return parseHexColor();
+            case URL:
+                return new Url(next().getText());
+            case IDENTIFIER:
+                Token identifier = next();
+                if (peek().getType() == TokenType.LPAREN) {
+                    return new Call(identifier.getText(), parseArgumentsExpression());
+                } else if (Colors.Strings.containsKey(identifier.getText())) {
+                    return Colors.Strings.get(identifier.getText());
+                }
+
+                return new Keyword(identifier.getText());
         }
 
-        return result;
+        throw new CartoshkaException(String.format("Unhandled expression %s at %d", peek().getText(), peek().getStart()));
+    }
+
+    private Dimension parseDimension() {
+        Token token = expect(TokenType.DIMENSION_LITERAL);
+        String value = token.getText();
+        for (int i = 1; i <= 2; i++) {
+            if (DIMENSION_UNITS.contains(value.substring(value.length() - i))) {
+                String num = value.substring(0, value.length() - i);
+                String unit = value.substring(value.length() - i);
+                return new Dimension(Double.valueOf(num), unit);
+            }
+        }
+
+        throw new CartoshkaException(String.format("Wrong unit for dimension at pos: %d", token.getStart()));
+    }
+
+    private Color parseHexColor() {
+        expect(TokenType.HASH);
+        Token token = next();
+        String text = token.getText();
+        try {
+            if (text.length() == 3) {
+                int r = Integer.parseInt(text.substring(0, 1) + text.substring(0, 1), 16);
+                int g = Integer.parseInt(text.substring(1, 2) + text.substring(1, 2), 16);
+                int b = Integer.parseInt(text.substring(2, 3) + text.substring(2, 3), 16);
+                return new Color(r, g, b);
+            } else if (text.length() == 7) {
+                int r = Integer.parseInt(text.substring(0, 2), 16);
+                int g = Integer.parseInt(text.substring(2, 4), 16);
+                int b = Integer.parseInt(text.substring(4, 6), 16);
+                return new Color(r, g, b);
+            }
+        } catch (NumberFormatException ex) {
+            // do nothing
+        }
+
+        throw new CartoshkaException(String.format("Wrong hex color #%s at pos: %d", token.getText(), token.getStart()));
     }
 
     private Collection<Expression> parseArgumentsExpression() {
         Collection<Expression> args = new ArrayList<>();
-        boolean done = (peek().text.equals(")"));
+        expect(TokenType.LPAREN);
+        boolean done = peek().getType() == TokenType.RPAREN;
         while (!done) {
             Expression argument = parseExpression();
             args.add(argument);
-            done = (peek().text.equals(")"));
+            if (args.size() > MaxArguments) {
+                throw new CartoshkaException("too_many_arguments");
+            }
+
+            done = peek().getType() == TokenType.RPAREN;
             if (!done) {
-                expect(Token.Type.Delimiter, ",");
+                expect(TokenType.COMMA);
             }
         }
 
-        expect(Token.Type.Delimiter, ")");
+        expect(TokenType.RPAREN);
         return args;
     }
 
@@ -226,15 +208,7 @@ public final class CartoParser extends CartoScanner {
 
     // Selectors are made out of one or more Elements, see above.
     private Collection<Node> parseSelectors() {
-        Collection<Node> selectors = new ArrayList<>();
-        while (true) {
-            selectors.add(parseSelector());
-            if (accept(Token.Type.Delimiter, ",") == null) {
-                break;
-            }
-        }
-
-        return selectors;
+        throw new NotImplementedException();
     }
 
     private Node parseSelector() {
@@ -242,28 +216,6 @@ public final class CartoParser extends CartoScanner {
         // zoom
         // filter
         // attachment
-        switch (peek().type) {
-            case Operator:
-            case Identifier:
-                // element
-                // subsequent
-
-            default:
-            case Delimiter:
-                // subsequent
-
-                //                if (accept(Token.Type.Delimiter, "[") != null) {
-                //                    parseFilter();
-                //                    // [ zoom
-                //                    // [ filter
-                //                } else if (accept(Token.Type.Delimiter, ":") != null) {
-                //                    // :: attachment
-                //                    parseAttachment();
-                //                }
-
-                break;
-        }
-
         throw new NotImplementedException();
     }
 
@@ -311,6 +263,15 @@ public final class CartoParser extends CartoScanner {
 
     private Node parseProperty() {
         throw new NotImplementedException();
+    }
+
+    protected Token expect(TokenType type) {
+        Token token = next();
+        if (token.getType() != type) {
+            throw new UnexpectedTokenException(type.name(), token.getType().name(), token.getStart());
+        }
+
+        return token;
     }
 }
 

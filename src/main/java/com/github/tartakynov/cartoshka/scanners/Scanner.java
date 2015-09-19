@@ -1,30 +1,31 @@
-package com.github.tartakynov.cartoshka.tokenizers;
+package com.github.tartakynov.cartoshka.scanners;
 
 import com.github.tartakynov.cartoshka.exceptions.UnexpectedCharException;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
-public abstract class Tokenizer {
-    private static final Map<String, TokenType> keywords = new HashMap<>();
+public abstract class Scanner {
+    protected static final Map<String, TokenType> KEYWORDS = new HashMap<>();
+
+    protected static final Set<String> DIMENSION_UNITS = new HashSet<>(Arrays.asList("m", "cm", "in", "mm", "pt", "pc", "px", "%"));
 
     static {
         for (TokenType type : TokenType.values()) {
             if (type.getStr() != null && !type.getStr().isEmpty()) {
                 String str = type.getStr();
                 if (Character.isJavaIdentifierStart(str.charAt(0))) {
-                    keywords.put(str, type);
+                    KEYWORDS.put(str, type);
                 }
             }
         }
     }
 
     private final StringBuilder literal;
-    protected Token next;
-    protected Token current;
     protected char c0_;
+    private Token next;
+    private Token current;
 
-    protected Tokenizer() {
+    protected Scanner() {
         literal = new StringBuilder();
         current = null;
     }
@@ -66,6 +67,8 @@ public abstract class Tokenizer {
 
     protected abstract boolean isEOS();
 
+    protected abstract void push(char c);
+
     protected void scan() {
         int posStart;
         int posEnd;
@@ -87,8 +90,11 @@ public abstract class Tokenizer {
                     break;
 
                 case '"':
+                    token = scanString('"', '"');
+                    break;
+
                 case '\'':
-                    token = scanString();
+                    token = scanString('\'', '\'');
                     break;
 
                 case '<':
@@ -186,16 +192,24 @@ public abstract class Tokenizer {
                     token = select(TokenType.RBRACE);
                     break;
 
-                case '@':
                 case '#':
-                    token = scanHashOrVariable();
+                    token = select(TokenType.HASH);
+                    break;
+
+                case '@':
+                    token = scanVariable();
                     break;
 
                 default:
                     if (Character.isJavaIdentifierStart(c0_)) {
                         token = scanIdentifierOrKeyword();
+                        if (token == TokenType.IDENTIFIER && c0_ == '(' && literal.toString().equals("url")) {
+                            literal.setLength(0);
+                            token = scanUrl();
+                        }
+
                     } else if (Character.isDigit(c0_)) {
-                        token = scanNumber(false);
+                        token = scanNumberOrDimension(false);
                     } else if (skipWhiteSpace()) {
                         token = TokenType.WHITESPACE;
                     } else {
@@ -253,12 +267,12 @@ public abstract class Tokenizer {
         return type;
     }
 
-    private TokenType scanString() {
-        char quote = c0_;
+    private TokenType scanString(char leftQuote, char rightQuote) {
+        expect(leftQuote);
         while (advance()) {
             if (isLineTerminator(c0_)) {
                 break;
-            } else if (c0_ == quote) {
+            } else if (c0_ == rightQuote) {
                 advance(); // consume quote
                 return TokenType.STRING_LITERAL;
             } else {
@@ -269,7 +283,7 @@ public abstract class Tokenizer {
         return TokenType.ILLEGAL;
     }
 
-    private TokenType scanNumber(boolean seen_period) {
+    private TokenType scanNumberOrDimension(boolean seen_period) {
         if (seen_period) {
             literal.append('.');
             scanDecimalDigits();
@@ -279,6 +293,10 @@ public abstract class Tokenizer {
                 addLiteralCharAdvance();
                 scanDecimalDigits();
             }
+        }
+
+        if (isEOS()) {
+            return TokenType.NUMBER_LITERAL;
         }
 
         // scan exponent, if any
@@ -293,6 +311,31 @@ public abstract class Tokenizer {
             }
 
             scanDecimalDigits();
+        }
+
+        // scan dimension, if any
+        if (Character.isLetter(c0_)) {
+            String number = literal.toString();
+            literal.setLength(0);
+            while (Character.isLetter(c0_)) {
+                literal.append(c0_);
+                if (!advance()) {
+                    break;
+                }
+            }
+
+            String unit = literal.toString();
+            literal.setLength(0);
+            literal.append(number);
+            literal.append(unit);
+            if (DIMENSION_UNITS.contains(unit)) {
+                return TokenType.DIMENSION_LITERAL;
+            } else {
+                return TokenType.ILLEGAL;
+            }
+        } else if (c0_ == '%') {
+            literal.append(c0_);
+            return select(TokenType.DIMENSION_LITERAL);
         }
 
         if (!isEOS() && Character.isJavaIdentifierStart(c0_)) {
@@ -311,22 +354,16 @@ public abstract class Tokenizer {
         }
     }
 
-    private TokenType scanHashOrVariable() {
-        char first = c0_;
-        advance(); // consume @ or #
-
+    private TokenType scanVariable() {
+        expect('@');
+        advance(); // consume @
         if (Character.isJavaIdentifierStart(c0_)) {
             literal.append(c0_);
             while (advance() && (Character.isJavaIdentifierPart(c0_) || c0_ == '-')) {
                 literal.append(c0_);
             }
 
-            switch (first) {
-                case '@':
-                    return TokenType.VARIABLE;
-                case '#':
-                    return TokenType.HASHNAME;
-            }
+            return TokenType.VARIABLE;
         }
 
         return TokenType.ILLEGAL;
@@ -338,12 +375,25 @@ public abstract class Tokenizer {
             literal.append(c0_);
         }
 
-        TokenType type = keywords.get(literal.toString());
+        TokenType type = KEYWORDS.get(literal.toString());
         if (type != null) {
             return type;
         }
 
         return TokenType.IDENTIFIER;
+    }
+
+    private TokenType scanUrl() {
+        expect('(');
+        scanString('(', ')');
+
+        // trim quotes
+        if (literal.charAt(0) == '"' || literal.charAt(0) == '\'') {
+            literal.deleteCharAt(literal.length() - 1);
+            literal.deleteCharAt(0);
+        }
+
+        return TokenType.URL;
     }
 
     private TokenType scanHtmlComment() {
