@@ -197,7 +197,7 @@ public abstract class Tokenizer {
                     if (Character.isJavaIdentifierStart(c0_)) {
                         token = scanIdentifierOrKeyword();
                     } else if (Character.isDigit(c0_)) {
-                        token = scanNumber(false);
+                        token = scanNumberOrDimension(false);
                     } else if (skipWhiteSpace()) {
                         token = TokenType.WHITESPACE;
                     } else {
@@ -271,7 +271,7 @@ public abstract class Tokenizer {
         return TokenType.ILLEGAL;
     }
 
-    private TokenType scanNumber(boolean seen_period) {
+    private TokenType scanNumberOrDimension(boolean seen_period) {
         if (seen_period) {
             literal.append('.');
             scanDecimalDigits();
@@ -296,6 +296,15 @@ public abstract class Tokenizer {
 
             scanDecimalDigits();
         }
+
+        if (!isEOS() && (Character.isLowerCase(c0_) || c0_ == '%')) {
+
+        }
+
+        physical_units: ['m', 'cm', 'in', 'mm', 'pt', 'pc'],
+        screen_units: ['px', '%'],
+        all_units: ['m', 'cm', 'in', 'mm', 'pt', 'pc', 'px', '%'],
+
 
         if (!isEOS() && Character.isJavaIdentifierStart(c0_)) {
             return TokenType.ILLEGAL;
