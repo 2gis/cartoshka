@@ -173,6 +173,22 @@ public class TokenizerTest {
     }
 
     @Test
+    public void testUrl() {
+        Tokenizer tokenizer = createTokenizer("url(\"/myfolder/img.png\") url(/myfolder/img.png) url('/myfolder/img.png')");
+        Assert.assertEquals(TokenType.URL, tokenizer.next().getType());
+        Assert.assertEquals("/myfolder/img.png", tokenizer.current().getText());
+
+        Assert.assertEquals(TokenType.URL, tokenizer.next().getType());
+        Assert.assertEquals("/myfolder/img.png", tokenizer.current().getText());
+
+        Assert.assertEquals(TokenType.URL, tokenizer.next().getType());
+        Assert.assertEquals("/myfolder/img.png", tokenizer.current().getText());
+
+        Assert.assertEquals(TokenType.EOS, tokenizer.next().getType());
+
+    }
+
+    @Test
     public void testEmptySource() {
         Tokenizer tokenizer = createTokenizer("");
         Assert.assertEquals(TokenType.EOS, tokenizer.next().getType());

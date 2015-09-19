@@ -123,30 +123,17 @@ public final class CartoParser extends CartoScanner {
                 return parseDimension();
             case HASH:
                 return parseHexColor();
+            case URL:
+                return new Url(next().getText());
             case IDENTIFIER:
                 Token identifier = next();
                 if (peek().getType() == TokenType.LPAREN) {
-                    if (identifier.getText().equals("url")) {
-
-                    }
-
                     return new Call(identifier.getText(), parseArgumentsExpression());
                 } else if (Colors.Strings.containsKey(identifier.getText())) {
                     return Colors.Strings.get(identifier.getText());
                 }
 
                 return new Keyword(identifier.getText());
-//            case Function:
-//                // fname(
-//                Token f = next();
-//                String func = f.text;
-//                result = new Call(func.substring(0, func.length() - 1), parseArgumentsExpression());
-//                break;
-//
-//            case Uri:
-//                result = new Url(((UriToken) next()).unquotedText);
-//                break;
-
         }
 
         throw new NotImplementedException();

@@ -90,8 +90,11 @@ public abstract class Tokenizer {
                     break;
 
                 case '"':
+                    token = scanString('"', '"');
+                    break;
+
                 case '\'':
-                    token = scanString();
+                    token = scanString('\'', '\'');
                     break;
 
                 case '<':
@@ -200,6 +203,11 @@ public abstract class Tokenizer {
                 default:
                     if (Character.isJavaIdentifierStart(c0_)) {
                         token = scanIdentifierOrKeyword();
+                        if (token == TokenType.IDENTIFIER && c0_ == '(' && literal.toString().equals("url")) {
+                            literal.setLength(0);
+                            token = scanUrl();
+                        }
+
                     } else if (Character.isDigit(c0_)) {
                         token = scanNumberOrDimension(false);
                     } else if (skipWhiteSpace()) {
@@ -259,12 +267,12 @@ public abstract class Tokenizer {
         return type;
     }
 
-    private TokenType scanString() {
-        char quote = c0_;
+    private TokenType scanString(char leftQuote, char rightQuote) {
+        expect(leftQuote);
         while (advance()) {
             if (isLineTerminator(c0_)) {
                 break;
-            } else if (c0_ == quote) {
+            } else if (c0_ == rightQuote) {
                 advance(); // consume quote
                 return TokenType.STRING_LITERAL;
             } else {
@@ -373,6 +381,19 @@ public abstract class Tokenizer {
         }
 
         return TokenType.IDENTIFIER;
+    }
+
+    private TokenType scanUrl() {
+        expect('(');
+        scanString('(', ')');
+
+        // trim quotes
+        if (literal.charAt(0) == '"' || literal.charAt(0) == '\'') {
+            literal.deleteCharAt(literal.length() - 1);
+            literal.deleteCharAt(0);
+        }
+
+        return TokenType.URL;
     }
 
     private TokenType scanHtmlComment() {
