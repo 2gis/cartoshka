@@ -13,7 +13,7 @@ public enum TokenType {
     RBRACE("}", 0),
     COLON(":", 0),
     SEMICOLON(";", 0),
-    COMMA(",", 1),
+    COMMA(",", 0),
 
     /* Binary operators sorted by precedence. */
     /* IsBinaryOp() relies on this block of enum values */
@@ -42,11 +42,10 @@ public enum TokenType {
 
     /* Literals. */
     NUMBER_LITERAL(null, 0),
-    NULL_LITERAL("null", 0),
-    TRUE_LITERAL("true", 0),
-    FALSE_LITERAL("false", 0),
     STRING_LITERAL(null, 0),
     DIMENSION_LITERAL(null, 0),
+    TRUE_LITERAL("true", 0),
+    FALSE_LITERAL("false", 0),
     URL(null, 0),
 
     /* Keywords. */

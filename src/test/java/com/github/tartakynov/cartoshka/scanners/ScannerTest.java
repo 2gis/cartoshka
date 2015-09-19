@@ -80,7 +80,6 @@ public class ScannerTest {
         Scanner scanner = createTokenizer("true false null Map zoom");
         Assert.assertEquals(TokenType.TRUE_LITERAL, scanner.next().getType());
         Assert.assertEquals(TokenType.FALSE_LITERAL, scanner.next().getType());
-        Assert.assertEquals(TokenType.NULL_LITERAL, scanner.next().getType());
         Assert.assertEquals(TokenType.MAP_KEYWORD, scanner.next().getType());
         Assert.assertEquals(TokenType.ZOOM_KEYWORD, scanner.next().getType());
 
@@ -185,7 +184,6 @@ public class ScannerTest {
         Assert.assertEquals("/myfolder/img.png", scanner.current().getText());
 
         Assert.assertEquals(TokenType.EOS, scanner.next().getType());
-
     }
 
     @Test

@@ -25,6 +25,8 @@ public final class CartoParser extends CartoScanner {
 
     public static Collection<Node> parse(Reader input) {
         CartoParser parser = new CartoParser(input);
+        parser.initialize();
+
         return parser.parsePrimary();
     }
 
@@ -32,9 +34,8 @@ public final class CartoParser extends CartoScanner {
     // The rules here can appear at any level of the parse tree.
     private Collection<Node> parsePrimary() {
         List<Node> root = new ArrayList<>();
-        while (peek() != null) {
-            Token token = peek();
-            switch (token.getType()) {
+        while (peek().getType() != TokenType.EOS) {
+            switch (peek().getType()) {
                 case VARIABLE:
                     root.add(parseVariable());
                     break;
@@ -84,9 +85,9 @@ public final class CartoParser extends CartoScanner {
         Expression result = parseUnaryExpression();
         for (int prec1 = peek().getType().getPrecedence(); prec1 >= prec; prec1--) {
             while (peek().getType().getPrecedence() == prec1) {
-                Token operation = next();
+                Token op = next();
                 Expression right = parseBinaryExpression(prec1 + 1);
-                result = new BinaryOperation(operation.getText(), result, right);
+                result = new BinaryOperation(op.getType(), result, right);
             }
         }
 
@@ -96,10 +97,14 @@ public final class CartoParser extends CartoScanner {
     private Expression parseUnaryExpression() {
         switch (peek().getType()) {
             case ADD:
+                next();
+                return parseUnaryExpression();
+
             case SUB:
                 Token op = next();
                 Expression expression = parseUnaryExpression();
-                return new UnaryOperation(op.getText(), expression);
+                return new UnaryOperation(op.getType(), expression);
+
             default:
                 return parsePrimaryExpression();
         }
@@ -136,7 +141,7 @@ public final class CartoParser extends CartoScanner {
                 return new Keyword(identifier.getText());
         }
 
-        throw new NotImplementedException();
+        throw new CartoshkaException(String.format("Unhandled expression %s at %d", peek().getText(), peek().getStart()));
     }
 
     private Dimension parseDimension() {
@@ -155,7 +160,7 @@ public final class CartoParser extends CartoScanner {
 
     private Color parseHexColor() {
         expect(TokenType.HASH);
-        Token token = expect(TokenType.NUMBER_LITERAL);
+        Token token = next();
         String text = token.getText();
         try {
             if (text.length() == 3) {
@@ -173,7 +178,7 @@ public final class CartoParser extends CartoScanner {
             // do nothing
         }
 
-        throw new CartoshkaException(String.format("Wrong hex color %s at pos: %d", token.getText(), token.getStart()));
+        throw new CartoshkaException(String.format("Wrong hex color #%s at pos: %d", token.getText(), token.getStart()));
     }
 
     private Collection<Expression> parseArgumentsExpression() {
@@ -263,7 +268,7 @@ public final class CartoParser extends CartoScanner {
     protected Token expect(TokenType type) {
         Token token = next();
         if (token.getType() != type) {
-            throw new UnexpectedTokenException(token.getText(), token.getStart());
+            throw new UnexpectedTokenException(type.name(), token.getType().name(), token.getStart());
         }
 
         return token;

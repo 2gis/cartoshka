@@ -4,6 +4,6 @@ import org.junit.Test;
 
 public class CartoParserTest {
     @Test
-    public void test() {
+    public void testNumberLiteral() {
     }
 }
