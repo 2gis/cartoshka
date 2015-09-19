@@ -137,7 +137,7 @@ public final class CartoParser extends CartoScanner {
             }
         }
 
-        throw new CartoshkaException(String.format("Wrong unit for dimension at pos: %d", getCurrentPosition()));
+        throw new CartoshkaException(String.format("Wrong unit for dimension at pos: %d", token.getStart()));
     }
 
 //    private Expression parsePrimaryExpression() {
@@ -314,12 +314,12 @@ public final class CartoParser extends CartoScanner {
     }
 
     protected Token expect(TokenType type) {
-        Token next = next();
-        if (next.getType() != type) {
-            throw new UnexpectedTokenException(next.getText(), next.getStart());
+        Token token = next();
+        if (token.getType() != type) {
+            throw new UnexpectedTokenException(token.getText(), token.getStart());
         }
 
-        return next;
+        return token;
     }
 }
 
