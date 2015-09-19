@@ -1,5 +1,6 @@
 package com.github.tartakynov.cartoshka;
 
+import com.github.tartakynov.cartoshka.exceptions.CartoshkaException;
 import com.github.tartakynov.cartoshka.exceptions.UnexpectedTokenException;
 import com.github.tartakynov.cartoshka.tokenizers.Token;
 import com.github.tartakynov.cartoshka.tokenizers.TokenType;
@@ -116,16 +117,29 @@ public final class CartoParser extends CartoScanner {
             case FALSE_LITERAL:
                 next();
                 return new Boolean(false);
-
             case VARIABLE:
                 return new Variable(next().getText());
-
+            case DIMENSION_LITERAL:
+                return parseDimension();
         }
 
         throw new NotImplementedException();
     }
 
-//
+    private Dimension parseDimension() {
+        Token token = expect(TokenType.DIMENSION_LITERAL);
+        String value = token.getText();
+        for (int i = 1; i <= 2; i++) {
+            if (DIMENSION_UNITS.contains(value.substring(value.length() - i))) {
+                String num = value.substring(0, value.length() - i);
+                String unit = value.substring(value.length() - i);
+                return new Dimension(Double.valueOf(num), unit);
+            }
+        }
+
+        throw new CartoshkaException(String.format("Wrong unit for dimension at pos: %d", getCurrentPosition()));
+    }
+
 //    private Expression parsePrimaryExpression() {
 //        /*
 //            $(this.entities.call) ||
