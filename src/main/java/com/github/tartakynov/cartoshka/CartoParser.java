@@ -1,6 +1,5 @@
 package com.github.tartakynov.cartoshka;
 
-import com.github.tartakynov.cartoshka.exceptions.CartoshkaException;
 import com.github.tartakynov.cartoshka.exceptions.UnexpectedTokenException;
 import com.github.tartakynov.cartoshka.tokenizers.Token;
 import com.github.tartakynov.cartoshka.tokenizers.TokenType;

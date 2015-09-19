@@ -2,27 +2,28 @@ package com.github.tartakynov.cartoshka.tokenizers;
 
 import com.github.tartakynov.cartoshka.exceptions.UnexpectedCharException;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public abstract class Tokenizer {
-    private static final Map<String, TokenType> keywords = new HashMap<>();
+    protected static final Map<String, TokenType> KEYWORDS = new HashMap<>();
+
+    protected static final Set<String> DIMENSION_UNITS = new HashSet<>(Arrays.asList("m", "cm", "in", "mm", "pt", "pc", "px", "%"));
 
     static {
         for (TokenType type : TokenType.values()) {
             if (type.getStr() != null && !type.getStr().isEmpty()) {
                 String str = type.getStr();
                 if (Character.isJavaIdentifierStart(str.charAt(0))) {
-                    keywords.put(str, type);
+                    KEYWORDS.put(str, type);
                 }
             }
         }
     }
 
     private final StringBuilder literal;
-    protected Token next;
-    protected Token current;
     protected char c0_;
+    private Token next;
+    private Token current;
 
     protected Tokenizer() {
         literal = new StringBuilder();
@@ -283,6 +284,10 @@ public abstract class Tokenizer {
             }
         }
 
+        if (isEOS()) {
+            return TokenType.NUMBER_LITERAL;
+        }
+
         // scan exponent, if any
         if (c0_ == 'e' || c0_ == 'E') {
             addLiteralCharAdvance();
@@ -297,14 +302,30 @@ public abstract class Tokenizer {
             scanDecimalDigits();
         }
 
-        if (!isEOS() && (Character.isLowerCase(c0_) || c0_ == '%')) {
+        // scan dimension, if any
+        if (Character.isLetter(c0_)) {
+            String number = literal.toString();
+            literal.setLength(0);
+            while (Character.isLetter(c0_)) {
+                literal.append(c0_);
+                if (!advance()) {
+                    break;
+                }
+            }
 
+            String unit = literal.toString();
+            literal.setLength(0);
+            literal.append(number);
+            literal.append(unit);
+            if (DIMENSION_UNITS.contains(unit)) {
+                return TokenType.DIMENSION_LITERAL;
+            } else {
+                return TokenType.ILLEGAL;
+            }
+        } else if (c0_ == '%') {
+            literal.append(c0_);
+            return select(TokenType.DIMENSION_LITERAL);
         }
-
-        physical_units: ['m', 'cm', 'in', 'mm', 'pt', 'pc'],
-        screen_units: ['px', '%'],
-        all_units: ['m', 'cm', 'in', 'mm', 'pt', 'pc', 'px', '%'],
-
 
         if (!isEOS() && Character.isJavaIdentifierStart(c0_)) {
             return TokenType.ILLEGAL;
@@ -349,7 +370,7 @@ public abstract class Tokenizer {
             literal.append(c0_);
         }
 
-        TokenType type = keywords.get(literal.toString());
+        TokenType type = KEYWORDS.get(literal.toString());
         if (type != null) {
             return type;
         }

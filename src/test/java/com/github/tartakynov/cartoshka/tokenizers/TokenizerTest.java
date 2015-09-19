@@ -60,7 +60,7 @@ public class TokenizerTest {
         Assert.assertEquals(TokenType.STRING_LITERAL, tokenizer.next().getType());
         Assert.assertEquals("dabra", tokenizer.current().getText());
 
-        Assert.assertEquals(TokenType.EOS, tokenizer.next.getType());
+        Assert.assertEquals(TokenType.EOS, tokenizer.next().getType());
     }
 
     @Test
@@ -72,7 +72,7 @@ public class TokenizerTest {
         Assert.assertEquals(TokenType.NUMBER_LITERAL, tokenizer.next().getType());
         Assert.assertEquals("26e-2", tokenizer.current().getText());
 
-        Assert.assertEquals(TokenType.EOS, tokenizer.next.getType());
+        Assert.assertEquals(TokenType.EOS, tokenizer.next().getType());
     }
 
     @Test
@@ -84,7 +84,7 @@ public class TokenizerTest {
         Assert.assertEquals(TokenType.MAP_KEYWORD, tokenizer.next().getType());
         Assert.assertEquals(TokenType.ZOOM_KEYWORD, tokenizer.next().getType());
 
-        Assert.assertEquals(TokenType.EOS, tokenizer.next.getType());
+        Assert.assertEquals(TokenType.EOS, tokenizer.next().getType());
     }
 
     @Test
@@ -102,7 +102,7 @@ public class TokenizerTest {
         Assert.assertEquals(TokenType.HASHNAME, tokenizer.next().getType());
         Assert.assertEquals("012345", tokenizer.current().getText());
 
-        Assert.assertEquals(TokenType.EOS, tokenizer.next.getType());
+        Assert.assertEquals(TokenType.EOS, tokenizer.next().getType());
     }
 
     @Test
@@ -114,7 +114,7 @@ public class TokenizerTest {
         Assert.assertEquals(TokenType.VARIABLE, tokenizer.next().getType());
         Assert.assertEquals("second-2", tokenizer.current().getText());
 
-        Assert.assertEquals(TokenType.EOS, tokenizer.next.getType());
+        Assert.assertEquals(TokenType.EOS, tokenizer.next().getType());
     }
 
     @Test
@@ -127,7 +127,7 @@ public class TokenizerTest {
         Assert.assertEquals(TokenType.NUMBER_LITERAL, tokenizer.next().getType());
         Assert.assertEquals("1", tokenizer.current().getText());
 
-        Assert.assertEquals(TokenType.EOS, tokenizer.next.getType());
+        Assert.assertEquals(TokenType.EOS, tokenizer.next().getType());
     }
 
     @Test
@@ -147,12 +147,30 @@ public class TokenizerTest {
         Assert.assertEquals(TokenType.SEMICOLON, tokenizer.next().getType());
         Assert.assertEquals(TokenType.COMMA, tokenizer.next().getType());
 
-        Assert.assertEquals(TokenType.EOS, tokenizer.next.getType());
+        Assert.assertEquals(TokenType.EOS, tokenizer.next().getType());
+    }
+
+    @Test
+    public void testDimensions() {
+        Tokenizer tokenizer = createTokenizer("3.1415926535897932384pt 26e-2% 2e+2cm 1.23xy");
+        Assert.assertEquals(TokenType.DIMENSION_LITERAL, tokenizer.next().getType());
+        Assert.assertEquals("3.1415926535897932384pt", tokenizer.current().getText());
+
+        Assert.assertEquals(TokenType.DIMENSION_LITERAL, tokenizer.next().getType());
+        Assert.assertEquals("26e-2%", tokenizer.current().getText());
+
+        Assert.assertEquals(TokenType.DIMENSION_LITERAL, tokenizer.next().getType());
+        Assert.assertEquals("2e+2cm", tokenizer.current().getText());
+
+        Assert.assertEquals(TokenType.ILLEGAL, tokenizer.next().getType());
+        Assert.assertEquals("1.23xy", tokenizer.current().getText());
+
+        Assert.assertEquals(TokenType.EOS, tokenizer.next().getType());
     }
 
     @Test
     public void testEmptySource() {
         Tokenizer tokenizer = createTokenizer("");
-        Assert.assertEquals(TokenType.EOS, tokenizer.next.getType());
+        Assert.assertEquals(TokenType.EOS, tokenizer.next().getType());
     }
 }
