@@ -6,4 +6,8 @@ public class Quoted extends Expression {
     public Quoted(String value) {
         this.value = value;
     }
+
+    public String getValue() {
+        return value;
+    }
 }

@@ -2,7 +2,7 @@ package com.github.tartakynov.cartoshka.scanners;
 
 public enum TokenType {
     /* End of source indicator. */
-    EOS("EOS", 0),
+    EOS(null, 0),
 
     /* Punctuators. */
     LPAREN("(", 0),
@@ -24,7 +24,6 @@ public enum TokenType {
     MUL("*", 13),
     DIV("/", 13),
     MOD("%", 13),
-    POW("^", 13),
 
     /* Compare operators sorted by precedence. */
     /* IsCompareOp() relies on this block of enum values */
@@ -59,7 +58,7 @@ public enum TokenType {
     VARIABLE(null, 0),
 
     /* Illegal token - not able to scan. */
-    ILLEGAL("ILLEGAL", 0),
+    ILLEGAL(null, 0),
 
     /* Scanner-internal use only. */
     WHITESPACE(null, 0);

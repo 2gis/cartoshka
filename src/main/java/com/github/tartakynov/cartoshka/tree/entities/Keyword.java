@@ -6,4 +6,8 @@ public class Keyword extends Expression {
     public Keyword(String value) {
         this.value = value;
     }
+
+    public String getValue() {
+        return value;
+    }
 }

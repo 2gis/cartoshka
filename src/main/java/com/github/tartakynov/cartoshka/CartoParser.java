@@ -4,10 +4,7 @@ import com.github.tartakynov.cartoshka.exceptions.CartoshkaException;
 import com.github.tartakynov.cartoshka.exceptions.UnexpectedTokenException;
 import com.github.tartakynov.cartoshka.scanners.Token;
 import com.github.tartakynov.cartoshka.scanners.TokenType;
-import com.github.tartakynov.cartoshka.tree.Node;
-import com.github.tartakynov.cartoshka.tree.Rule;
-import com.github.tartakynov.cartoshka.tree.Selector;
-import com.github.tartakynov.cartoshka.tree.Value;
+import com.github.tartakynov.cartoshka.tree.*;
 import com.github.tartakynov.cartoshka.tree.entities.*;
 import com.github.tartakynov.cartoshka.tree.entities.Boolean;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
@@ -84,7 +81,7 @@ public final class CartoParser extends CartoScanner {
         Expression result = parseUnaryExpression();
         for (int prec1 = peek().getType().getPrecedence(); prec1 >= prec; prec1--) {
             while (peek().getType().getPrecedence() == prec1) {
-                Token op = next();
+                Token op = expect(TokenType.ADD, TokenType.SUB, TokenType.MUL, TokenType.DIV, TokenType.MOD);
                 Expression right = parseBinaryExpression(prec1 + 1);
                 result = new BinaryOperation(op.getType(), result, right);
             }
@@ -137,6 +134,13 @@ public final class CartoParser extends CartoScanner {
             case URL:
                 return new Url(next().getText());
 
+            case LBRACK:
+                Token field = next();
+                expect(TokenType.RBRACK);
+                return new Field(field.getText());
+
+            case MAP_KEYWORD:
+            case ZOOM_KEYWORD:
             case IDENTIFIER:
                 Token identifier = next();
                 if (peek().getType() == TokenType.LPAREN) {
@@ -232,22 +236,26 @@ public final class CartoParser extends CartoScanner {
     private Node parseSelector() {
         // (element | zoom | filter)+ attachment?
         boolean done = false;
+        Collection<Element> elements = new ArrayList<>();
+        Collection<Zoom> zooms = new ArrayList<>();
+        Collection<Filter> filters = new ArrayList<>();
         while (!done) {
+
             switch (peek().getType()) {
                 case HASH:
                 case PERIOD:
                 case MUL:
                 case MAP_KEYWORD:
-                    // element
+                    elements.add(parseElement());
                     break;
 
                 case LBRACK:
-                    expect(TokenType.LBRACK);
-                    if (peek().getType() == TokenType.ZOOM_KEYWORD) {
-                        // zoom
+                    Filter filter = parseZoomOrFilter();
+                    if (filter instanceof Zoom) {
+                        zooms.add((Zoom) filter);
                     }
 
-                    // filter
+                    filters.add(filter);
                     break;
 
                 case COLON:
@@ -263,31 +271,56 @@ public final class CartoParser extends CartoScanner {
         throw new NotImplementedException();
     }
 
-    // A Rule terminator. Note that we use `peek()` to check for '}',
-    // because the `block` rule will be expecting it, but we still need to make sure
-    // it's there, if ';' was ommitted.
-    private Node parseEnd() {
-        throw new NotImplementedException();
-    }
-
     // Elements are the building blocks for Selectors. They consist of
     // an element name, such as a tag a class, or `*`.
-    private Node parseElement() {
-        throw new NotImplementedException();
+    private Element parseElement() {
+        Token token = expect(TokenType.HASH, TokenType.PERIOD, TokenType.MUL, TokenType.MAP_KEYWORD);
+        Element.ElementType elementType = Element.ElementType.MAP;
+        switch (token.getType()) {
+            case HASH:
+                elementType = Element.ElementType.ID;
+                break;
+
+            case PERIOD:
+                elementType = Element.ElementType.CLASS;
+                break;
+
+            case MUL:
+                elementType = Element.ElementType.WILDCARD;
+                break;
+        }
+
+        return new Element(token.getText(), elementType);
+    }
+
+    private Filter parseZoomOrFilter() {
+        expect(TokenType.LBRACK);
+        CompareOperation cmp = parseComparison();
+        expect(TokenType.RBRACK);
+        if (cmp.getLeft() instanceof Keyword) {
+            Keyword keyword = (Keyword) cmp.getLeft();
+            if (keyword.getValue().equals(TokenType.ZOOM_KEYWORD.getStr())) {
+                return new Zoom(cmp);
+            }
+        }
+
+        return new Filter(cmp);
+    }
+
+    private CompareOperation parseComparison() {
+        Expression left = parsePrimaryExpression();
+        if (left instanceof Quoted) {
+            left = new Field(((Quoted) left).getValue());
+        }
+
+        Token op = expect(TokenType.EQ, TokenType.NE, TokenType.LT, TokenType.GT, TokenType.LTE, TokenType.GTE);
+        Expression right = parseExpression();
+        return new CompareOperation(op.getType(), left, right);
     }
 
     // Attachments allow adding multiple lines, polygons etc. to an
     // object. There can only be one attachment per selector.
     private Node parseAttachment() {
-        throw new NotImplementedException();
-    }
-
-
-    private Node parseFilter() {
-        throw new NotImplementedException();
-    }
-
-    private Node parseZoom() {
         throw new NotImplementedException();
     }
 
