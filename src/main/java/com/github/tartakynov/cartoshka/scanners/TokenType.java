@@ -14,6 +14,7 @@ public enum TokenType {
     COLON(":", 0),
     SEMICOLON(";", 0),
     COMMA(",", 0),
+    PERIOD(".", 0),
 
     /* Binary operators sorted by precedence. */
     /* IsBinaryOp() relies on this block of enum values */

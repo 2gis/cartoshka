@@ -9,7 +9,7 @@ public class ScannerTest {
     private static Scanner createTokenizer(final String str) {
         return new Scanner() {
             private final char[] source = str.toCharArray();
-            private final Stack<Character> stack = new Stack<Character>();
+            private final Stack<Character> stack = new Stack<>();
             private int position = -1;
 
             public Scanner init() {
@@ -77,7 +77,7 @@ public class ScannerTest {
 
     @Test
     public void testKeywords() {
-        Scanner scanner = createTokenizer("true false null Map zoom");
+        Scanner scanner = createTokenizer("true false Map zoom");
         Assert.assertEquals(TokenType.TRUE_LITERAL, scanner.next().getType());
         Assert.assertEquals(TokenType.FALSE_LITERAL, scanner.next().getType());
         Assert.assertEquals(TokenType.MAP_KEYWORD, scanner.next().getType());
@@ -135,7 +135,7 @@ public class ScannerTest {
 
     @Test
     public void testCharacters() {
-        Scanner scanner = createTokenizer("+-*/% >= <= > < =:;,");
+        Scanner scanner = createTokenizer("+-*/% >= <= > < =:;,. 1.2");
         Assert.assertEquals(TokenType.ADD, scanner.next().getType());
         Assert.assertEquals(TokenType.SUB, scanner.next().getType());
         Assert.assertEquals(TokenType.MUL, scanner.next().getType());
@@ -149,6 +149,9 @@ public class ScannerTest {
         Assert.assertEquals(TokenType.COLON, scanner.next().getType());
         Assert.assertEquals(TokenType.SEMICOLON, scanner.next().getType());
         Assert.assertEquals(TokenType.COMMA, scanner.next().getType());
+        Assert.assertEquals(TokenType.PERIOD, scanner.next().getType());
+        Assert.assertEquals(TokenType.NUMBER_LITERAL, scanner.next().getType());
+        Assert.assertEquals("1.2", scanner.current().getText());
 
         Assert.assertEquals(TokenType.EOS, scanner.next().getType());
     }

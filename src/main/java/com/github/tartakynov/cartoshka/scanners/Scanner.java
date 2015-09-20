@@ -168,6 +168,10 @@ public abstract class Scanner {
                     token = select(TokenType.COMMA);
                     break;
 
+                case '.':
+                    token = select(TokenType.PERIOD);
+                    break;
+
                 case '(':
                     token = select(TokenType.LPAREN);
                     break;
