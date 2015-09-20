@@ -47,6 +47,7 @@ public enum TokenType {
     TRUE_LITERAL("true", 0),
     FALSE_LITERAL("false", 0),
     URL(null, 0),
+    ATTACHMENT(null, 0),
 
     /* Keywords. */
     MAP_KEYWORD("Map", 0),

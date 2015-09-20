@@ -157,7 +157,12 @@ public abstract class Scanner {
                     break;
 
                 case ':':
-                    token = select(TokenType.COLON);
+                    advance();
+                    if (c0_ == ':') {
+                        token = scanAttachment();
+                    } else {
+                        token = TokenType.COLON;
+                    }
                     break;
 
                 case ';':
@@ -398,6 +403,32 @@ public abstract class Scanner {
         }
 
         return TokenType.URL;
+    }
+
+    private TokenType scanAttachment() {
+        expect(':');
+        advance(); // consume :
+        boolean hasLetters = false;
+        do {
+            if (c0_ == '/') {
+                if (!hasLetters) {
+                    return TokenType.ILLEGAL;
+                }
+
+                hasLetters = false;
+                literal.append(c0_);
+                advance();
+            }
+
+            while (Character.isLetter(c0_)) {
+                literal.append(c0_);
+                hasLetters = true;
+                if (!advance()) {
+                    break;
+                }
+            }
+        } while (c0_ == '/');
+        return hasLetters ? TokenType.ATTACHMENT : TokenType.ILLEGAL;
     }
 
     private TokenType scanHtmlComment() {

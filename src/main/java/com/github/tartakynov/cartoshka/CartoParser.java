@@ -217,8 +217,9 @@ public final class CartoParser extends CartoScanner {
     private Node parseRuleSet() {
         // selectors block
         Collection<Selector> selectors = parseSelectors();
-        Collection<Node> rules = parseBlock();
-        throw new NotImplementedException();
+        expect(TokenType.SEMICOLON);
+//        Collection<Node> rules = parseBlock();
+        return new Ruleset(selectors, new ArrayList<Node>());
     }
 
     private Collection<Node> parseBlock() {
@@ -230,17 +231,28 @@ public final class CartoParser extends CartoScanner {
 
     // Selectors are made out of one or more Elements, see above.
     private Collection<Selector> parseSelectors() {
-        throw new NotImplementedException();
+        Collection<Selector> selectors = new ArrayList<>();
+        while (true) {
+            selectors.add(parseSelector());
+            if (peek().getType() != TokenType.COMMA) {
+                break;
+            }
+
+            expect(TokenType.COMMA); // consume comma
+        }
+
+        return selectors;
     }
 
-    private Node parseSelector() {
+    private Selector parseSelector() {
         // (element | zoom | filter)+ attachment?
         boolean done = false;
         Collection<Element> elements = new ArrayList<>();
         Collection<Zoom> zooms = new ArrayList<>();
         Collection<Filter> filters = new ArrayList<>();
+        String attachment = null;
+        int segments = 0;
         while (!done) {
-
             switch (peek().getType()) {
                 case HASH:
                 case PERIOD:
@@ -258,39 +270,45 @@ public final class CartoParser extends CartoScanner {
                     filters.add(filter);
                     break;
 
-                case COLON:
-                    // attachment
+                case ATTACHMENT:
+                    if (attachment != null) {
+                        throw new UnexpectedTokenException(peek().getText(), peek().getStart());
+                    }
+
+                    attachment = next().getText();
                     break;
 
                 default:
+                    if (segments == 0) {
+                        throw new CartoshkaException(String.format("Selector without segments at %d", peek().getEnd()));
+                    }
+
                     done = true;
                     break;
             }
+
+            segments++;
         }
 
-        throw new NotImplementedException();
+        return new Selector(elements, filters, zooms, attachment);
     }
 
     // Elements are the building blocks for Selectors. They consist of
     // an element name, such as a tag a class, or `*`.
     private Element parseElement() {
         Token token = expect(TokenType.HASH, TokenType.PERIOD, TokenType.MUL, TokenType.MAP_KEYWORD);
-        Element.ElementType elementType = Element.ElementType.MAP;
         switch (token.getType()) {
             case HASH:
-                elementType = Element.ElementType.ID;
-                break;
+                return new Element(next().getText(), Element.ElementType.ID);
 
             case PERIOD:
-                elementType = Element.ElementType.CLASS;
-                break;
+                return new Element(next().getText(), Element.ElementType.CLASS);
 
             case MUL:
-                elementType = Element.ElementType.WILDCARD;
-                break;
+                return new Element("*", Element.ElementType.ID);
         }
 
-        return new Element(token.getText(), elementType);
+        return new Element(token.getText(), Element.ElementType.MAP);
     }
 
     private Filter parseZoomOrFilter() {

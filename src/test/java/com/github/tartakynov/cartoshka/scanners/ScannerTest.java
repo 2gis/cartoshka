@@ -190,6 +190,18 @@ public class ScannerTest {
     }
 
     @Test
+    public void testAttachment() {
+        Scanner scanner = createTokenizer("::a/b ::abcd");
+        Assert.assertEquals(TokenType.ATTACHMENT, scanner.next().getType());
+        Assert.assertEquals("a/b", scanner.current().getText());
+
+        Assert.assertEquals(TokenType.ATTACHMENT, scanner.next().getType());
+        Assert.assertEquals("abcd", scanner.current().getText());
+
+        Assert.assertEquals(TokenType.EOS, scanner.next().getType());
+    }
+
+    @Test
     public void testEmptySource() {
         Scanner scanner = createTokenizer("");
         Assert.assertEquals(TokenType.EOS, scanner.next().getType());
