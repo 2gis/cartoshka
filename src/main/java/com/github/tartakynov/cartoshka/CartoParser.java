@@ -32,7 +32,7 @@ public final class CartoParser extends CartoScanner {
     // The rules here can appear at any level of the parse tree.
     private Collection<Node> parsePrimary() {
         List<Node> root = new ArrayList<>();
-        while (peek().getType() != TokenType.EOS) {
+        while (peek().getType() != TokenType.EOS && peek().getType() != TokenType.RBRACE) {
             switch (peek().getType()) {
                 case VARIABLE:
                 case IDENTIFIER:
@@ -217,9 +217,8 @@ public final class CartoParser extends CartoScanner {
     private Node parseRuleSet() {
         // selectors block
         Collection<Selector> selectors = parseSelectors();
-        expect(TokenType.SEMICOLON);
-//        Collection<Node> rules = parseBlock();
-        return new Ruleset(selectors, new ArrayList<Node>());
+        Collection<Node> rules = parseBlock();
+        return new Ruleset(selectors, rules);
     }
 
     private Collection<Node> parseBlock() {
