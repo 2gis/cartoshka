@@ -230,10 +230,36 @@ public final class CartoParser extends CartoScanner {
     }
 
     private Node parseSelector() {
-        // element
-        // zoom
-        // filter
-        // attachment
+        // (element | zoom | filter)+ attachment?
+        boolean done = false;
+        while (!done) {
+            switch (peek().getType()) {
+                case HASH:
+                case PERIOD:
+                case MUL:
+                case MAP_KEYWORD:
+                    // element
+                    break;
+
+                case LBRACK:
+                    expect(TokenType.LBRACK);
+                    if (peek().getType() == TokenType.ZOOM_KEYWORD) {
+                        // zoom
+                    }
+
+                    // filter
+                    break;
+
+                case COLON:
+                    // attachment
+                    break;
+
+                default:
+                    done = true;
+                    break;
+            }
+        }
+
         throw new NotImplementedException();
     }
 
