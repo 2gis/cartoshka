@@ -5,8 +5,9 @@ import com.github.tartakynov.cartoshka.exceptions.UnexpectedTokenException;
 import com.github.tartakynov.cartoshka.scanners.Token;
 import com.github.tartakynov.cartoshka.scanners.TokenType;
 import com.github.tartakynov.cartoshka.tree.Node;
+import com.github.tartakynov.cartoshka.tree.Rule;
+import com.github.tartakynov.cartoshka.tree.Selector;
 import com.github.tartakynov.cartoshka.tree.Value;
-import com.github.tartakynov.cartoshka.tree.VariableDeclaration;
 import com.github.tartakynov.cartoshka.tree.entities.*;
 import com.github.tartakynov.cartoshka.tree.entities.Boolean;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
@@ -37,7 +38,8 @@ public final class CartoParser extends CartoScanner {
         while (peek().getType() != TokenType.EOS) {
             switch (peek().getType()) {
                 case VARIABLE:
-                    root.add(parseVariable());
+                case IDENTIFIER:
+                    root.add(parseRule());
                     break;
                 default:
                     root.add(parseRuleSet());
@@ -47,15 +49,12 @@ public final class CartoParser extends CartoScanner {
         return root;
     }
 
-    // The variable part of a variable definition.
-    // Used in the `rule` parser. Like @fink:
-    private VariableDeclaration parseVariable() {
-        Token name = expect(TokenType.VARIABLE);
+    private Rule parseRule() {
+        Token token = expect(TokenType.VARIABLE, TokenType.IDENTIFIER);
         expect(TokenType.COLON);
         Value value = parseValue();
         expect(TokenType.SEMICOLON);
-
-        return new VariableDeclaration(name.getText(), value);
+        return new Rule(token.getText(), value, token.getType() == TokenType.VARIABLE);
     }
 
     // A Value is a comma-delimited list of Expressions
@@ -69,7 +68,7 @@ public final class CartoParser extends CartoScanner {
                 break;
             }
 
-            next(); // consume comma
+            expect(TokenType.COMMA); // consume comma
         }
 
         return new Value(expressions);
@@ -114,22 +113,30 @@ public final class CartoParser extends CartoScanner {
         switch (peek().getType()) {
             case NUMBER_LITERAL:
                 return new Literal(Double.valueOf(next().getText()));
+
             case STRING_LITERAL:
                 return new Quoted(next().getText());
+
             case TRUE_LITERAL:
                 next();
                 return new Boolean(true);
+
             case FALSE_LITERAL:
                 next();
                 return new Boolean(false);
+
             case VARIABLE:
                 return new Variable(next().getText());
+
             case DIMENSION_LITERAL:
                 return parseDimension();
+
             case HASH:
                 return parseHexColor();
+
             case URL:
                 return new Url(next().getText());
+
             case IDENTIFIER:
                 Token identifier = next();
                 if (peek().getType() == TokenType.LPAREN) {
@@ -139,9 +146,10 @@ public final class CartoParser extends CartoScanner {
                 }
 
                 return new Keyword(identifier.getText());
-        }
 
-        throw new CartoshkaException(String.format("Unhandled expression %s at %d", peek().getText(), peek().getStart()));
+            default:
+                throw new CartoshkaException(String.format("Unhandled expression %s at %d", peek().getText(), peek().getStart()));
+        }
     }
 
     private Dimension parseDimension() {
@@ -203,11 +211,21 @@ public final class CartoParser extends CartoScanner {
     }
 
     private Node parseRuleSet() {
+        // selectors block
+        Collection<Selector> selectors = parseSelectors();
+        Collection<Node> rules = parseBlock();
         throw new NotImplementedException();
     }
 
+    private Collection<Node> parseBlock() {
+        expect(TokenType.LBRACE);
+        Collection<Node> rules = parsePrimary();
+        expect(TokenType.RBRACE);
+        return rules;
+    }
+
     // Selectors are made out of one or more Elements, see above.
-    private Collection<Node> parseSelectors() {
+    private Collection<Selector> parseSelectors() {
         throw new NotImplementedException();
     }
 
@@ -247,16 +265,6 @@ public final class CartoParser extends CartoScanner {
         throw new NotImplementedException();
     }
 
-    // The `block` rule is used by `ruleset`
-    // It's a wrapper around the `primary` rule, with added `{}`.
-    private Node parseBlock() {
-        throw new NotImplementedException();
-    }
-
-    private Node parseRule() {
-        throw new NotImplementedException();
-    }
-
     private Node parseFont() {
         throw new NotImplementedException();
     }
@@ -265,13 +273,15 @@ public final class CartoParser extends CartoScanner {
         throw new NotImplementedException();
     }
 
-    protected Token expect(TokenType type) {
+    protected Token expect(TokenType... types) {
         Token token = next();
-        if (token.getType() != type) {
-            throw new UnexpectedTokenException(type.name(), token.getType().name(), token.getStart());
+        for (TokenType type : types) {
+            if (token.getType() == type) {
+                return token;
+            }
         }
 
-        return token;
+        throw new UnexpectedTokenException(token.getType().name(), token.getStart());
     }
 }
 
