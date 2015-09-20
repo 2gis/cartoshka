@@ -271,9 +271,10 @@ public final class CartoParser extends CartoScanner {
                     Filter filter = parseZoomOrFilter();
                     if (filter instanceof Zoom) {
                         zooms.add((Zoom) filter);
+                    } else {
+                        filters.add(filter);
                     }
 
-                    filters.add(filter);
                     break;
 
                 case ATTACHMENT:
@@ -319,40 +320,23 @@ public final class CartoParser extends CartoScanner {
 
     private Filter parseZoomOrFilter() {
         expect(TokenType.LBRACK);
-        CompareOperation cmp = parseComparison();
-        expect(TokenType.RBRACK);
-        if (cmp.getLeft() instanceof Keyword) {
-            Keyword keyword = (Keyword) cmp.getLeft();
-            if (keyword.getValue().equals(TokenType.ZOOM_KEYWORD.getStr())) {
-                return new Zoom(cmp);
-            }
-        }
-
-        return new Filter(cmp);
-    }
-
-    private CompareOperation parseComparison() {
         Expression left = parsePrimaryExpression();
-        if (left instanceof Quoted) {
+        Token op = expect(TokenType.EQ, TokenType.NE, TokenType.LT, TokenType.GT, TokenType.LTE, TokenType.GTE);
+        Expression right = parseExpression();
+        expect(TokenType.RBRACK);
+        if (left instanceof Keyword) {
+            Keyword keyword = (Keyword) left;
+            if (keyword.getValue().equals(TokenType.ZOOM_KEYWORD.getStr())) {
+                return new Zoom(op.getType(), left, right);
+            }
+        } else if (left instanceof Quoted) {
             left = new Field(((Quoted) left).getValue());
         }
 
-        Token op = expect(TokenType.EQ, TokenType.NE, TokenType.LT, TokenType.GT, TokenType.LTE, TokenType.GTE);
-        Expression right = parseExpression();
-        return new CompareOperation(op.getType(), left, right);
-    }
-
-    // Attachments allow adding multiple lines, polygons etc. to an
-    // object. There can only be one attachment per selector.
-    private Node parseAttachment() {
-        throw new NotImplementedException();
+        return new Filter(op.getType(), left, right);
     }
 
     private Node parseFont() {
-        throw new NotImplementedException();
-    }
-
-    private Node parseProperty() {
         throw new NotImplementedException();
     }
 
