@@ -135,9 +135,16 @@ public final class CartoParser extends CartoScanner {
                 return new Url(next().getText());
 
             case LBRACK:
+                expect(TokenType.LBRACK);
                 Token field = next();
                 expect(TokenType.RBRACK);
                 return new Field(field.getText());
+
+            case LPAREN:
+                expect(TokenType.LPAREN);
+                Expression expression = parseExpression();
+                expect(TokenType.RPAREN);
+                return expression;
 
             case MAP_KEYWORD:
             case ZOOM_KEYWORD:
@@ -171,8 +178,7 @@ public final class CartoParser extends CartoScanner {
     }
 
     private Color parseHexColor() {
-        expect(TokenType.HASH);
-        Token token = next();
+        Token token = expect(TokenType.HASH);
         String text = token.getText();
         try {
             if (text.length() == 3) {
@@ -180,13 +186,14 @@ public final class CartoParser extends CartoScanner {
                 int g = Integer.parseInt(text.substring(1, 2) + text.substring(1, 2), 16);
                 int b = Integer.parseInt(text.substring(2, 3) + text.substring(2, 3), 16);
                 return new Color(r, g, b);
-            } else if (text.length() == 7) {
+            } else if (text.length() == 6) {
                 int r = Integer.parseInt(text.substring(0, 2), 16);
                 int g = Integer.parseInt(text.substring(2, 4), 16);
                 int b = Integer.parseInt(text.substring(4, 6), 16);
                 return new Color(r, g, b);
             }
         } catch (NumberFormatException ex) {
+            ex.printStackTrace();
             // do nothing
         }
 
@@ -298,7 +305,7 @@ public final class CartoParser extends CartoScanner {
         Token token = expect(TokenType.HASH, TokenType.PERIOD, TokenType.MUL, TokenType.MAP_KEYWORD);
         switch (token.getType()) {
             case HASH:
-                return new Element(next().getText(), Element.ElementType.ID);
+                return new Element(token.getText(), Element.ElementType.ID);
 
             case PERIOD:
                 return new Element(next().getText(), Element.ElementType.CLASS);

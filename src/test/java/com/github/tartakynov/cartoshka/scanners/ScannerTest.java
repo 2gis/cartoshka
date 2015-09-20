@@ -87,23 +87,34 @@ public class ScannerTest {
     }
 
     @Test
-    public void testHashes() {
-        Scanner scanner = createTokenizer("#first-1 #second-2 #012 #012345");
-        Assert.assertEquals(TokenType.HASH, scanner.next().getType());
+    public void testIdentifiers() {
+        Scanner scanner = createTokenizer("a/b /b");
         Assert.assertEquals(TokenType.IDENTIFIER, scanner.next().getType());
+        Assert.assertEquals("a/b", scanner.current().getText());
+        Assert.assertEquals(TokenType.DIV, scanner.next().getType());
+        Assert.assertEquals(TokenType.IDENTIFIER, scanner.next().getType());
+        Assert.assertEquals("b", scanner.current().getText());
+
+        Assert.assertEquals(TokenType.EOS, scanner.next().getType());
+    }
+
+    @Test
+    public void testHashes() {
+        Scanner scanner = createTokenizer("#first-1 #second-2 #012 #012345 #707d05");
+        Assert.assertEquals(TokenType.HASH, scanner.next().getType());
         Assert.assertEquals("first-1", scanner.current().getText());
 
         Assert.assertEquals(TokenType.HASH, scanner.next().getType());
-        Assert.assertEquals(TokenType.IDENTIFIER, scanner.next().getType());
         Assert.assertEquals("second-2", scanner.current().getText());
 
         Assert.assertEquals(TokenType.HASH, scanner.next().getType());
-        Assert.assertEquals(TokenType.NUMBER_LITERAL, scanner.next().getType());
         Assert.assertEquals("012", scanner.current().getText());
 
         Assert.assertEquals(TokenType.HASH, scanner.next().getType());
-        Assert.assertEquals(TokenType.NUMBER_LITERAL, scanner.next().getType());
         Assert.assertEquals("012345", scanner.current().getText());
+
+        Assert.assertEquals(TokenType.HASH, scanner.next().getType());
+        Assert.assertEquals("707d05", scanner.current().getText());
 
         Assert.assertEquals(TokenType.EOS, scanner.next().getType());
     }
@@ -135,7 +146,7 @@ public class ScannerTest {
 
     @Test
     public void testCharacters() {
-        Scanner scanner = createTokenizer("+-*/% >= <= > < =:;,. 1.2");
+        Scanner scanner = createTokenizer("+-*/% >= <= > < != =:;,. 1.2");
         Assert.assertEquals(TokenType.ADD, scanner.next().getType());
         Assert.assertEquals(TokenType.SUB, scanner.next().getType());
         Assert.assertEquals(TokenType.MUL, scanner.next().getType());
@@ -145,6 +156,7 @@ public class ScannerTest {
         Assert.assertEquals(TokenType.LTE, scanner.next().getType());
         Assert.assertEquals(TokenType.GT, scanner.next().getType());
         Assert.assertEquals(TokenType.LT, scanner.next().getType());
+        Assert.assertEquals(TokenType.NE, scanner.next().getType());
         Assert.assertEquals(TokenType.EQ, scanner.next().getType());
         Assert.assertEquals(TokenType.COLON, scanner.next().getType());
         Assert.assertEquals(TokenType.SEMICOLON, scanner.next().getType());
@@ -191,12 +203,15 @@ public class ScannerTest {
 
     @Test
     public void testAttachment() {
-        Scanner scanner = createTokenizer("::a/b ::abcd");
+        Scanner scanner = createTokenizer("::a/b ::abcd ::-a/b");
         Assert.assertEquals(TokenType.ATTACHMENT, scanner.next().getType());
         Assert.assertEquals("a/b", scanner.current().getText());
 
         Assert.assertEquals(TokenType.ATTACHMENT, scanner.next().getType());
         Assert.assertEquals("abcd", scanner.current().getText());
+
+        Assert.assertEquals(TokenType.ATTACHMENT, scanner.next().getType());
+        Assert.assertEquals("-a/b", scanner.current().getText());
 
         Assert.assertEquals(TokenType.EOS, scanner.next().getType());
     }

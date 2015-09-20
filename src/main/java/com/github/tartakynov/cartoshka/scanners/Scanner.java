@@ -124,6 +124,15 @@ public abstract class Scanner {
                     token = select(TokenType.EQ);
                     break;
 
+                case '!':
+                    advance();
+                    if (c0_ == '=') {
+                        token = select(TokenType.NE);
+                    } else {
+                        token = TokenType.ILLEGAL;
+                    }
+                    break;
+
                 case '+':
                     // +
                     token = select(TokenType.ADD);
@@ -202,7 +211,7 @@ public abstract class Scanner {
                     break;
 
                 case '#':
-                    token = select(TokenType.HASH);
+                    token = scanHash();
                     break;
 
                 case '@':
@@ -378,9 +387,24 @@ public abstract class Scanner {
         return TokenType.ILLEGAL;
     }
 
+    private TokenType scanHash() {
+        expect('#');
+        advance(); // consume #
+        if (Character.isJavaIdentifierPart(c0_)) {
+            literal.append(c0_);
+            while (advance() && (Character.isJavaIdentifierPart(c0_) || c0_ == '-')) {
+                literal.append(c0_);
+            }
+
+            return TokenType.HASH;
+        }
+
+        return TokenType.ILLEGAL;
+    }
+
     private TokenType scanIdentifierOrKeyword() {
         literal.append(c0_);
-        while (advance() && (Character.isJavaIdentifierPart(c0_) || c0_ == '-')) {
+        while (advance() && (Character.isJavaIdentifierPart(c0_) || c0_ == '-' || c0_ == '/')) {
             literal.append(c0_);
         }
 
@@ -420,7 +444,7 @@ public abstract class Scanner {
                 advance();
             }
 
-            while (Character.isLetter(c0_)) {
+            while (Character.isLetter(c0_) || c0_ == '_' || c0_ == '-') {
                 literal.append(c0_);
                 hasLetters = true;
                 if (!advance()) {
