@@ -42,12 +42,6 @@ public class ScannerTest {
             protected boolean isEOS() {
                 return position >= source.length;
             }
-
-            @Override
-            protected void push(char c) {
-                stack.push(c);
-                position--;
-            }
         }.init();
     }
 

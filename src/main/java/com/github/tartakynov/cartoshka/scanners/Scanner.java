@@ -67,8 +67,6 @@ public abstract class Scanner {
 
     protected abstract boolean isEOS();
 
-    protected abstract void push(char c);
-
     protected void scan() {
         int posStart;
         int posEnd;
