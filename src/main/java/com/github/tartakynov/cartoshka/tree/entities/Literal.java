@@ -6,4 +6,9 @@ public class Literal extends Expression {
     public Literal(Number value) {
         this.value = value;
     }
+
+    @Override
+    public Expression ev() {
+        return this;
+    }
 }

@@ -10,4 +10,9 @@ public class Keyword extends Expression {
     public String getValue() {
         return value;
     }
+
+    @Override
+    public Expression ev() {
+        return this;
+    }
 }

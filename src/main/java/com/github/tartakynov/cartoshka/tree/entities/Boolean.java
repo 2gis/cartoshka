@@ -6,4 +6,9 @@ public class Boolean extends Expression {
     public Boolean(boolean value) {
         this.value = value;
     }
+
+    @Override
+    public Expression ev() {
+        return this;
+    }
 }

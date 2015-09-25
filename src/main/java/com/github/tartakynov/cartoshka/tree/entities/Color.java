@@ -16,4 +16,9 @@ public class Color extends Expression {
         this.b = b;
         this.a = a;
     }
+
+    @Override
+    public Expression ev() {
+        return this;
+    }
 }

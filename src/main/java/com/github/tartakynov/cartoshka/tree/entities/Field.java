@@ -6,4 +6,9 @@ public class Field extends Expression {
     public Field(String value) {
         this.value = value;
     }
+
+    @Override
+    public Expression ev() {
+        return this;
+    }
 }

@@ -1,5 +1,7 @@
 package com.github.tartakynov.cartoshka.tree.entities;
 
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+
 public class Dimension extends Expression {
     private final Number value;
 
@@ -8,5 +10,10 @@ public class Dimension extends Expression {
     public Dimension(Number value, String unit) {
         this.value = value;
         this.unit = unit;
+    }
+
+    @Override
+    public Expression ev() {
+        throw new NotImplementedException();
     }
 }

@@ -1,5 +1,7 @@
 package com.github.tartakynov.cartoshka.tree.entities;
 
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+
 import java.util.Collection;
 
 public class Call extends Expression {
@@ -9,5 +11,10 @@ public class Call extends Expression {
     public Call(String function, Collection<Expression> args) {
         this.function = function;
         this.args = args;
+    }
+
+    @Override
+    public Expression ev() {
+        throw new NotImplementedException();
     }
 }
