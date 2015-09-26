@@ -10,9 +10,7 @@ public abstract class Literal extends Expression {
     }
 
     public Literal operate(TokenType operator, Literal operand) {
-        String leftType = this.getClass().getSimpleName().toLowerCase();
-        String rightType = operand.getClass().getSimpleName().toLowerCase();
-        throw new OperationException(String.format("Operator [%s] cannot be applied to %s and %s", operator.getStr(), leftType, rightType));
+        throw new OperationException(String.format("Operator [%s] cannot be applied to given operands", operator.getStr()));
     }
 
     public Literal operate(TokenType operator) {
