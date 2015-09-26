@@ -15,7 +15,7 @@ public class Field extends Literal {
     }
 
     @Override
-    public String asString() {
+    public String toString() {
         return value;
     }
 }

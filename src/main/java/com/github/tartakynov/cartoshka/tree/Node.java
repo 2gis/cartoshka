@@ -1,4 +1,4 @@
 package com.github.tartakynov.cartoshka.tree;
 
-public class Node {
+public abstract class Node {
 }

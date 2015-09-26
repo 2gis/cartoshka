@@ -48,13 +48,12 @@ public abstract class Literal extends Expression {
         return false;
     }
 
-    public Double asNumber() {
+    public Double toNumber() {
         return null;
     }
 
-    public String asString() {
-        return null;
-    }
+    @Override
+    public abstract String toString();
 
     public boolean isURL() {
         return false;

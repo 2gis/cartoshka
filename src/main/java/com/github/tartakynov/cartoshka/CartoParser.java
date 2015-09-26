@@ -328,11 +328,11 @@ public final class CartoParser extends CartoScanner {
         if (left instanceof Literal) {
             Literal literal = (Literal) left;
             if (literal.isKeyword()) {
-                if (literal.asString().equals(TokenType.ZOOM_KEYWORD.getStr())) {
+                if (literal.toString().equals(TokenType.ZOOM_KEYWORD.getStr())) {
                     return new Zoom(op.getType(), left, right);
                 }
             } else if (literal.isQuoted()) {
-                left = new Field(literal.asString());
+                left = new Field(literal.toString());
             }
         }
 

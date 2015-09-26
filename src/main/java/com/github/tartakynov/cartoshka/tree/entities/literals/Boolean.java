@@ -13,4 +13,9 @@ public class Boolean extends Literal {
     public boolean isBoolean() {
         return true;
     }
+
+    @Override
+    public String toString() {
+        return this.value ? "true" : "false";
+    }
 }

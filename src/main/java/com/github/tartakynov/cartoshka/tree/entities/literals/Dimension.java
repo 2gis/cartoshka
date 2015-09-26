@@ -27,7 +27,45 @@ public class Dimension extends Literal {
     }
 
     @Override
+    public Literal operate(TokenType operator, Literal operand) {
+        if (operand.isDimension() || operand.isNumeric()) {
+            Double left = this.getValue();
+            Double right = null;
+            if (operand.isDimension()) {
+                Dimension dimension = (Dimension) operand;
+                if (unit.equals(dimension.getUnit())) {
+                    right = dimension.getValue();
+                }
+            } else {
+                right = operand.toNumber();
+            }
+
+            if (right != null) {
+                switch (operator) {
+                    case ADD:
+                        return new Dimension(left + right, unit);
+                    case SUB:
+                        return new Dimension(left - right, unit);
+                    case MUL:
+                        return new Dimension(left * right, unit);
+                    case DIV:
+                        return new Dimension(left / right, unit);
+                    case MOD:
+                        return new Dimension(left % right, unit);
+                }
+            }
+        }
+
+        return super.operate(operator, operand);
+    }
+
+    @Override
     public boolean isDimension() {
         return true;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%s%s", Double.toString(value), unit);
     }
 }

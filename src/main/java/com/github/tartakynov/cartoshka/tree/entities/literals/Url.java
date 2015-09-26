@@ -15,7 +15,7 @@ public class Url extends Literal {
     }
 
     @Override
-    public String asString() {
+    public String toString() {
         return value;
     }
 }

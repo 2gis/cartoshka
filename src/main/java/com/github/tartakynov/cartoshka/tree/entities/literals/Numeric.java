@@ -22,7 +22,18 @@ public class Numeric extends Literal {
     @Override
     public Literal operate(TokenType operator, Literal operand) {
         if (operand.isNumeric()) {
-            return new Numeric(value + operand.asNumber());
+            switch (operator) {
+                case ADD:
+                    return new Numeric(value + operand.toNumber());
+                case SUB:
+                    return new Numeric(value - operand.toNumber());
+                case MUL:
+                    return new Numeric(value * operand.toNumber());
+                case DIV:
+                    return new Numeric(value / operand.toNumber());
+                case MOD:
+                    return new Numeric(value % operand.toNumber());
+            }
         }
 
         return super.operate(operator, operand);
@@ -34,7 +45,12 @@ public class Numeric extends Literal {
     }
 
     @Override
-    public Double asNumber() {
+    public Double toNumber() {
         return value;
+    }
+
+    @Override
+    public String toString() {
+        return Double.toString(value);
     }
 }
