@@ -1,7 +1,6 @@
 package com.github.tartakynov.cartoshka.tree.entities;
 
 import com.github.tartakynov.cartoshka.scanners.TokenType;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 public class BinaryOperation extends Expression {
     private final TokenType operator;
@@ -17,23 +16,7 @@ public class BinaryOperation extends Expression {
     }
 
     @Override
-    public Expression ev() {
-        Expression leftOp = left.ev();
-        Expression rightOp = right.ev();
-
-        switch (operator) {
-            case ADD:
-                break;
-            case SUB:
-                break;
-            case MUL:
-                break;
-            case DIV:
-                break;
-            case MOD:
-                break;
-        }
-
-        throw new NotImplementedException();
+    public Literal ev() {
+        return left.ev().operate(operator, right.ev());
     }
 }

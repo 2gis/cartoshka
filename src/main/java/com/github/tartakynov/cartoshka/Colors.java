@@ -1,6 +1,6 @@
 package com.github.tartakynov.cartoshka;
 
-import com.github.tartakynov.cartoshka.tree.entities.Color;
+import com.github.tartakynov.cartoshka.tree.entities.literals.Color;
 
 import java.util.HashMap;
 import java.util.Map;

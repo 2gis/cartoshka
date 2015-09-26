@@ -6,7 +6,8 @@ import com.github.tartakynov.cartoshka.scanners.Token;
 import com.github.tartakynov.cartoshka.scanners.TokenType;
 import com.github.tartakynov.cartoshka.tree.*;
 import com.github.tartakynov.cartoshka.tree.entities.*;
-import com.github.tartakynov.cartoshka.tree.entities.Boolean;
+import com.github.tartakynov.cartoshka.tree.entities.literals.Boolean;
+import com.github.tartakynov.cartoshka.tree.entities.literals.*;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.io.Reader;
@@ -109,7 +110,7 @@ public final class CartoParser extends CartoScanner {
     private Expression parsePrimaryExpression() {
         switch (peek().getType()) {
             case NUMBER_LITERAL:
-                return new Literal(Double.valueOf(next().getText()));
+                return new Numeric(Double.valueOf(next().getText()));
 
             case STRING_LITERAL:
                 return new Quoted(next().getText());

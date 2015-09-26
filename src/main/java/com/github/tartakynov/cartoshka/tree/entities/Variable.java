@@ -10,7 +10,7 @@ public class Variable extends Expression {
     }
 
     @Override
-    public Expression ev() {
+    public Literal ev() {
         throw new NotImplementedException();
     }
 }

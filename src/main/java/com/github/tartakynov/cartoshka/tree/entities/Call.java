@@ -14,7 +14,7 @@ public class Call extends Expression {
     }
 
     @Override
-    public Expression ev() {
+    public Literal ev() {
         throw new NotImplementedException();
     }
 }
