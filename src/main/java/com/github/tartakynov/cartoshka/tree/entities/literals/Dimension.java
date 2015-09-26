@@ -65,6 +65,15 @@ public class Dimension extends Literal {
     }
 
     @Override
+    public Double toNumber() {
+        if (unit.equals("%")) {
+            return value / 100.0;
+        }
+
+        return super.toNumber();
+    }
+
+    @Override
     public String toString() {
         return String.format("%s%s", Double.toString(value), unit);
     }
