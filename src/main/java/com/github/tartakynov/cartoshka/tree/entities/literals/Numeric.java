@@ -15,11 +15,6 @@ public class Numeric extends Literal {
     }
 
     @Override
-    public Literal operate(TokenType operator, Literal operand) {
-        return null;
-    }
-
-    @Override
     public Literal operate(TokenType operator) {
         return new Numeric(-value);
     }
@@ -28,6 +23,4 @@ public class Numeric extends Literal {
     public boolean isNumeric() {
         return true;
     }
-
-
 }

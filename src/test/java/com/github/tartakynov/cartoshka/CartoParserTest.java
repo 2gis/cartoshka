@@ -12,7 +12,7 @@ public class CartoParserTest {
     @Test
     public void test() {
         ClassLoader loader = getClass().getClassLoader();
-        Collection<Node> x = CartoParser.parse(new StringReader("@X: -xa;"));//new InputStreamReader(loader.getResourceAsStream("roads.mss")));
+        Collection<Node> x = CartoParser.parse(new StringReader("@X: xa + true;"));//new InputStreamReader(loader.getResourceAsStream("roads.mss")));
         Collection<Expression> expressions = ((Rule) (x.iterator().next())).getValue().getExpressions();
         expressions.iterator().next().ev();
         x.toArray();

@@ -22,11 +22,6 @@ public class Dimension extends Literal {
     }
 
     @Override
-    public Literal operate(TokenType operator, Literal operand) {
-        return null;
-    }
-
-    @Override
     public Literal operate(TokenType operator) {
         return new Dimension(-value, unit);
     }
@@ -35,6 +30,4 @@ public class Dimension extends Literal {
     public boolean isDimension() {
         return true;
     }
-
-
 }

@@ -1,6 +1,5 @@
 package com.github.tartakynov.cartoshka.tree.entities.literals;
 
-import com.github.tartakynov.cartoshka.scanners.TokenType;
 import com.github.tartakynov.cartoshka.tree.entities.Literal;
 
 public class Color extends Literal {
@@ -21,14 +20,7 @@ public class Color extends Literal {
     }
 
     @Override
-    public Literal operate(TokenType operator, Literal operand) {
-        return null;
-    }
-
-    @Override
     public boolean isColor() {
         return true;
     }
-
-
 }

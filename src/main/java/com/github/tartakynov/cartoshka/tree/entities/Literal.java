@@ -9,11 +9,15 @@ public abstract class Literal extends Expression {
         return this;
     }
 
-    public abstract Literal operate(TokenType operator, Literal operand);
+    public Literal operate(TokenType operator, Literal operand) {
+        String leftType = this.getClass().getSimpleName().toLowerCase();
+        String rightType = operand.getClass().getSimpleName().toLowerCase();
+        throw new OperationException(String.format("Operator [%s] cannot be applied to %s and %s", operator.getStr(), leftType, rightType));
+    }
 
     public Literal operate(TokenType operator) {
         String operandType = this.getClass().getSimpleName().toLowerCase();
-        throw new OperationException("Operator [-] cannot be applied to " + operandType);
+        throw new OperationException(String.format("Operator [%s] cannot be applied to %s", operator.getStr(), operandType));
     }
 
     public boolean isBoolean() {

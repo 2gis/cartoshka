@@ -1,6 +1,5 @@
 package com.github.tartakynov.cartoshka.tree.entities.literals;
 
-import com.github.tartakynov.cartoshka.scanners.TokenType;
 import com.github.tartakynov.cartoshka.tree.entities.Literal;
 
 public class Keyword extends Literal {
@@ -12,11 +11,6 @@ public class Keyword extends Literal {
 
     public String getValue() {
         return value;
-    }
-
-    @Override
-    public Literal operate(TokenType operator, Literal operand) {
-        return null;
     }
 
     @Override
