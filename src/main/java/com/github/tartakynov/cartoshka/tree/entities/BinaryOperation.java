@@ -17,6 +17,14 @@ public class BinaryOperation extends Expression {
 
     @Override
     public Literal ev() {
-        return left.ev().operate(operator, right.ev());
+        Literal leftOp = left.ev();
+        Literal rightOp = right.ev();
+        if (!leftOp.isColor() && rightOp.isColor()) {
+            Literal tmp = leftOp;
+            leftOp = rightOp;
+            rightOp = tmp;
+        }
+
+        return leftOp.operate(operator, rightOp);
     }
 }
