@@ -6,7 +6,8 @@ import com.github.tartakynov.cartoshka.scanners.Token;
 import com.github.tartakynov.cartoshka.scanners.TokenType;
 import com.github.tartakynov.cartoshka.tree.*;
 import com.github.tartakynov.cartoshka.tree.entities.*;
-import com.github.tartakynov.cartoshka.tree.entities.Boolean;
+import com.github.tartakynov.cartoshka.tree.entities.literals.Boolean;
+import com.github.tartakynov.cartoshka.tree.entities.literals.*;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.io.Reader;
@@ -109,7 +110,7 @@ public final class CartoParser extends CartoScanner {
     private Expression parsePrimaryExpression() {
         switch (peek().getType()) {
             case NUMBER_LITERAL:
-                return new Literal(Double.valueOf(next().getText()));
+                return new Numeric(Double.valueOf(next().getText()));
 
             case STRING_LITERAL:
                 return new Quoted(next().getText());
@@ -324,13 +325,15 @@ public final class CartoParser extends CartoScanner {
         Token op = expect(TokenType.EQ, TokenType.NE, TokenType.LT, TokenType.GT, TokenType.LTE, TokenType.GTE);
         Expression right = parseExpression();
         expect(TokenType.RBRACK);
-        if (left instanceof Keyword) {
-            Keyword keyword = (Keyword) left;
-            if (keyword.getValue().equals(TokenType.ZOOM_KEYWORD.getStr())) {
-                return new Zoom(op.getType(), left, right);
+        if (left instanceof Literal) {
+            Literal literal = (Literal) left;
+            if (literal.isKeyword()) {
+                if (literal.toString().equals(TokenType.ZOOM_KEYWORD.getStr())) {
+                    return new Zoom(op.getType(), left, right);
+                }
+            } else if (literal.isQuoted()) {
+                left = new Field(literal.toString());
             }
-        } else if (left instanceof Quoted) {
-            left = new Field(((Quoted) left).getValue());
         }
 
         return new Filter(op.getType(), left, right);

@@ -3,7 +3,7 @@ package com.github.tartakynov.cartoshka.tree;
 import com.github.tartakynov.cartoshka.scanners.TokenType;
 import com.github.tartakynov.cartoshka.tree.entities.Expression;
 
-public class Filter {
+public class Filter extends Node {
     private final TokenType operator;
 
     private final Expression left;

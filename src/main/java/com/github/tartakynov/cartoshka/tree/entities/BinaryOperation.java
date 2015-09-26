@@ -1,7 +1,6 @@
 package com.github.tartakynov.cartoshka.tree.entities;
 
 import com.github.tartakynov.cartoshka.scanners.TokenType;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 public class BinaryOperation extends Expression {
     private final TokenType operator;
@@ -17,7 +16,15 @@ public class BinaryOperation extends Expression {
     }
 
     @Override
-    public Expression ev() {
-        throw new NotImplementedException();
+    public Literal ev() {
+        Literal leftOp = left.ev();
+        Literal rightOp = right.ev();
+        if ((!leftOp.isColor() && rightOp.isColor()) || (leftOp.isNumeric() && rightOp.isDimension())) {
+            Literal tmp = leftOp;
+            leftOp = rightOp;
+            rightOp = tmp;
+        }
+
+        return leftOp.operate(operator, rightOp);
     }
 }

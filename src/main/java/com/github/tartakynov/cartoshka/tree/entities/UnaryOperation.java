@@ -1,7 +1,6 @@
 package com.github.tartakynov.cartoshka.tree.entities;
 
 import com.github.tartakynov.cartoshka.scanners.TokenType;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 public class UnaryOperation extends Expression {
     private final TokenType operator;
@@ -14,7 +13,7 @@ public class UnaryOperation extends Expression {
     }
 
     @Override
-    public Expression ev() {
-        throw new NotImplementedException();
+    public Literal ev() {
+        return expression.ev().operate(operator);
     }
 }
