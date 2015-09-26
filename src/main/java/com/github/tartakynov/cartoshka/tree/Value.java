@@ -10,4 +10,8 @@ public class Value extends Node {
     public Value(Collection<Expression> expressions) {
         this.expressions = expressions;
     }
+
+    public Collection<Expression> getExpressions() {
+        return expressions;
+    }
 }

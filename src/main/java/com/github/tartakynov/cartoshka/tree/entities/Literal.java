@@ -11,4 +11,8 @@ public class Literal extends Expression {
     public Expression ev() {
         return this;
     }
+
+    public Number getValue() {
+        return value;
+    }
 }

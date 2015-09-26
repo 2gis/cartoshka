@@ -10,4 +10,16 @@ public class Rule extends Node {
         this.value = value;
         this.isVariable = isVariable;
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public Value getValue() {
+        return value;
+    }
+
+    public boolean isVariable() {
+        return isVariable;
+    }
 }

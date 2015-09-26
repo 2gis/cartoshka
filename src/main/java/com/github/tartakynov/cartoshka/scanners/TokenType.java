@@ -36,8 +36,6 @@ public enum TokenType {
     GTE(">=", 10),
 
     /* Unary operators. */
-    /* IsUnaryOp() relies on this block of enum values */
-    /* being contiguous and sorted in the same order! */
     FACTORIAL("!", 0),
 
     /* Literals. */

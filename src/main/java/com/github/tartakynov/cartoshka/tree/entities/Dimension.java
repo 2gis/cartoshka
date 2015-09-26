@@ -16,4 +16,12 @@ public class Dimension extends Expression {
     public Expression ev() {
         throw new NotImplementedException();
     }
+
+    public Number getValue() {
+        return value;
+    }
+
+    public String getUnit() {
+        return unit;
+    }
 }

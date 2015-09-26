@@ -18,6 +18,22 @@ public class BinaryOperation extends Expression {
 
     @Override
     public Expression ev() {
+        Expression leftOp = left.ev();
+        Expression rightOp = right.ev();
+
+        switch (operator) {
+            case ADD:
+                break;
+            case SUB:
+                break;
+            case MUL:
+                break;
+            case DIV:
+                break;
+            case MOD:
+                break;
+        }
+
         throw new NotImplementedException();
     }
 }
