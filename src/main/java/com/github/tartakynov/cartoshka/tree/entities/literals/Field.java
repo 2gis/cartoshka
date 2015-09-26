@@ -13,4 +13,9 @@ public class Field extends Literal {
     public boolean isField() {
         return true;
     }
+
+    @Override
+    public String asString() {
+        return value;
+    }
 }

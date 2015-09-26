@@ -48,6 +48,14 @@ public abstract class Literal extends Expression {
         return false;
     }
 
+    public Double asNumber() {
+        return null;
+    }
+
+    public String asString() {
+        return null;
+    }
+
     public boolean isURL() {
         return false;
     }

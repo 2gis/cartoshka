@@ -20,7 +20,21 @@ public class Numeric extends Literal {
     }
 
     @Override
+    public Literal operate(TokenType operator, Literal operand) {
+        if (operand.isNumeric()) {
+            return new Numeric(value + operand.asNumber());
+        }
+
+        return super.operate(operator, operand);
+    }
+
+    @Override
     public boolean isNumeric() {
         return true;
+    }
+
+    @Override
+    public Double asNumber() {
+        return value;
     }
 }

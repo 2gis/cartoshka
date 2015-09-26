@@ -9,7 +9,8 @@ public class Quoted extends Literal {
         this.value = value;
     }
 
-    public String getValue() {
+    @Override
+    public String asString() {
         return value;
     }
 

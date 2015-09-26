@@ -325,13 +325,15 @@ public final class CartoParser extends CartoScanner {
         Token op = expect(TokenType.EQ, TokenType.NE, TokenType.LT, TokenType.GT, TokenType.LTE, TokenType.GTE);
         Expression right = parseExpression();
         expect(TokenType.RBRACK);
-        if (left instanceof Keyword) {
-            Keyword keyword = (Keyword) left;
-            if (keyword.getValue().equals(TokenType.ZOOM_KEYWORD.getStr())) {
-                return new Zoom(op.getType(), left, right);
+        if (left instanceof Literal) {
+            Literal literal = (Literal) left;
+            if (literal.isKeyword()) {
+                if (literal.asString().equals(TokenType.ZOOM_KEYWORD.getStr())) {
+                    return new Zoom(op.getType(), left, right);
+                }
+            } else if (literal.isQuoted()) {
+                left = new Field(literal.asString());
             }
-        } else if (left instanceof Quoted) {
-            left = new Field(((Quoted) left).getValue());
         }
 
         return new Filter(op.getType(), left, right);

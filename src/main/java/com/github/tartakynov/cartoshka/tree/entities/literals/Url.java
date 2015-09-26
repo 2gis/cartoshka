@@ -13,4 +13,9 @@ public class Url extends Literal {
     public boolean isURL() {
         return true;
     }
+
+    @Override
+    public String asString() {
+        return value;
+    }
 }

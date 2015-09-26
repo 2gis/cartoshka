@@ -9,12 +9,13 @@ public class Keyword extends Literal {
         this.value = value;
     }
 
-    public String getValue() {
-        return value;
-    }
-
     @Override
     public boolean isKeyword() {
         return true;
+    }
+
+    @Override
+    public String asString() {
+        return value;
     }
 }
