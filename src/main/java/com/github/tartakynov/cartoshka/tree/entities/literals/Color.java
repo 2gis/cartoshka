@@ -1,23 +1,31 @@
 package com.github.tartakynov.cartoshka.tree.entities.literals;
 
+import com.github.tartakynov.cartoshka.scanners.TokenType;
 import com.github.tartakynov.cartoshka.tree.entities.Literal;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 public class Color extends Literal {
     private final int r;
     private final int g;
     private final int b;
-    private final int a;
+    private final double a;
 
-    public Color(int r, int g, int b) {
-        this(r, g, b, -1);
+    public Color(int r, int g, int b, double a) {
+        this.r = Math.max(0, Math.min(r, 0xFF));
+        this.g = Math.max(0, Math.min(g, 0xFF));
+        this.b = Math.max(0, Math.min(b, 0xFF));
+        this.a = Math.max(0.0, Math.min(a, 1.0));
     }
 
-    public Color(int r, int g, int b, int a) {
-        this.r = r;
-        this.g = g;
-        this.b = b;
-        this.a = a;
+    public Color(int r, int g, int b) {
+        this(r, g, b, 1.0);
+    }
+
+    public Color(double r, double g, double b) {
+        this(r, g, b, 1.0);
+    }
+
+    public Color(double r, double g, double b, double a) {
+        this((int) (0xFF * r), (int) (0xFF * g), (int) (0xFF * b), a);
     }
 
     @Override
@@ -27,6 +35,35 @@ public class Color extends Literal {
 
     @Override
     public String toString() {
-        throw new NotImplementedException();
+        return String.format("rgba(%d, %d, %d, %s)", r, g, b, Double.toString(a));
+    }
+
+    @Override
+    public Literal operate(TokenType operator, Literal operand) {
+        Color right = null;
+        if (operand.isColor()) {
+            right = (Color) operand;
+        } else if (operand.isDimension()) {
+            Dimension dimension = (Dimension) operand;
+            if (((Dimension) operand).getUnit().equals("%")) {
+                double v = dimension.getValue() / 100.0;
+                right = new Color(v, v, v);
+            }
+        }
+
+        if (right != null) {
+            switch (operator) {
+                case ADD:
+                    return new Color(r + right.r, g + right.g, b + right.b);
+                case SUB:
+                    return new Color(r - right.r, g - right.g, b - right.b);
+                case MUL:
+                    return new Color(r * right.r, g * right.g, b * right.b);
+                case DIV:
+                    return new Color(r / right.r, g / right.g, b / right.b);
+            }
+        }
+
+        return super.operate(operator, operand);
     }
 }
