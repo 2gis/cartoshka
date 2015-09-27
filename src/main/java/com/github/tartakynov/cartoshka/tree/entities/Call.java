@@ -4,6 +4,7 @@ import com.github.tartakynov.cartoshka.Function;
 import com.github.tartakynov.cartoshka.exceptions.ArgumentException;
 import com.github.tartakynov.cartoshka.exceptions.OperationException;
 import com.github.tartakynov.cartoshka.functions.HSLAFunction;
+import com.github.tartakynov.cartoshka.functions.HSLFunction;
 import com.github.tartakynov.cartoshka.functions.RGBAFunction;
 import com.github.tartakynov.cartoshka.functions.RGBFunction;
 
@@ -16,6 +17,7 @@ public class Call extends Expression {
         put("rgb", new RGBFunction());
         put("rgba", new RGBAFunction());
         put("hsla", new HSLAFunction());
+        put("hsl", new HSLFunction());
     }};
 
     private final String function;

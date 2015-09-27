@@ -27,6 +27,10 @@ public class Color extends Literal {
 
     @Override
     public String toString() {
+        if (a == 1.0) {
+            return String.format("rgb(%d, %d, %d)", r, g, b);
+        }
+
         return String.format("rgba(%d, %d, %d, %s)", r, g, b, Double.toString(a));
     }
 
