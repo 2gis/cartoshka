@@ -20,14 +20,6 @@ public class Color extends Literal {
         this(r, g, b, 1.0);
     }
 
-    public Color(double r, double g, double b) {
-        this(r, g, b, 1.0);
-    }
-
-    public Color(double r, double g, double b, double a) {
-        this((int) (0xFF * r), (int) (0xFF * g), (int) (0xFF * b), a);
-    }
-
     @Override
     public boolean isColor() {
         return true;
@@ -43,12 +35,9 @@ public class Color extends Literal {
         Color right = null;
         if (operand.isColor()) {
             right = (Color) operand;
-        } else if (operand.isDimension()) {
-            Dimension dimension = (Dimension) operand;
-            if (((Dimension) operand).getUnit().equals("%")) {
-                double v = dimension.getValue() / 100.0;
-                right = new Color(v, v, v);
-            }
+        } else if (operand.isDimension() && operand.toNumber() != null) {
+            int v = (int) (operand.toNumber() * 0xFF);
+            right = new Color(v, v, v);
         }
 
         if (right != null) {

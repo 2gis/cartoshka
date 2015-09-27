@@ -110,7 +110,8 @@ public final class CartoParser extends CartoScanner {
     private Expression parsePrimaryExpression() {
         switch (peek().getType()) {
             case NUMBER_LITERAL:
-                return new Numeric(Double.valueOf(next().getText()));
+                String number = next().getText();
+                return new Numeric(Double.valueOf(number), number.indexOf('.') >= 0);
 
             case STRING_LITERAL:
                 return new Quoted(next().getText());

@@ -3,6 +3,7 @@ package com.github.tartakynov.cartoshka.tree.entities;
 import com.github.tartakynov.cartoshka.Function;
 import com.github.tartakynov.cartoshka.exceptions.ArgumentException;
 import com.github.tartakynov.cartoshka.exceptions.OperationException;
+import com.github.tartakynov.cartoshka.functions.HSLAFunction;
 import com.github.tartakynov.cartoshka.functions.RGBAFunction;
 import com.github.tartakynov.cartoshka.functions.RGBFunction;
 
@@ -14,6 +15,7 @@ public class Call extends Expression {
     private final static Map<String, Function> BUILTIN_FUNCTIONS = new HashMap<String, Function>() {{
         put("rgb", new RGBFunction());
         put("rgba", new RGBAFunction());
+        put("hsla", new HSLAFunction());
     }};
 
     private final String function;

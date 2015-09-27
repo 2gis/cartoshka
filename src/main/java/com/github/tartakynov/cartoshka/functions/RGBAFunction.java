@@ -23,18 +23,20 @@ public class RGBAFunction implements Function {
     @Override
     public Literal apply(Collection<Expression> args) {
         Iterator<Expression> iterator = args.iterator();
-        Double r = iterator.next().ev().toNumber();
-        Double g = iterator.next().ev().toNumber();
-        Double b = iterator.next().ev().toNumber();
-        Double a = iterator.next().ev().toNumber();
-        if (r == null) throw new ArgumentException(getName(), "r");
-        if (g == null) throw new ArgumentException(getName(), "g");
-        if (b == null) throw new ArgumentException(getName(), "b");
-        if (a == null) throw new ArgumentException(getName(), "a");
-        if (Math.floor(r) != r) r *= 0xFF;
-        if (Math.floor(g) != g) g *= 0xFF;
-        if (Math.floor(b) != b) b *= 0xFF;
+        Double r = literalToArgument(iterator.next().ev(), "r", true);
+        Double g = literalToArgument(iterator.next().ev(), "g", true);
+        Double b = literalToArgument(iterator.next().ev(), "b", true);
+        Double a = literalToArgument(iterator.next().ev(), "a", false);
 
         return new Color(r.intValue(), g.intValue(), b.intValue(), a);
+    }
+
+    protected Double literalToArgument(Literal literal, String name, boolean mapToFF) {
+        Double arg = literal.toNumber();
+        if (arg == null) {
+            throw new ArgumentException(getName(), name);
+        }
+
+        return (literal.hasDot() && mapToFF) ? arg * 0xFF : arg;
     }
 }

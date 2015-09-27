@@ -46,6 +46,10 @@ public abstract class Literal extends Expression {
         return false;
     }
 
+    public boolean hasDot() {
+        return false;
+    }
+
     public Double toNumber() {
         return null;
     }

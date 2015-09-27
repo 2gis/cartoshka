@@ -74,6 +74,11 @@ public class Dimension extends Literal {
     }
 
     @Override
+    public boolean hasDot() {
+        return unit.equals("%");
+    }
+
+    @Override
     public String toString() {
         return String.format("%s%s", Double.toString(value), unit);
     }
