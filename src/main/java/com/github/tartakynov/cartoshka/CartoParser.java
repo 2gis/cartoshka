@@ -187,12 +187,12 @@ public final class CartoParser extends CartoScanner {
                 int r = Integer.parseInt(text.substring(0, 1) + text.substring(0, 1), 16);
                 int g = Integer.parseInt(text.substring(1, 2) + text.substring(1, 2), 16);
                 int b = Integer.parseInt(text.substring(2, 3) + text.substring(2, 3), 16);
-                return new Color(r, g, b);
+                return Color.fromRGBA(r, g, b, 1.0);
             } else if (text.length() == 6) {
                 int r = Integer.parseInt(text.substring(0, 2), 16);
                 int g = Integer.parseInt(text.substring(2, 4), 16);
                 int b = Integer.parseInt(text.substring(4, 6), 16);
-                return new Color(r, g, b);
+                return Color.fromRGBA(r, g, b, 1.0);
             }
         } catch (NumberFormatException ex) {
             ex.printStackTrace();

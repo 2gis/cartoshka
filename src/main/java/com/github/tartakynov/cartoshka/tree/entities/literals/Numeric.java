@@ -58,6 +58,10 @@ public class Numeric extends Literal {
 
     @Override
     public String toString() {
-        return Double.toString(value);
+        if (hasDot) {
+            return Double.toString(value);
+        }
+
+        return Integer.toString((int) value);
     }
 }

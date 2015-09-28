@@ -3,10 +3,7 @@ package com.github.tartakynov.cartoshka.tree.entities;
 import com.github.tartakynov.cartoshka.Function;
 import com.github.tartakynov.cartoshka.exceptions.ArgumentException;
 import com.github.tartakynov.cartoshka.exceptions.OperationException;
-import com.github.tartakynov.cartoshka.functions.HSLAFunction;
-import com.github.tartakynov.cartoshka.functions.HSLFunction;
-import com.github.tartakynov.cartoshka.functions.RGBAFunction;
-import com.github.tartakynov.cartoshka.functions.RGBFunction;
+import com.github.tartakynov.cartoshka.functions.*;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -18,6 +15,7 @@ public class Call extends Expression {
         put("rgba", new RGBAFunction());
         put("hsla", new HSLAFunction());
         put("hsl", new HSLFunction());
+        put("hue", new HueFunction());
     }};
 
     private final String function;

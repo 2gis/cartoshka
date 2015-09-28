@@ -1,14 +1,14 @@
 package com.github.tartakynov.cartoshka.functions;
 
+import com.github.tartakynov.cartoshka.Function;
 import com.github.tartakynov.cartoshka.tree.entities.Expression;
 import com.github.tartakynov.cartoshka.tree.entities.Literal;
-import com.github.tartakynov.cartoshka.tree.entities.literals.Numeric;
+import com.github.tartakynov.cartoshka.tree.entities.literals.Color;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
+import java.util.Iterator;
 
-public class RGBFunction extends RGBAFunction {
+public class RGBFunction implements Function {
     @Override
     public String getName() {
         return "rgb";
@@ -21,8 +21,10 @@ public class RGBFunction extends RGBAFunction {
 
     @Override
     public Literal apply(Collection<Expression> args) {
-        List<Expression> extended = new ArrayList<>(args);
-        extended.add(new Numeric(1.0, true));
-        return super.apply(extended);
+        Iterator<Expression> iterator = args.iterator();
+        Double r = Arguments.numeric(iterator.next().ev(), getName(), "r", true);
+        Double g = Arguments.numeric(iterator.next().ev(), getName(), "g", true);
+        Double b = Arguments.numeric(iterator.next().ev(), getName(), "b", true);
+        return Color.fromRGBA(r.intValue(), g.intValue(), b.intValue(), 1.0);
     }
 }

@@ -1,14 +1,14 @@
 package com.github.tartakynov.cartoshka.functions;
 
+import com.github.tartakynov.cartoshka.Function;
 import com.github.tartakynov.cartoshka.tree.entities.Expression;
 import com.github.tartakynov.cartoshka.tree.entities.Literal;
-import com.github.tartakynov.cartoshka.tree.entities.literals.Numeric;
+import com.github.tartakynov.cartoshka.tree.entities.literals.Color;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
+import java.util.Iterator;
 
-public class HSLFunction extends HSLAFunction {
+public class HSLFunction implements Function {
     @Override
     public String getName() {
         return "hsl";
@@ -21,8 +21,10 @@ public class HSLFunction extends HSLAFunction {
 
     @Override
     public Literal apply(Collection<Expression> args) {
-        List<Expression> extended = new ArrayList<>(args);
-        extended.add(new Numeric(1.0, true));
-        return super.apply(extended);
+        Iterator<Expression> iterator = args.iterator();
+        Double h = Arguments.numeric(iterator.next().ev(), getName(), "h", false);
+        Double s = Arguments.numeric(iterator.next().ev(), getName(), "s", false);
+        Double l = Arguments.numeric(iterator.next().ev(), getName(), "l", false);
+        return Color.fromHSLA(h.intValue(), s, l, 1.0);
     }
 }

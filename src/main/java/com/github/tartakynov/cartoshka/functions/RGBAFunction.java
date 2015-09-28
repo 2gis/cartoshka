@@ -1,7 +1,6 @@
 package com.github.tartakynov.cartoshka.functions;
 
 import com.github.tartakynov.cartoshka.Function;
-import com.github.tartakynov.cartoshka.exceptions.ArgumentException;
 import com.github.tartakynov.cartoshka.tree.entities.Expression;
 import com.github.tartakynov.cartoshka.tree.entities.Literal;
 import com.github.tartakynov.cartoshka.tree.entities.literals.Color;
@@ -23,20 +22,10 @@ public class RGBAFunction implements Function {
     @Override
     public Literal apply(Collection<Expression> args) {
         Iterator<Expression> iterator = args.iterator();
-        Double r = literalToArgument(iterator.next().ev(), "r", true);
-        Double g = literalToArgument(iterator.next().ev(), "g", true);
-        Double b = literalToArgument(iterator.next().ev(), "b", true);
-        Double a = literalToArgument(iterator.next().ev(), "a", false);
-
-        return new Color(r.intValue(), g.intValue(), b.intValue(), a);
-    }
-
-    protected Double literalToArgument(Literal literal, String name, boolean mapToFF) {
-        Double arg = literal.toNumber();
-        if (arg == null) {
-            throw new ArgumentException(getName(), name);
-        }
-
-        return (literal.hasDot() && mapToFF) ? arg * 0xFF : arg;
+        Double r = Arguments.numeric(iterator.next().ev(), getName(), "r", true);
+        Double g = Arguments.numeric(iterator.next().ev(), getName(), "g", true);
+        Double b = Arguments.numeric(iterator.next().ev(), getName(), "b", true);
+        Double a = Arguments.numeric(iterator.next().ev(), getName(), "a", false);
+        return Color.fromRGBA(r.intValue(), g.intValue(), b.intValue(), a);
     }
 }
