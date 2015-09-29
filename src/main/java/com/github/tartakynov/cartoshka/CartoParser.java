@@ -8,14 +8,26 @@ import com.github.tartakynov.cartoshka.tree.*;
 import com.github.tartakynov.cartoshka.tree.entities.*;
 import com.github.tartakynov.cartoshka.tree.entities.literals.Boolean;
 import com.github.tartakynov.cartoshka.tree.entities.literals.*;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.io.Reader;
 import java.util.*;
 
 public final class CartoParser extends CartoScanner {
     private static final int MaxArguments = 32;
-    private final Map<String, Function> functions = new HashMap<>();
+    private final Map<String, Function> functions = new HashMap<String, Function>() {{
+        put(Functions.alpha.getName(), Functions.alpha);
+        put(Functions.darken.getName(), Functions.darken);
+        put(Functions.desaturate.getName(), Functions.desaturate);
+        put(Functions.hsl.getName(), Functions.alpha);
+        put(Functions.hsla.getName(), Functions.hsla);
+        put(Functions.hue.getName(), Functions.hue);
+        put(Functions.lighten.getName(), Functions.lighten);
+        put(Functions.lightness.getName(), Functions.lightness);
+        put(Functions.rgb.getName(), Functions.rgb);
+        put(Functions.rgba.getName(), Functions.rgba);
+        put(Functions.saturate.getName(), Functions.saturate);
+        put(Functions.saturation.getName(), Functions.saturation);
+    }};
 
     private CartoParser(Reader input) {
         super(input);
@@ -26,22 +38,6 @@ public final class CartoParser extends CartoScanner {
         parser.initialize();
 
         return parser.parsePrimary();
-    }
-
-    @Override
-    public void initialize() {
-        super.initialize();
-        try {
-            for (java.lang.reflect.Field field : Functions.class.getFields()) {
-                Object value = field.get(null);
-                if (value instanceof Function) {
-                    Function f = (Function) value;
-                    functions.put(f.getName(), f);
-                }
-            }
-        } catch (IllegalAccessException ex) {
-            throw new RuntimeException(ex);
-        }
     }
 
     public void addOrReplaceFunction(Function function) {
@@ -365,10 +361,6 @@ public final class CartoParser extends CartoScanner {
         return new Filter(op.getType(), left, right);
     }
 
-    private Node parseFont() {
-        throw new NotImplementedException();
-    }
-
     protected Token expect(TokenType... types) {
         Token token = next();
         for (TokenType type : types) {
@@ -380,4 +372,3 @@ public final class CartoParser extends CartoScanner {
         throw new UnexpectedTokenException(token.getType().name(), token.getStart());
     }
 }
-
