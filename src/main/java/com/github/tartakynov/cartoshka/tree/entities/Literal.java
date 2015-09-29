@@ -1,6 +1,6 @@
 package com.github.tartakynov.cartoshka.tree.entities;
 
-import com.github.tartakynov.cartoshka.exceptions.OperationException;
+import com.github.tartakynov.cartoshka.exceptions.CartoshkaException;
 import com.github.tartakynov.cartoshka.scanners.TokenType;
 
 public abstract class Literal extends Expression {
@@ -10,12 +10,12 @@ public abstract class Literal extends Expression {
     }
 
     public Literal operate(TokenType operator, Literal operand) {
-        throw new OperationException(String.format("Operator [%s] cannot be applied to given operands", operator.getStr()));
+        throw new CartoshkaException(String.format("Operator [%s] cannot be applied to given operands", operator.getStr()));
     }
 
     public Literal operate(TokenType operator) {
         String operandType = this.getClass().getSimpleName().toLowerCase();
-        throw new OperationException(String.format("Operator [%s] cannot be applied to %s", operator.getStr(), operandType));
+        throw new CartoshkaException(String.format("Operator [%s] cannot be applied to %s", operator.getStr(), operandType));
     }
 
     public boolean isBoolean() {

@@ -18,8 +18,8 @@ public class Color extends Literal {
         this.green = Math.max(0, Math.min(g, 0xFF));
         this.blue = Math.max(0, Math.min(b, 0xFF));
         this.hue = h;
-        this.saturation = Math.round(s * 100) / 100.0;
-        this.lightness = Math.round(l * 100) / 100.0;
+        this.saturation = Math.round(s * 100) / 100d;
+        this.lightness = Math.round(l * 100) / 100d;
     }
 
     protected static double hue(double h, double m2, double m1) {
@@ -36,6 +36,10 @@ public class Color extends Literal {
     }
 
     public static Color fromRGBA(int r, int g, int b, double a) {
+        r = Math.max(0, Math.min(r, 0xFF));
+        g = Math.max(0, Math.min(g, 0xFF));
+        b = Math.max(0, Math.min(b, 0xFF));
+        a = Math.max(0.0, Math.min(a, 1.0));
         double _r = r / 255.0;
         double _g = g / 255.0;
         double _b = b / 255.0;
@@ -65,6 +69,10 @@ public class Color extends Literal {
     }
 
     public static Color fromHSLA(int h, double s, double l, double a) {
+        s = Math.max(0.0, Math.min(s, 1.0));
+        l = Math.max(0.0, Math.min(l, 1.0));
+        a = Math.max(0.0, Math.min(a, 1.0));
+
         double _h = (h % 360) / 360.0;
         double m2 = l <= 0.5 ? l * (s + 1.0) : l + s - l * s;
         double m1 = l * 2.0 - m2;

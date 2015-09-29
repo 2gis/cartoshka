@@ -11,12 +11,11 @@ import com.github.tartakynov.cartoshka.tree.entities.literals.*;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.io.Reader;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 public final class CartoParser extends CartoScanner {
     private static final int MaxArguments = 32;
+    private final Map<String, Function> functions = new HashMap<>();
 
     private CartoParser(Reader input) {
         super(input);
@@ -27,6 +26,26 @@ public final class CartoParser extends CartoScanner {
         parser.initialize();
 
         return parser.parsePrimary();
+    }
+
+    @Override
+    public void initialize() {
+        super.initialize();
+        try {
+            for (java.lang.reflect.Field field : Functions.class.getFields()) {
+                Object value = field.get(null);
+                if (value instanceof Function) {
+                    Function f = (Function) value;
+                    functions.put(f.getName(), f);
+                }
+            }
+        } catch (IllegalAccessException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+    public void addOrReplaceFunction(Function function) {
+        functions.put(function.getName(), function);
     }
 
     // The `primary` rule is the *entry* and *exit* point of the parser.
@@ -153,7 +172,13 @@ public final class CartoParser extends CartoScanner {
             case IDENTIFIER:
                 Token identifier = next();
                 if (peek().getType() == TokenType.LPAREN) {
-                    return new Call(identifier.getText(), parseArgumentsExpression());
+                    String functionName = identifier.getText();
+                    Function function = functions.get(functionName);
+                    if (function != null) {
+                        return new Call(function, parseArgumentsExpression());
+                    }
+
+                    throw new CartoshkaException(String.format("Function [%s] not found", functionName));
                 } else if (Colors.Strings.containsKey(identifier.getText())) {
                     return Colors.Strings.get(identifier.getText());
                 }
