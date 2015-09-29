@@ -138,4 +138,32 @@ public class Functions {
             );
         }
     };
+
+    public static BaseFunction fadein = new BaseFunction("fadein") {
+        @Override
+        public Literal apply(Iterator<Expression> args) {
+            Color color = Arguments.color(args, "color", getName());
+            Double amount = Arguments.numeric(args, "amount", getName(), false);
+            return Color.fromHSLA(
+                    color.getHue(),
+                    color.getSaturation(),
+                    color.getLightness(),
+                    color.getAlpha() + amount
+            );
+        }
+    };
+
+    public static BaseFunction fadeout = new BaseFunction("fadeout") {
+        @Override
+        public Literal apply(Iterator<Expression> args) {
+            Color color = Arguments.color(args, "color", getName());
+            Double amount = Arguments.numeric(args, "amount", getName(), false);
+            return Color.fromHSLA(
+                    color.getHue(),
+                    color.getSaturation(),
+                    color.getLightness(),
+                    color.getAlpha() - amount
+            );
+        }
+    };
 }

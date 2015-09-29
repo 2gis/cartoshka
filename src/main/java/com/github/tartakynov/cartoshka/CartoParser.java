@@ -29,6 +29,8 @@ public final class CartoParser extends CartoScanner {
         put(Functions.rgba.getName(), Functions.rgba);
         put(Functions.saturate.getName(), Functions.saturate);
         put(Functions.saturation.getName(), Functions.saturation);
+        put(Functions.fadein.getName(), Functions.fadein);
+        put(Functions.fadeout.getName(), Functions.fadeout);
     }};
 
     private CartoParser(Reader input) {
