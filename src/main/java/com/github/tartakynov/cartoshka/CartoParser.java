@@ -2,6 +2,7 @@ package com.github.tartakynov.cartoshka;
 
 import com.github.tartakynov.cartoshka.exceptions.CartoshkaException;
 import com.github.tartakynov.cartoshka.exceptions.UnexpectedTokenException;
+import com.github.tartakynov.cartoshka.functions.Functions;
 import com.github.tartakynov.cartoshka.scanners.Token;
 import com.github.tartakynov.cartoshka.scanners.TokenType;
 import com.github.tartakynov.cartoshka.tree.*;
@@ -14,6 +15,7 @@ import java.util.*;
 
 public final class CartoParser extends CartoScanner {
     private static final int MaxArguments = 32;
+
     private final Map<String, Function> functions = new HashMap<String, Function>() {{
         put(Functions.alpha.getName(), Functions.alpha);
         put(Functions.darken.getName(), Functions.darken);
