@@ -12,7 +12,7 @@ public class CartoParserTest {
     @Test
     public void test() {
         ClassLoader loader = getClass().getClassLoader();
-        Collection<Node> x = CartoParser.parse(new StringReader("@X: alpha(fadeout(rgb(49,129,116), 99%));"));//new InputStreamReader(loader.getResourceAsStream("roads.mss")));
+        Collection<Node> x = CartoParser.parse(new StringReader("@X: greyscale(hsl(100, 50%, 50%));"));//new InputStreamReader(loader.getResourceAsStream("roads.mss")));
         Collection<Expression> expressions = ((Rule) (x.iterator().next())).getValue().getExpressions();
         Object y = expressions.iterator().next().ev();
         System.out.println(y.toString());

@@ -20,7 +20,7 @@ public final class CartoParser extends CartoScanner {
         put(Functions.alpha.getName(), Functions.alpha);
         put(Functions.darken.getName(), Functions.darken);
         put(Functions.desaturate.getName(), Functions.desaturate);
-        put(Functions.hsl.getName(), Functions.alpha);
+        put(Functions.hsl.getName(), Functions.hsl);
         put(Functions.hsla.getName(), Functions.hsla);
         put(Functions.hue.getName(), Functions.hue);
         put(Functions.lighten.getName(), Functions.lighten);
@@ -31,6 +31,8 @@ public final class CartoParser extends CartoScanner {
         put(Functions.saturation.getName(), Functions.saturation);
         put(Functions.fadein.getName(), Functions.fadein);
         put(Functions.fadeout.getName(), Functions.fadeout);
+        put(Functions.spin.getName(), Functions.spin);
+        put(Functions.greyscale.getName(), Functions.greyscale);
     }};
 
     private CartoParser(Reader input) {

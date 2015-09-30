@@ -6,7 +6,7 @@ import com.github.tartakynov.cartoshka.tree.entities.Literal;
 
 import java.util.Iterator;
 
-public class BaseFunction implements Function {
+public abstract class BaseFunction implements Function {
     protected final String name;
 
     protected BaseFunction(String name) {
@@ -19,7 +19,5 @@ public class BaseFunction implements Function {
     }
 
     @Override
-    public Literal apply(Iterator<Expression> args) {
-        return null;
-    }
+    public abstract Literal apply(Iterator<Expression> args);
 }
