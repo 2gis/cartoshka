@@ -11,7 +11,7 @@ public class ArgumentException extends CartoshkaException {
         return new ArgumentException("Incorrect type of argument %s for function %s", arg, func);
     }
 
-    public static ArgumentException notEnough(String func) {
-        return new ArgumentException("Not enough arguments for function %s", func);
+    public static ArgumentException wrongArgumentsCount(String func, int expected, int actual) {
+        return new ArgumentException("Wrong argument count for \"%s\", expected %d but given %d", func, expected, actual);
     }
 }

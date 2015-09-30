@@ -8,5 +8,7 @@ import java.util.Iterator;
 public interface Function {
     String getName();
 
+    int getArgumentCount();
+
     Literal apply(Iterator<Expression> args);
 }

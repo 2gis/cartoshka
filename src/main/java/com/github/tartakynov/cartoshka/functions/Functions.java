@@ -10,7 +10,7 @@ import com.github.tartakynov.cartoshka.tree.entities.literals.Numeric;
 import java.util.Iterator;
 
 public class Functions {
-    public static Function hsla = new BaseFunction("hsla") {
+    public static Function hsla = new BaseFunction("hsla", 4) {
         @Override
         public Literal apply(Iterator<Expression> args) {
             Double h = Arguments.numeric(args, "h", getName(), false);
@@ -21,7 +21,7 @@ public class Functions {
         }
     };
 
-    public static Function hsl = new BaseFunction("hsl") {
+    public static Function hsl = new BaseFunction("hsl", 3) {
         @Override
         public Literal apply(Iterator<Expression> args) {
             Double h = Arguments.numeric(args, "h", getName(), false);
@@ -31,7 +31,7 @@ public class Functions {
         }
     };
 
-    public static Function rgba = new BaseFunction("rgba") {
+    public static Function rgba = new BaseFunction("rgba", 4) {
         @Override
         public Literal apply(Iterator<Expression> args) {
             Double r = Arguments.numeric(args, "r", getName(), true);
@@ -42,7 +42,7 @@ public class Functions {
         }
     };
 
-    public static Function rgb = new BaseFunction("rgb") {
+    public static Function rgb = new BaseFunction("rgb", 3) {
         @Override
         public Literal apply(Iterator<Expression> args) {
             Double r = Arguments.numeric(args, "r", getName(), true);
@@ -52,7 +52,7 @@ public class Functions {
         }
     };
 
-    public static Function hue = new BaseFunction("hue") {
+    public static Function hue = new BaseFunction("hue", 1) {
         @Override
         public Literal apply(Iterator<Expression> args) {
             Color color = Arguments.color(args, "color", getName());
@@ -60,7 +60,7 @@ public class Functions {
         }
     };
 
-    public static Function saturation = new BaseFunction("saturation") {
+    public static Function saturation = new BaseFunction("saturation", 1) {
         @Override
         public Literal apply(Iterator<Expression> args) {
             Color color = Arguments.color(args, "color", getName());
@@ -68,7 +68,7 @@ public class Functions {
         }
     };
 
-    public static Function lightness = new BaseFunction("lightness") {
+    public static Function lightness = new BaseFunction("lightness", 1) {
         @Override
         public Literal apply(Iterator<Expression> args) {
             Color color = Arguments.color(args, "color", getName());
@@ -76,7 +76,7 @@ public class Functions {
         }
     };
 
-    public static Function alpha = new BaseFunction("alpha") {
+    public static Function alpha = new BaseFunction("alpha", 1) {
         @Override
         public Literal apply(Iterator<Expression> args) {
             Color color = Arguments.color(args, "color", getName());
@@ -84,7 +84,7 @@ public class Functions {
         }
     };
 
-    public static Function saturate = new BaseFunction("saturate") {
+    public static Function saturate = new BaseFunction("saturate", 2) {
         @Override
         public Literal apply(Iterator<Expression> args) {
             Color color = Arguments.color(args, "color", getName());
@@ -98,7 +98,7 @@ public class Functions {
         }
     };
 
-    public static Function desaturate = new BaseFunction("desaturate") {
+    public static Function desaturate = new BaseFunction("desaturate", 2) {
         @Override
         public Literal apply(Iterator<Expression> args) {
             Color color = Arguments.color(args, "color", getName());
@@ -112,7 +112,7 @@ public class Functions {
         }
     };
 
-    public static Function lighten = new BaseFunction("lighten") {
+    public static Function lighten = new BaseFunction("lighten", 2) {
         @Override
         public Literal apply(Iterator<Expression> args) {
             Color color = Arguments.color(args, "color", getName());
@@ -126,7 +126,7 @@ public class Functions {
         }
     };
 
-    public static Function darken = new BaseFunction("darken") {
+    public static Function darken = new BaseFunction("darken", 2) {
         @Override
         public Literal apply(Iterator<Expression> args) {
             Color color = Arguments.color(args, "color", getName());
@@ -140,7 +140,7 @@ public class Functions {
         }
     };
 
-    public static Function fadein = new BaseFunction("fadein") {
+    public static Function fadein = new BaseFunction("fadein", 2) {
         @Override
         public Literal apply(Iterator<Expression> args) {
             Color color = Arguments.color(args, "color", getName());
@@ -154,7 +154,7 @@ public class Functions {
         }
     };
 
-    public static Function fadeout = new BaseFunction("fadeout") {
+    public static Function fadeout = new BaseFunction("fadeout", 2) {
         @Override
         public Literal apply(Iterator<Expression> args) {
             Color color = Arguments.color(args, "color", getName());
@@ -168,7 +168,7 @@ public class Functions {
         }
     };
 
-    public static Function spin = new BaseFunction("spin") {
+    public static Function spin = new BaseFunction("spin", 2) {
         @Override
         public Literal apply(Iterator<Expression> args) {
             Color color = Arguments.color(args, "color", getName());
@@ -183,7 +183,7 @@ public class Functions {
         }
     };
 
-    public static Function greyscale = new BaseFunction("greyscale") {
+    public static Function greyscale = new BaseFunction("greyscale", 1) {
         @Override
         public Literal apply(Iterator<Expression> args) {
             Color color = Arguments.color(args, "color", getName());

@@ -1,5 +1,6 @@
 package com.github.tartakynov.cartoshka;
 
+import com.github.tartakynov.cartoshka.exceptions.ArgumentException;
 import com.github.tartakynov.cartoshka.exceptions.CartoshkaException;
 import com.github.tartakynov.cartoshka.exceptions.UnexpectedTokenException;
 import com.github.tartakynov.cartoshka.functions.Functions;
@@ -174,13 +175,7 @@ public final class CartoParser extends CartoScanner {
             case IDENTIFIER:
                 Token identifier = next();
                 if (peek().getType() == TokenType.LPAREN) {
-                    String functionName = identifier.getText();
-                    Function function = functions.get(functionName);
-                    if (function != null) {
-                        return new Call(function, parseArgumentsExpression());
-                    }
-
-                    throw new CartoshkaException(String.format("Function [%s] not found", functionName));
+                    return parseFunctionCall();
                 } else if (Colors.Strings.containsKey(identifier.getText())) {
                     return Colors.Strings.get(identifier.getText());
                 }
@@ -190,6 +185,21 @@ public final class CartoParser extends CartoScanner {
             default:
                 throw new CartoshkaException(String.format("Unhandled expression %s at %d", peek().getText(), peek().getStart()));
         }
+    }
+
+    private Call parseFunctionCall() {
+        String functionName = current().getText();
+        Function function = functions.get(functionName);
+        if (function != null) {
+            Collection<Expression> arguments = parseArgumentsExpression();
+            if (function.getArgumentCount() != arguments.size()) {
+                throw ArgumentException.wrongArgumentsCount(functionName, function.getArgumentCount(), arguments.size());
+            }
+
+            return new Call(function, arguments);
+        }
+
+        throw new CartoshkaException(String.format("Function [%s] not found", functionName));
     }
 
     private Dimension parseDimension() {

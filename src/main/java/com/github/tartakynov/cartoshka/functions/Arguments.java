@@ -9,10 +9,6 @@ import java.util.Iterator;
 
 public class Arguments {
     public static Double numeric(Iterator<Expression> iter, String name, String func, boolean mapTo255) {
-        if (!iter.hasNext()) {
-            throw ArgumentException.notEnough(func);
-        }
-
         Literal literal = iter.next().ev();
         Double arg = literal.toNumber();
         if (arg == null) {
@@ -23,10 +19,6 @@ public class Arguments {
     }
 
     public static Color color(Iterator<Expression> iter, String func, String name) {
-        if (!iter.hasNext()) {
-            throw ArgumentException.notEnough(func);
-        }
-
         Literal arg = iter.next().ev();
         if (arg == null || !arg.isColor()) {
             throw ArgumentException.incorrectType(func, name);

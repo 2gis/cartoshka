@@ -8,9 +8,11 @@ import java.util.Iterator;
 
 public abstract class BaseFunction implements Function {
     protected final String name;
+    protected final int argc;
 
-    protected BaseFunction(String name) {
+    protected BaseFunction(String name, int argc) {
         this.name = name;
+        this.argc = argc;
     }
 
     @Override
@@ -20,4 +22,9 @@ public abstract class BaseFunction implements Function {
 
     @Override
     public abstract Literal apply(Iterator<Expression> args);
+
+    @Override
+    public int getArgumentCount() {
+        return argc;
+    }
 }
