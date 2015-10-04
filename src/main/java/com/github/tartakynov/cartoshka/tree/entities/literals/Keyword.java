@@ -18,4 +18,8 @@ public class Keyword extends Literal {
     public String toString() {
         return value;
     }
+
+    public String getValue() {
+        return value;
+    }
 }

@@ -54,6 +54,10 @@ public abstract class Literal extends Expression {
         return null;
     }
 
+    public boolean isMulti() {
+        return false;
+    }
+
     @Override
     public abstract String toString();
 

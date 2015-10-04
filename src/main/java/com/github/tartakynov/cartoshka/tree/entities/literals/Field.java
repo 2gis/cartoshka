@@ -1,12 +1,13 @@
 package com.github.tartakynov.cartoshka.tree.entities.literals;
 
 import com.github.tartakynov.cartoshka.tree.entities.Literal;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 public class Field extends Literal {
-    private final String value;
+    private final String name;
 
-    public Field(String value) {
-        this.value = value;
+    public Field(String name) {
+        this.name = name;
     }
 
     @Override
@@ -16,6 +17,6 @@ public class Field extends Literal {
 
     @Override
     public String toString() {
-        return value;
+        throw new NotImplementedException();
     }
 }

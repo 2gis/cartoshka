@@ -28,4 +28,8 @@ public class Quoted extends Literal {
 
         return super.operate(operator, operand);
     }
+
+    public String getValue() {
+        return value;
+    }
 }

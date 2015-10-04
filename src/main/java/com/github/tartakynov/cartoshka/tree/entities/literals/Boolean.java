@@ -9,6 +9,10 @@ public class Boolean extends Literal {
         this.value = value;
     }
 
+    public boolean getValue() {
+        return value;
+    }
+
     @Override
     public boolean isBoolean() {
         return true;
