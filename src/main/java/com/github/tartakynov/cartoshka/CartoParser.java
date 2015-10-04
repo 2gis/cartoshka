@@ -36,14 +36,16 @@ public final class CartoParser extends CartoScanner {
         put(Functions.greyscale.getName(), Functions.greyscale);
     }};
 
-    private CartoParser(Reader input) {
+    private VariableContext context;
+
+    private CartoParser(Reader input, VariableContext context) {
         super(input);
+        this.context = context;
     }
 
     public static Collection<Node> parse(Reader input) {
-        CartoParser parser = new CartoParser(input);
+        CartoParser parser = new CartoParser(input, new VariableContext());
         parser.initialize();
-
         return parser.parsePrimary();
     }
 
@@ -58,11 +60,17 @@ public final class CartoParser extends CartoScanner {
         while (peek().getType() != TokenType.EOS && peek().getType() != TokenType.RBRACE) {
             switch (peek().getType()) {
                 case VARIABLE:
+                    root.add(context.add(parseRule()));
+                    break;
+
                 case IDENTIFIER:
                     root.add(parseRule());
                     break;
+
                 default:
+                    context = context.createChild();
                     root.add(parseRuleSet());
+                    context = context.getParent();
             }
         }
 
@@ -147,7 +155,7 @@ public final class CartoParser extends CartoScanner {
                 return new Boolean(false);
 
             case VARIABLE:
-                return new Variable(next().getText());
+                return new Variable(context, next().getText());
 
             case DIMENSION_LITERAL:
                 return parseDimension();
