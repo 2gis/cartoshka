@@ -370,15 +370,20 @@ public abstract class Scanner {
         }
     }
 
+    private void scanIdentifierPart() {
+        while (Character.isJavaIdentifierPart(c0_) || c0_ == '-') {
+            literal.append(c0_);
+            if (!advance()) {
+                break;
+            }
+        }
+    }
+
     private TokenType scanVariable() {
         expect('@');
         advance(); // consume @
         if (Character.isJavaIdentifierStart(c0_)) {
-            literal.append(c0_);
-            while (advance() && (Character.isJavaIdentifierPart(c0_) || c0_ == '-')) {
-                literal.append(c0_);
-            }
-
+            scanIdentifierPart();
             return TokenType.VARIABLE;
         }
 
@@ -389,11 +394,7 @@ public abstract class Scanner {
         expect('#');
         advance(); // consume #
         if (Character.isJavaIdentifierPart(c0_)) {
-            literal.append(c0_);
-            while (advance() && (Character.isJavaIdentifierPart(c0_) || c0_ == '-')) {
-                literal.append(c0_);
-            }
-
+            scanIdentifierPart();
             return TokenType.HASH;
         }
 
@@ -401,9 +402,10 @@ public abstract class Scanner {
     }
 
     private TokenType scanIdentifierOrKeyword() {
-        literal.append(c0_);
-        while (advance() && (Character.isJavaIdentifierPart(c0_) || c0_ == '-' || c0_ == '/')) {
-            literal.append(c0_);
+        scanIdentifierPart();
+        if (c0_ == '/') {
+            addLiteralCharAdvance();
+            scanIdentifierPart();
         }
 
         TokenType type = KEYWORDS.get(literal.toString());
