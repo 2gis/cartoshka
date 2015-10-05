@@ -30,10 +30,6 @@ public abstract class Literal extends Expression {
         return false;
     }
 
-    public boolean isField() {
-        return false;
-    }
-
     public boolean isKeyword() {
         return false;
     }
@@ -50,12 +46,12 @@ public abstract class Literal extends Expression {
         return false;
     }
 
-    public Double toNumber() {
-        return null;
-    }
-
     public boolean isMulti() {
         return false;
+    }
+
+    public Double toNumber() {
+        return null;
     }
 
     @Override

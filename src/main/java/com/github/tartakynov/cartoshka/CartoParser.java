@@ -43,7 +43,7 @@ public final class CartoParser extends CartoScanner {
         this.context = context;
     }
 
-    public static Collection<Node> parse(Reader input) {
+    public static List<Node> parse(Reader input) {
         CartoParser parser = new CartoParser(input, new VariableContext());
         parser.initialize();
         return parser.parsePrimary();
@@ -55,7 +55,7 @@ public final class CartoParser extends CartoScanner {
 
     // The `primary` rule is the *entry* and *exit* point of the parser.
     // The rules here can appear at any level of the parse tree.
-    private Collection<Node> parsePrimary() {
+    private List<Node> parsePrimary() {
         List<Node> root = new ArrayList<>();
         while (peek().getType() != TokenType.EOS && peek().getType() != TokenType.RBRACE) {
             switch (peek().getType()) {
