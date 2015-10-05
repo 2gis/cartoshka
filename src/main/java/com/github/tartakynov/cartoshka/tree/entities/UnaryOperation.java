@@ -7,13 +7,21 @@ public class UnaryOperation extends Expression {
 
     private final Expression expression;
 
+    private final boolean isDynamic;
+
     public UnaryOperation(TokenType operator, Expression expression) {
         this.operator = operator;
         this.expression = expression;
+        this.isDynamic = expression.isDynamic();
     }
 
     @Override
     public Literal ev() {
         return expression.ev().operate(operator);
+    }
+
+    @Override
+    public boolean isDynamic() {
+        return isDynamic;
     }
 }

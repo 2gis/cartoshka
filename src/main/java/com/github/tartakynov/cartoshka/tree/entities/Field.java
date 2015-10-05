@@ -17,4 +17,9 @@ public class Field extends Expression {
     public Literal ev() {
         throw new NotImplementedException();
     }
+
+    @Override
+    public boolean isDynamic() {
+        return true;
+    }
 }

@@ -60,4 +60,8 @@ public abstract class Literal extends Expression {
     public boolean isURL() {
         return false;
     }
+
+    public boolean isDynamic() {
+        return false;
+    }
 }

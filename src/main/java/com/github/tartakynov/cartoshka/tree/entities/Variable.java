@@ -14,11 +14,20 @@ public class Variable extends Expression {
 
     @Override
     public Literal ev() {
+        return getValue().ev();
+    }
+
+    @Override
+    public boolean isDynamic() {
+        return getValue().isDynamic();
+    }
+
+    private Value getValue() {
         Value value = context.get(name);
         if (value == null) {
             throw new CartoshkaException(String.format("Undefined variable: %s", name));
         }
 
-        return value.ev();
+        return value;
     }
 }
