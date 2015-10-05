@@ -61,7 +61,13 @@ public abstract class Literal extends Expression {
         return false;
     }
 
+    @Override
     public boolean isDynamic() {
         return false;
+    }
+
+    @Override
+    public boolean isLiteral() {
+        return true;
     }
 }
