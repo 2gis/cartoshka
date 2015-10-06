@@ -5,20 +5,20 @@ import com.github.tartakynov.cartoshka.tree.entities.Value;
 
 import java.util.HashMap;
 
-public class VariableContext {
+public class Context {
     private final HashMap<String, Value> variables = new HashMap<>();
 
-    private final VariableContext parent;
+    private final Context parent;
 
-    public VariableContext() {
+    public Context() {
         this.parent = null;
     }
 
-    protected VariableContext(VariableContext parent) {
+    protected Context(Context parent) {
         this.parent = parent;
     }
 
-    public Rule add(Rule variable) {
+    public Rule setVariable(Rule variable) {
         if (variable != null && variable.isVariable()) {
             variables.put(variable.getName(), variable.getValue());
             return variable;
@@ -27,20 +27,20 @@ public class VariableContext {
         return null;
     }
 
-    public Value get(String name) {
+    public Value getVariable(String name) {
         Value value = variables.get(name);
         if (value == null && parent != null) {
-            value = parent.get(name);
+            value = parent.getVariable(name);
         }
 
         return value;
     }
 
-    public VariableContext createChild() {
-        return new VariableContext(this);
+    public Context createNestedBlockContext() {
+        return new Context(this);
     }
 
-    public VariableContext getParent() {
+    public Context getParent() {
         return parent;
     }
 
