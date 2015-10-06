@@ -10,4 +10,12 @@ public class Ruleset extends Node {
         this.selectors = selectors;
         this.rules = rules;
     }
+
+    public Collection<Selector> getSelectors() {
+        return selectors;
+    }
+
+    public Collection<Node> getRules() {
+        return rules;
+    }
 }

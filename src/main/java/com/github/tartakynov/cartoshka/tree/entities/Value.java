@@ -10,11 +10,8 @@ import java.util.List;
 public class Value extends Expression {
     private final Collection<Expression> expressions;
 
-    private final boolean isDynamic;
-
     public Value(Collection<Expression> expressions) {
         this.expressions = expressions;
-        this.isDynamic = hasDynamicExpression(expressions);
     }
 
     @Override
@@ -33,6 +30,6 @@ public class Value extends Expression {
 
     @Override
     public boolean isDynamic() {
-        return isDynamic;
+        return hasDynamicExpression(expressions);
     }
 }

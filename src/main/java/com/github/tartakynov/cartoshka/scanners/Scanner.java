@@ -2,9 +2,11 @@ package com.github.tartakynov.cartoshka.scanners;
 
 import com.github.tartakynov.cartoshka.exceptions.UnexpectedCharException;
 
+import java.io.IOException;
+import java.io.Reader;
 import java.util.*;
 
-public abstract class Scanner {
+public class Scanner {
     protected static final Map<String, TokenType> KEYWORDS = new HashMap<>();
 
     protected static final Set<String> DIMENSION_UNITS = new HashSet<>(Arrays.asList("m", "cm", "in", "mm", "pt", "pc", "px", "%"));
@@ -20,38 +22,41 @@ public abstract class Scanner {
         }
     }
 
-    private final StringBuilder literal;
+    private final StringBuilder literal = new StringBuilder();
     protected char c0_;
+    private Reader source;
     private Token next;
     private Token current;
-
-    protected Scanner() {
-        literal = new StringBuilder();
-        current = null;
-    }
+    private int position;
+    private boolean eos;
 
     private static boolean isLineTerminator(char c) {
         return c == '\n' || c == '\r';
     }
 
-    protected void initialize() {
+    protected void initialize(Reader source) {
+        this.position = -1;
+        this.eos = false;
+        this.current = null;
+        this.source = source;
+        this.literal.setLength(0);
         advance();
         skipWhiteSpace();
         scan();
     }
 
-    public Token peek() {
+    protected Token peek() {
         return next;
     }
 
-    public Token next() {
+    protected Token next() {
         current = next;
         scan();
 
         return current;
     }
 
-    public Token current() {
+    protected Token current() {
         return current;
     }
 
@@ -61,11 +66,29 @@ public abstract class Scanner {
         }
     }
 
-    protected abstract boolean advance();
+    protected boolean advance() {
+        try {
+            int c = this.source.read();
+            if (c < 0) {
+                this.eos = true;
+                return false;
+            }
 
-    protected abstract int getCurrentPosition();
+            this.c0_ = (char) c;
+            this.position++;
+            return true;
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
 
-    protected abstract boolean isEOS();
+    protected int getCurrentPosition() {
+        return this.position;
+    }
+
+    protected boolean isEOS() {
+        return this.eos;
+    }
 
     protected void scan() {
         int posStart;

@@ -3,46 +3,13 @@ package com.github.tartakynov.cartoshka.scanners;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.Stack;
+import java.io.StringReader;
 
 public class ScannerTest {
     private static Scanner createTokenizer(final String str) {
-        return new Scanner() {
-            private final char[] source = str.toCharArray();
-            private final Stack<Character> stack = new Stack<>();
-            private int position = -1;
-
-            public Scanner init() {
-                initialize();
-                return this;
-            }
-
-            @Override
-            protected boolean advance() {
-                position++;
-                if (stack.isEmpty()) {
-                    if (position >= source.length) {
-                        return false;
-                    }
-
-                    this.c0_ = source[position];
-                } else {
-                    this.c0_ = stack.pop();
-                }
-
-                return true;
-            }
-
-            @Override
-            protected int getCurrentPosition() {
-                return position;
-            }
-
-            @Override
-            protected boolean isEOS() {
-                return position >= source.length;
-            }
-        }.init();
+        Scanner scanner = new Scanner();
+        scanner.initialize(new StringReader(str));
+        return scanner;
     }
 
     @Test

@@ -4,6 +4,7 @@ import com.github.tartakynov.cartoshka.exceptions.ArgumentException;
 import com.github.tartakynov.cartoshka.exceptions.CartoshkaException;
 import com.github.tartakynov.cartoshka.exceptions.UnexpectedTokenException;
 import com.github.tartakynov.cartoshka.functions.Functions;
+import com.github.tartakynov.cartoshka.scanners.Scanner;
 import com.github.tartakynov.cartoshka.scanners.Token;
 import com.github.tartakynov.cartoshka.scanners.TokenType;
 import com.github.tartakynov.cartoshka.tree.*;
@@ -14,7 +15,7 @@ import com.github.tartakynov.cartoshka.tree.entities.literals.*;
 import java.io.Reader;
 import java.util.*;
 
-public final class CartoParser extends CartoScanner {
+public final class CartoParser extends Scanner {
     private static final int MaxArguments = 32;
 
     private final Map<String, Function> functions = new HashMap<String, Function>() {{
@@ -36,17 +37,23 @@ public final class CartoParser extends CartoScanner {
         put(Functions.greyscale.getName(), Functions.greyscale);
     }};
 
-    private Context context;
+    private final Collection<Reader> sources = new LinkedList<>();
 
-    private CartoParser(Reader input, Context context) {
-        super(input);
-        this.context = context;
+    private Context context = new Context();
+
+    public CartoParser addSource(Reader source) {
+        sources.add(source);
+        return this;
     }
 
-    public static List<Node> parse(Reader input) {
-        CartoParser parser = new CartoParser(input, new Context());
-        parser.initialize();
-        return parser.parsePrimary();
+    public List<Node> parse() {
+        List<Node> root = new ArrayList<>();
+        for (Reader source : sources) {
+            initialize(source);
+            root.addAll(parsePrimary());
+        }
+
+        return root;
     }
 
     public void addOrReplaceFunction(Function function) {
@@ -56,25 +63,25 @@ public final class CartoParser extends CartoScanner {
     // The `primary` rule is the *entry* and *exit* point of the parser.
     // The rules here can appear at any level of the parse tree.
     private List<Node> parsePrimary() {
-        List<Node> root = new ArrayList<>();
+        List<Node> nodes = new ArrayList<>();
         while (peek().getType() != TokenType.EOS && peek().getType() != TokenType.RBRACE) {
             switch (peek().getType()) {
                 case VARIABLE:
-                    root.add(context.setVariable(parseRule()));
+                    nodes.add(context.setVariable(parseRule()));
                     break;
 
                 case IDENTIFIER:
-                    root.add(parseRule());
+                    nodes.add(parseRule());
                     break;
 
                 default:
                     context = context.createNestedBlockContext();
-                    root.add(parseRuleSet());
+                    nodes.add(parseRuleSet());
                     context = context.getParent();
             }
         }
 
-        return root;
+        return nodes;
     }
 
     private Rule parseRule() {
@@ -385,7 +392,7 @@ public final class CartoParser extends CartoScanner {
         return new Filter(op.getType(), left, right);
     }
 
-    protected Token expect(TokenType... types) {
+    private Token expect(TokenType... types) {
         Token token = next();
         for (TokenType type : types) {
             if (token.getType() == type) {

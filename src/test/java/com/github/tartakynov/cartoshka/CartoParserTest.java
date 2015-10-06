@@ -2,14 +2,17 @@ package com.github.tartakynov.cartoshka;
 
 import com.github.tartakynov.cartoshka.tree.Node;
 import com.github.tartakynov.cartoshka.tree.Rule;
+import com.github.tartakynov.cartoshka.tree.Ruleset;
 import com.github.tartakynov.cartoshka.tree.entities.Literal;
 import com.github.tartakynov.cartoshka.tree.entities.literals.Numeric;
 import org.junit.Test;
 
+import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.util.HashSet;
-import java.util.List;
+import java.util.Queue;
 import java.util.Set;
+import java.util.concurrent.LinkedBlockingQueue;
 
 public class CartoParserTest {
     private static Feature featureMock() {
@@ -37,12 +40,22 @@ public class CartoParserTest {
 
     @Test
     public void test() {
-        List<Node> ast = CartoParser.parse(new StringReader("@a: [test]; x: 1 + @a,2,rgb(50%,60%,70%);"));
-        for (Node node : ast) {
+        CartoParser parser = new CartoParser();
+//        ClassLoader cl = this.getClass().getClassLoader();
+//        parser.addSource(new InputStreamReader(cl.getResourceAsStream("roads.mss")));
+//        parser.addSource(new InputStreamReader(cl.getResourceAsStream("style.mss")));
+        parser.addSource(new StringReader("@a: [test]; x: 1 + @a,2,rgb(50%,60%,70%);"));
+        Queue<Node> queue = new LinkedBlockingQueue<>();
+        queue.addAll(parser.parse());
+        while (!queue.isEmpty()) {
+            Node node = queue.poll();
             if (node instanceof Rule) {
                 Rule rule = (Rule) node;
                 Literal value = rule.getValue().ev(featureMock());
                 System.out.println(String.format("%s: %s;", rule.getName(), value));
+            } else if (node instanceof Ruleset) {
+                Ruleset ruleset = (Ruleset) node;
+                queue.addAll(ruleset.getRules());
             }
         }
     }

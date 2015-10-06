@@ -9,12 +9,10 @@ import java.util.Iterator;
 public class Call extends Expression {
     private final Function function;
     private final Collection<Expression> args;
-    private final boolean isDynamic;
 
     public Call(Function function, Collection<Expression> args) {
         this.function = function;
         this.args = args;
-        this.isDynamic = hasDynamicExpression(args);
     }
 
     @Override
@@ -41,6 +39,6 @@ public class Call extends Expression {
 
     @Override
     public boolean isDynamic() {
-        return isDynamic;
+        return hasDynamicExpression(args);
     }
 }

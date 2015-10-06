@@ -10,13 +10,10 @@ public class BinaryOperation extends Expression {
 
     private final Expression right;
 
-    private final boolean isDynamic;
-
     public BinaryOperation(TokenType operator, Expression left, Expression right) {
         this.operator = operator;
         this.left = left;
         this.right = right;
-        this.isDynamic = left.isDynamic() || right.isDynamic();
     }
 
     @Override
@@ -34,6 +31,6 @@ public class BinaryOperation extends Expression {
 
     @Override
     public boolean isDynamic() {
-        return isDynamic;
+        return left.isDynamic() || right.isDynamic();
     }
 }
