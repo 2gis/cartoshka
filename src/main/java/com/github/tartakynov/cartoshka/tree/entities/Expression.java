@@ -1,5 +1,6 @@
 package com.github.tartakynov.cartoshka.tree.entities;
 
+import com.github.tartakynov.cartoshka.Feature;
 import com.github.tartakynov.cartoshka.tree.Node;
 
 import java.util.Collection;
@@ -20,7 +21,7 @@ public abstract class Expression extends Node {
      *
      * @return A literal that results from the evaluation of the expression
      */
-    public abstract Literal ev();
+    public abstract Literal ev(Feature feature);
 
     /**
      * Checks if the expression is dynamic.

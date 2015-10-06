@@ -1,8 +1,10 @@
 package com.github.tartakynov.cartoshka.tree.entities;
 
+import com.github.tartakynov.cartoshka.Feature;
 import com.github.tartakynov.cartoshka.Function;
 
 import java.util.Collection;
+import java.util.Iterator;
 
 public class Call extends Expression {
     private final Function function;
@@ -16,8 +18,25 @@ public class Call extends Expression {
     }
 
     @Override
-    public Literal ev() {
-        return function.apply(args.iterator());
+    public Literal ev(final Feature feature) {
+        return function.apply(new Iterator<Literal>() {
+            Iterator<Expression> iterator = args.iterator();
+
+            @Override
+            public boolean hasNext() {
+                return iterator.hasNext();
+            }
+
+            @Override
+            public Literal next() {
+                return iterator.next().ev(feature);
+            }
+
+            @Override
+            public void remove() {
+                throw new UnsupportedOperationException();
+            }
+        });
     }
 
     @Override

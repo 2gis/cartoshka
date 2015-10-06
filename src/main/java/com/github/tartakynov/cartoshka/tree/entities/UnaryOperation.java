@@ -1,5 +1,6 @@
 package com.github.tartakynov.cartoshka.tree.entities;
 
+import com.github.tartakynov.cartoshka.Feature;
 import com.github.tartakynov.cartoshka.scanners.TokenType;
 
 public class UnaryOperation extends Expression {
@@ -16,8 +17,8 @@ public class UnaryOperation extends Expression {
     }
 
     @Override
-    public Literal ev() {
-        return expression.ev().operate(operator);
+    public Literal ev(Feature feature) {
+        return expression.ev(feature).operate(operator);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.github.tartakynov.cartoshka.tree.entities;
 
+import com.github.tartakynov.cartoshka.Feature;
 import com.github.tartakynov.cartoshka.scanners.TokenType;
 
 public class BinaryOperation extends Expression {
@@ -19,9 +20,9 @@ public class BinaryOperation extends Expression {
     }
 
     @Override
-    public Literal ev() {
-        Literal leftOp = left.ev();
-        Literal rightOp = right.ev();
+    public Literal ev(Feature feature) {
+        Literal leftOp = left.ev(feature);
+        Literal rightOp = right.ev(feature);
         if ((!leftOp.isColor() && rightOp.isColor()) || (leftOp.isNumeric() && rightOp.isDimension())) {
             Literal tmp = leftOp;
             leftOp = rightOp;

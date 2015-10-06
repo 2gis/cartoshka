@@ -117,10 +117,10 @@ public class ScannerTest {
     public void testVariables() {
         Scanner scanner = createTokenizer("@first-1 @second-2");
         Assert.assertEquals(TokenType.VARIABLE, scanner.next().getType());
-        Assert.assertEquals("first-1", scanner.current().getText());
+        Assert.assertEquals("@first-1", scanner.current().getText());
 
         Assert.assertEquals(TokenType.VARIABLE, scanner.next().getType());
-        Assert.assertEquals("second-2", scanner.current().getText());
+        Assert.assertEquals("@second-2", scanner.current().getText());
 
         Assert.assertEquals(TokenType.EOS, scanner.next().getType());
     }

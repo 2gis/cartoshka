@@ -1,6 +1,7 @@
 package com.github.tartakynov.cartoshka.tree.entities;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+import com.github.tartakynov.cartoshka.Feature;
+import com.github.tartakynov.cartoshka.exceptions.CartoshkaException;
 
 public class Field extends Expression {
     private final String name;
@@ -14,8 +15,17 @@ public class Field extends Expression {
     }
 
     @Override
-    public Literal ev() {
-        throw new NotImplementedException();
+    public Literal ev(Feature feature) {
+        if (feature == null) {
+            throw new CartoshkaException(String.format("Feature is not provided to field: %s", name));
+        }
+
+        Literal field = feature.getField(name);
+        if (field == null) {
+            throw new CartoshkaException(String.format("Field not found: %s", name));
+        }
+
+        return field;
     }
 
     @Override

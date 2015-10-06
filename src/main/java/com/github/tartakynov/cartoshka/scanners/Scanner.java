@@ -381,7 +381,7 @@ public abstract class Scanner {
 
     private TokenType scanVariable() {
         expect('@');
-        advance(); // consume @
+        addLiteralCharAdvance(); // consume @
         if (Character.isJavaIdentifierStart(c0_)) {
             scanIdentifierPart();
             return TokenType.VARIABLE;

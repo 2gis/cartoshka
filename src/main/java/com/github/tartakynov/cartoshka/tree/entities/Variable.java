@@ -1,5 +1,6 @@
 package com.github.tartakynov.cartoshka.tree.entities;
 
+import com.github.tartakynov.cartoshka.Feature;
 import com.github.tartakynov.cartoshka.VariableContext;
 import com.github.tartakynov.cartoshka.exceptions.CartoshkaException;
 
@@ -13,8 +14,8 @@ public class Variable extends Expression {
     }
 
     @Override
-    public Literal ev() {
-        return getValue().ev();
+    public Literal ev(Feature feature) {
+        return getValue().ev(feature);
     }
 
     @Override

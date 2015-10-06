@@ -1,7 +1,6 @@
 package com.github.tartakynov.cartoshka.functions;
 
 import com.github.tartakynov.cartoshka.Function;
-import com.github.tartakynov.cartoshka.tree.entities.Expression;
 import com.github.tartakynov.cartoshka.tree.entities.Literal;
 import com.github.tartakynov.cartoshka.tree.entities.literals.Color;
 import com.github.tartakynov.cartoshka.tree.entities.literals.Dimension;
@@ -12,7 +11,7 @@ import java.util.Iterator;
 public class Functions {
     public static Function hsla = new BaseFunction("hsla", 4) {
         @Override
-        public Literal apply(Iterator<Expression> args) {
+        public Literal apply(Iterator<Literal> args) {
             Double h = Arguments.numeric(args, "h", getName(), false);
             Double s = Arguments.numeric(args, "s", getName(), false);
             Double l = Arguments.numeric(args, "l", getName(), false);
@@ -23,7 +22,7 @@ public class Functions {
 
     public static Function hsl = new BaseFunction("hsl", 3) {
         @Override
-        public Literal apply(Iterator<Expression> args) {
+        public Literal apply(Iterator<Literal> args) {
             Double h = Arguments.numeric(args, "h", getName(), false);
             Double s = Arguments.numeric(args, "s", getName(), false);
             Double l = Arguments.numeric(args, "l", getName(), false);
@@ -33,7 +32,7 @@ public class Functions {
 
     public static Function rgba = new BaseFunction("rgba", 4) {
         @Override
-        public Literal apply(Iterator<Expression> args) {
+        public Literal apply(Iterator<Literal> args) {
             Double r = Arguments.numeric(args, "r", getName(), true);
             Double g = Arguments.numeric(args, "g", getName(), true);
             Double b = Arguments.numeric(args, "b", getName(), true);
@@ -44,7 +43,7 @@ public class Functions {
 
     public static Function rgb = new BaseFunction("rgb", 3) {
         @Override
-        public Literal apply(Iterator<Expression> args) {
+        public Literal apply(Iterator<Literal> args) {
             Double r = Arguments.numeric(args, "r", getName(), true);
             Double g = Arguments.numeric(args, "g", getName(), true);
             Double b = Arguments.numeric(args, "b", getName(), true);
@@ -54,7 +53,7 @@ public class Functions {
 
     public static Function hue = new BaseFunction("hue", 1) {
         @Override
-        public Literal apply(Iterator<Expression> args) {
+        public Literal apply(Iterator<Literal> args) {
             Color color = Arguments.color(args, "color", getName());
             return new Numeric(color.getHue(), false);
         }
@@ -62,7 +61,7 @@ public class Functions {
 
     public static Function saturation = new BaseFunction("saturation", 1) {
         @Override
-        public Literal apply(Iterator<Expression> args) {
+        public Literal apply(Iterator<Literal> args) {
             Color color = Arguments.color(args, "color", getName());
             return new Dimension(color.getSaturation() * 100, "%");
         }
@@ -70,7 +69,7 @@ public class Functions {
 
     public static Function lightness = new BaseFunction("lightness", 1) {
         @Override
-        public Literal apply(Iterator<Expression> args) {
+        public Literal apply(Iterator<Literal> args) {
             Color color = Arguments.color(args, "color", getName());
             return new Dimension(color.getLightness() * 100, "%");
         }
@@ -78,7 +77,7 @@ public class Functions {
 
     public static Function alpha = new BaseFunction("alpha", 1) {
         @Override
-        public Literal apply(Iterator<Expression> args) {
+        public Literal apply(Iterator<Literal> args) {
             Color color = Arguments.color(args, "color", getName());
             return new Dimension(color.getAlpha() * 100, "%");
         }
@@ -86,7 +85,7 @@ public class Functions {
 
     public static Function saturate = new BaseFunction("saturate", 2) {
         @Override
-        public Literal apply(Iterator<Expression> args) {
+        public Literal apply(Iterator<Literal> args) {
             Color color = Arguments.color(args, "color", getName());
             Double amount = Arguments.numeric(args, "amount", getName(), false);
             return Color.fromHSLA(
@@ -100,7 +99,7 @@ public class Functions {
 
     public static Function desaturate = new BaseFunction("desaturate", 2) {
         @Override
-        public Literal apply(Iterator<Expression> args) {
+        public Literal apply(Iterator<Literal> args) {
             Color color = Arguments.color(args, "color", getName());
             Double amount = Arguments.numeric(args, "amount", getName(), false);
             return Color.fromHSLA(
@@ -114,7 +113,7 @@ public class Functions {
 
     public static Function lighten = new BaseFunction("lighten", 2) {
         @Override
-        public Literal apply(Iterator<Expression> args) {
+        public Literal apply(Iterator<Literal> args) {
             Color color = Arguments.color(args, "color", getName());
             Double amount = Arguments.numeric(args, "amount", getName(), false);
             return Color.fromHSLA(
@@ -128,7 +127,7 @@ public class Functions {
 
     public static Function darken = new BaseFunction("darken", 2) {
         @Override
-        public Literal apply(Iterator<Expression> args) {
+        public Literal apply(Iterator<Literal> args) {
             Color color = Arguments.color(args, "color", getName());
             Double amount = Arguments.numeric(args, "amount", getName(), false);
             return Color.fromHSLA(
@@ -142,7 +141,7 @@ public class Functions {
 
     public static Function fadein = new BaseFunction("fadein", 2) {
         @Override
-        public Literal apply(Iterator<Expression> args) {
+        public Literal apply(Iterator<Literal> args) {
             Color color = Arguments.color(args, "color", getName());
             Double amount = Arguments.numeric(args, "amount", getName(), false);
             return Color.fromHSLA(
@@ -156,7 +155,7 @@ public class Functions {
 
     public static Function fadeout = new BaseFunction("fadeout", 2) {
         @Override
-        public Literal apply(Iterator<Expression> args) {
+        public Literal apply(Iterator<Literal> args) {
             Color color = Arguments.color(args, "color", getName());
             Double amount = Arguments.numeric(args, "amount", getName(), false);
             return Color.fromHSLA(
@@ -170,7 +169,7 @@ public class Functions {
 
     public static Function spin = new BaseFunction("spin", 2) {
         @Override
-        public Literal apply(Iterator<Expression> args) {
+        public Literal apply(Iterator<Literal> args) {
             Color color = Arguments.color(args, "color", getName());
             int amount = Arguments.numeric(args, "amount", getName(), false).intValue();
             int hue = (color.getHue() + amount) % 360;
@@ -185,7 +184,7 @@ public class Functions {
 
     public static Function greyscale = new BaseFunction("greyscale", 1) {
         @Override
-        public Literal apply(Iterator<Expression> args) {
+        public Literal apply(Iterator<Literal> args) {
             Color color = Arguments.color(args, "color", getName());
             return Color.fromHSLA(
                     color.getHue(),
