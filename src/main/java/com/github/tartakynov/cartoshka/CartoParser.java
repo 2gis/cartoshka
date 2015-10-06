@@ -16,30 +16,23 @@ import java.io.Reader;
 import java.util.*;
 
 public final class CartoParser extends Scanner {
+
     private static final int MaxArguments = 32;
 
-    private final Map<String, Function> functions = new HashMap<String, Function>() {{
-        put(Functions.alpha.getName(), Functions.alpha);
-        put(Functions.darken.getName(), Functions.darken);
-        put(Functions.desaturate.getName(), Functions.desaturate);
-        put(Functions.hsl.getName(), Functions.hsl);
-        put(Functions.hsla.getName(), Functions.hsla);
-        put(Functions.hue.getName(), Functions.hue);
-        put(Functions.lighten.getName(), Functions.lighten);
-        put(Functions.lightness.getName(), Functions.lightness);
-        put(Functions.rgb.getName(), Functions.rgb);
-        put(Functions.rgba.getName(), Functions.rgba);
-        put(Functions.saturate.getName(), Functions.saturate);
-        put(Functions.saturation.getName(), Functions.saturation);
-        put(Functions.fadein.getName(), Functions.fadein);
-        put(Functions.fadeout.getName(), Functions.fadeout);
-        put(Functions.spin.getName(), Functions.spin);
-        put(Functions.greyscale.getName(), Functions.greyscale);
-    }};
+    private final Map<String, Function> functions;
 
-    private final Collection<Reader> sources = new LinkedList<>();
+    private final Collection<Reader> sources;
 
-    private Context context = new Context();
+    private Context context;
+
+    public CartoParser() {
+        this.functions = new HashMap<>();
+        this.sources = new LinkedList<>();
+        this.context = new Context();
+        for (Function function : Functions.BUILTIN_FUNCTIONS) {
+            addOrReplaceFunction(function);
+        }
+    }
 
     public CartoParser addSource(Reader source) {
         sources.add(source);

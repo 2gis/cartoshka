@@ -7,7 +7,6 @@ import com.github.tartakynov.cartoshka.tree.entities.Literal;
 import com.github.tartakynov.cartoshka.tree.entities.literals.Numeric;
 import org.junit.Test;
 
-import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.util.HashSet;
 import java.util.Queue;
@@ -44,7 +43,7 @@ public class CartoParserTest {
 //        ClassLoader cl = this.getClass().getClassLoader();
 //        parser.addSource(new InputStreamReader(cl.getResourceAsStream("roads.mss")));
 //        parser.addSource(new InputStreamReader(cl.getResourceAsStream("style.mss")));
-        parser.addSource(new StringReader("@a: [test]; x: 1 + @a,2,rgb(50%,60%,70%);"));
+        parser.addSource(new StringReader("@a: [test]; x: 1 + @a,2,lighten(rgb(100,110,120), 10%);"));
         Queue<Node> queue = new LinkedBlockingQueue<>();
         queue.addAll(parser.parse());
         while (!queue.isEmpty()) {

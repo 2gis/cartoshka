@@ -6,10 +6,12 @@ import com.github.tartakynov.cartoshka.tree.entities.literals.Color;
 import com.github.tartakynov.cartoshka.tree.entities.literals.Dimension;
 import com.github.tartakynov.cartoshka.tree.entities.literals.Numeric;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 
 public class Functions {
-    public static Function hsla = new BaseFunction("hsla", 4) {
+    public static final Function hsla = new BaseFunction("hsla", 4) {
         @Override
         public Literal apply(Iterator<Literal> args) {
             Double h = Arguments.numeric(args, "h", getName(), false);
@@ -20,7 +22,7 @@ public class Functions {
         }
     };
 
-    public static Function hsl = new BaseFunction("hsl", 3) {
+    public static final Function hsl = new BaseFunction("hsl", 3) {
         @Override
         public Literal apply(Iterator<Literal> args) {
             Double h = Arguments.numeric(args, "h", getName(), false);
@@ -30,7 +32,7 @@ public class Functions {
         }
     };
 
-    public static Function rgba = new BaseFunction("rgba", 4) {
+    public static final Function rgba = new BaseFunction("rgba", 4) {
         @Override
         public Literal apply(Iterator<Literal> args) {
             Double r = Arguments.numeric(args, "r", getName(), true);
@@ -41,7 +43,7 @@ public class Functions {
         }
     };
 
-    public static Function rgb = new BaseFunction("rgb", 3) {
+    public static final Function rgb = new BaseFunction("rgb", 3) {
         @Override
         public Literal apply(Iterator<Literal> args) {
             Double r = Arguments.numeric(args, "r", getName(), true);
@@ -51,7 +53,7 @@ public class Functions {
         }
     };
 
-    public static Function hue = new BaseFunction("hue", 1) {
+    public static final Function hue = new BaseFunction("hue", 1) {
         @Override
         public Literal apply(Iterator<Literal> args) {
             Color color = Arguments.color(args, "color", getName());
@@ -59,7 +61,7 @@ public class Functions {
         }
     };
 
-    public static Function saturation = new BaseFunction("saturation", 1) {
+    public static final Function saturation = new BaseFunction("saturation", 1) {
         @Override
         public Literal apply(Iterator<Literal> args) {
             Color color = Arguments.color(args, "color", getName());
@@ -67,7 +69,7 @@ public class Functions {
         }
     };
 
-    public static Function lightness = new BaseFunction("lightness", 1) {
+    public static final Function lightness = new BaseFunction("lightness", 1) {
         @Override
         public Literal apply(Iterator<Literal> args) {
             Color color = Arguments.color(args, "color", getName());
@@ -75,7 +77,7 @@ public class Functions {
         }
     };
 
-    public static Function alpha = new BaseFunction("alpha", 1) {
+    public static final Function alpha = new BaseFunction("alpha", 1) {
         @Override
         public Literal apply(Iterator<Literal> args) {
             Color color = Arguments.color(args, "color", getName());
@@ -83,7 +85,7 @@ public class Functions {
         }
     };
 
-    public static Function saturate = new BaseFunction("saturate", 2) {
+    public static final Function saturate = new BaseFunction("saturate", 2) {
         @Override
         public Literal apply(Iterator<Literal> args) {
             Color color = Arguments.color(args, "color", getName());
@@ -97,7 +99,7 @@ public class Functions {
         }
     };
 
-    public static Function desaturate = new BaseFunction("desaturate", 2) {
+    public static final Function desaturate = new BaseFunction("desaturate", 2) {
         @Override
         public Literal apply(Iterator<Literal> args) {
             Color color = Arguments.color(args, "color", getName());
@@ -111,7 +113,7 @@ public class Functions {
         }
     };
 
-    public static Function lighten = new BaseFunction("lighten", 2) {
+    public static final Function lighten = new BaseFunction("lighten", 2) {
         @Override
         public Literal apply(Iterator<Literal> args) {
             Color color = Arguments.color(args, "color", getName());
@@ -125,7 +127,7 @@ public class Functions {
         }
     };
 
-    public static Function darken = new BaseFunction("darken", 2) {
+    public static final Function darken = new BaseFunction("darken", 2) {
         @Override
         public Literal apply(Iterator<Literal> args) {
             Color color = Arguments.color(args, "color", getName());
@@ -139,7 +141,7 @@ public class Functions {
         }
     };
 
-    public static Function fadein = new BaseFunction("fadein", 2) {
+    public static final Function fadein = new BaseFunction("fadein", 2) {
         @Override
         public Literal apply(Iterator<Literal> args) {
             Color color = Arguments.color(args, "color", getName());
@@ -153,7 +155,7 @@ public class Functions {
         }
     };
 
-    public static Function fadeout = new BaseFunction("fadeout", 2) {
+    public static final Function fadeout = new BaseFunction("fadeout", 2) {
         @Override
         public Literal apply(Iterator<Literal> args) {
             Color color = Arguments.color(args, "color", getName());
@@ -167,7 +169,7 @@ public class Functions {
         }
     };
 
-    public static Function spin = new BaseFunction("spin", 2) {
+    public static final Function spin = new BaseFunction("spin", 2) {
         @Override
         public Literal apply(Iterator<Literal> args) {
             Color color = Arguments.color(args, "color", getName());
@@ -182,7 +184,7 @@ public class Functions {
         }
     };
 
-    public static Function greyscale = new BaseFunction("greyscale", 1) {
+    public static final Function greyscale = new BaseFunction("greyscale", 1) {
         @Override
         public Literal apply(Iterator<Literal> args) {
             Color color = Arguments.color(args, "color", getName());
@@ -194,4 +196,23 @@ public class Functions {
             );
         }
     };
+
+    public static final Collection<Function> BUILTIN_FUNCTIONS = new ArrayList<Function>() {{
+        add(Functions.alpha);
+        add(Functions.darken);
+        add(Functions.desaturate);
+        add(Functions.hsl);
+        add(Functions.hsla);
+        add(Functions.hue);
+        add(Functions.lighten);
+        add(Functions.lightness);
+        add(Functions.rgb);
+        add(Functions.rgba);
+        add(Functions.saturate);
+        add(Functions.saturation);
+        add(Functions.fadein);
+        add(Functions.fadeout);
+        add(Functions.spin);
+        add(Functions.greyscale);
+    }};
 }
