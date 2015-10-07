@@ -7,10 +7,12 @@ public class Rule extends Node {
     private final String name;
     private final Value value;
     private final boolean isVariable;
+    private final boolean isDefaultInstance;
 
     public Rule(String name, Value value, boolean isVariable) {
         String[] parts = name.split("/");
         this.instance = parts.length == 1 ? "__default__" : parts[0];
+        this.isDefaultInstance = parts.length == 1 || parts[0].equals("__default__");
         this.name = parts.length == 1 ? name : parts[1];
         this.value = value;
         this.isVariable = isVariable;
@@ -30,5 +32,9 @@ public class Rule extends Node {
 
     public boolean isVariable() {
         return isVariable;
+    }
+
+    public boolean isDefaultInstance() {
+        return isDefaultInstance;
     }
 }

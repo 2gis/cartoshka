@@ -28,11 +28,7 @@ public class CartoParserTest {
 
             @Override
             public Literal getField(String fieldName) {
-                if (fieldName.equals("test")) {
-                    return new Numeric(100500, false);
-                }
-
-                return null;
+                return new Numeric(100500, false);
             }
         };
     }
@@ -43,7 +39,18 @@ public class CartoParserTest {
 //        ClassLoader cl = this.getClass().getClassLoader();
 //        parser.addSource(new InputStreamReader(cl.getResourceAsStream("roads.mss")));
 //        parser.addSource(new InputStreamReader(cl.getResourceAsStream("style.mss")));
-        parser.addSource(new StringReader("@a: [test]; x: 1 + @a,2,lighten(rgb(100,110,120), 10%); z:  1 + '\\\" expansion @{a}_' + [test] + \"_b\";"));
+        parser.addSource(new StringReader("#cities{\n" +
+                "  [scalerank=0][zoom>=4],\n" +
+                "  [scalerank=1][zoom>=5],\n" +
+                "  [scalerank=2][x=2][zoom>=6],\n" +
+                "  [scalerank=3][zoom>=7],\n" +
+                "  [scalerank=4][zoom>=8]{\n" +
+                "      text-name: \"[name_z]\";\n" +
+                "      text-fill: #494430;\n" +
+                "      text-halo-fill: #fff;\n" +
+                "      text-face-name: 'Open Sans';\n" +
+                "  }\n" +
+                "}\n"));
         Queue<Node> queue = new LinkedBlockingQueue<>();
         queue.addAll(parser.parse());
         while (!queue.isEmpty()) {
@@ -51,7 +58,11 @@ public class CartoParserTest {
             if (node instanceof Rule) {
                 Rule rule = (Rule) node;
                 Literal value = rule.getValue().ev(featureMock());
-                System.out.println(String.format("%s: %s;", rule.getName(), value));
+                System.out.println(
+                        String.format("%s: %s;",
+                                rule.isDefaultInstance() ? rule.getName() : rule.getInstance() + "/" + rule.getName(),
+                                value)
+                );
             } else if (node instanceof Ruleset) {
                 Ruleset ruleset = (Ruleset) node;
                 queue.addAll(ruleset.getRules());
