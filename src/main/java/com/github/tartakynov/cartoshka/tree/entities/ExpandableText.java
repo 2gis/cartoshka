@@ -98,5 +98,6 @@ public class ExpandableText extends Expression {
 
     @Override
     public void fold() {
+        fold(variables.values());
     }
 }
