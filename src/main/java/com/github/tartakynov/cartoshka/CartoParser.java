@@ -175,12 +175,6 @@ public final class CartoParser extends Scanner {
                 String number = next().getText();
                 return new Numeric(Double.valueOf(number), number.indexOf('.') >= 0);
 
-            case STRING_LITERAL:
-                return new ExpandableText(context, next().getText());
-
-            case URL:
-                return new ExpandableText(context, next().getText(), true);
-
             case TRUE_LITERAL:
                 next();
                 return new Boolean(true);
@@ -210,6 +204,10 @@ public final class CartoParser extends Scanner {
                 expect(TokenType.RPAREN);
                 return expression;
 
+            case STRING_LITERAL:
+            case URL:
+                return parseString(peek().getType() == TokenType.URL);
+
             case MAP_KEYWORD:
             case ZOOM_KEYWORD:
             case IDENTIFIER:
@@ -225,6 +223,15 @@ public final class CartoParser extends Scanner {
             default:
                 throw new CartoshkaException(String.format("Unhandled expression %s at %d", peek().getText(), peek().getStart()));
         }
+    }
+
+    private Expression parseString(boolean isURL) {
+        ExpandableText text = new ExpandableText(context, next().getText(), isURL);
+        if (text.isPlain()) {
+            return text.ev(null);
+        }
+
+        return text;
     }
 
     private Call parseFunctionCall() {
@@ -408,7 +415,11 @@ public final class CartoParser extends Scanner {
             if (literal.isKeyword()) {
                 if (literal.toString().equals(TokenType.ZOOM_KEYWORD.getStr())) {
                     return new Zoom(op.getType(), left, right);
+                } else {
+                    left = new Field(literal.toString());
                 }
+            } else if (literal.isText()) {
+                left = new Field(literal.toString());
             }
         }
 

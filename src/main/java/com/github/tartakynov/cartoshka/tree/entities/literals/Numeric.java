@@ -42,7 +42,7 @@ public class Numeric extends Literal {
                     return new Numeric(value % operand.toNumber(), hasDot || operand.hasDot());
             }
         } else if (operand.isText() && operator == TokenType.ADD) {
-            return new Text(toString() + operand.toString());
+            return new Text(toString() + operand.toString(), false);
         }
 
         return super.operate(operator, operand);

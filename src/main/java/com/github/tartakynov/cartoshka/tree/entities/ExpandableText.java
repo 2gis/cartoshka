@@ -91,6 +91,10 @@ public class ExpandableText extends Expression {
         return new Text(result, isURL);
     }
 
+    public boolean isPlain() {
+        return fields.isEmpty() && variables.isEmpty();
+    }
+
     @Override
     public boolean isDynamic() {
         return !fields.isEmpty() || hasDynamicExpression(variables.values());

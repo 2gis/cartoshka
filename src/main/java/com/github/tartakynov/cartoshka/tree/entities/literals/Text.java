@@ -8,11 +8,6 @@ public class Text extends Literal {
 
     private final boolean isURL;
 
-    public Text(String value) {
-        this.value = value;
-        this.isURL = false;
-    }
-
     public Text(String value, boolean isURL) {
         this.value = value;
         this.isURL = isURL;
@@ -31,7 +26,7 @@ public class Text extends Literal {
     @Override
     public Literal operate(TokenType operator, Literal operand) {
         if (operator == TokenType.ADD && (operand.isNumeric() || operand.isText() || operand.isURL())) {
-            return new Text(this.toString() + operand.toString());
+            return new Text(this.toString() + operand.toString(), isURL);
         }
 
         return super.operate(operator, operand);
