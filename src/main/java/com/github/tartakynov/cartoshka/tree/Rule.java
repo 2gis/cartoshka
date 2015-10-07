@@ -37,4 +37,9 @@ public class Rule extends Node {
     public boolean isDefaultInstance() {
         return isDefaultInstance;
     }
+
+    @Override
+    public void fold() {
+        value.fold();
+    }
 }

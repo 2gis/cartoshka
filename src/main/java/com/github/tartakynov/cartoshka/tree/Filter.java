@@ -6,9 +6,9 @@ import com.github.tartakynov.cartoshka.tree.entities.Expression;
 public class Filter extends Node {
     private final TokenType operator;
 
-    private final Expression left;
+    private Expression left;
 
-    private final Expression right;
+    private Expression right;
 
     public Filter(TokenType operator, Expression left, Expression right) {
         this.operator = operator;
@@ -26,5 +26,11 @@ public class Filter extends Node {
 
     public Expression getRight() {
         return right;
+    }
+
+    @Override
+    public void fold() {
+        left = fold(left);
+        right = fold(right);
     }
 }

@@ -6,9 +6,9 @@ import com.github.tartakynov.cartoshka.scanners.TokenType;
 public class BinaryOperation extends Expression {
     private final TokenType operator;
 
-    private final Expression left;
+    private Expression left;
 
-    private final Expression right;
+    private Expression right;
 
     public BinaryOperation(TokenType operator, Expression left, Expression right) {
         this.operator = operator;
@@ -32,5 +32,11 @@ public class BinaryOperation extends Expression {
     @Override
     public boolean isDynamic() {
         return left.isDynamic() || right.isDynamic();
+    }
+
+    @Override
+    public void fold() {
+        left = fold(left);
+        right = fold(right);
     }
 }

@@ -8,7 +8,7 @@ import java.util.Collection;
 import java.util.List;
 
 public class Value extends Expression {
-    private final Collection<Expression> expressions;
+    private Collection<Expression> expressions;
 
     public Value(Collection<Expression> expressions) {
         this.expressions = expressions;
@@ -31,5 +31,15 @@ public class Value extends Expression {
     @Override
     public boolean isDynamic() {
         return hasDynamicExpression(expressions);
+    }
+
+    @Override
+    public void fold() {
+        Collection<Expression> newExpressions = new ArrayList<>();
+        for (Expression expression : expressions) {
+            newExpressions.add(fold(expression));
+        }
+
+        expressions = newExpressions;
     }
 }

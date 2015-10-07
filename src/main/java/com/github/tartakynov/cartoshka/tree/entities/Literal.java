@@ -71,4 +71,8 @@ public abstract class Literal extends Expression {
     public boolean isLiteral() {
         return true;
     }
+
+    @Override
+    public void fold() {
+    }
 }

@@ -9,6 +9,10 @@ public class Element extends Node {
         this.type = type;
     }
 
+    @Override
+    public void fold() {
+    }
+
     public enum ElementType {
         MAP,
         ID,

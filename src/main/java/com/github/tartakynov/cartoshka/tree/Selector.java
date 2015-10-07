@@ -14,4 +14,27 @@ public class Selector extends Node {
         this.zooms = zooms;
         this.attachment = attachment;
     }
+
+    public Collection<Element> getElements() {
+        return elements;
+    }
+
+    public Collection<Filter> getFilters() {
+        return filters;
+    }
+
+    public Collection<Zoom> getZooms() {
+        return zooms;
+    }
+
+    public String getAttachment() {
+        return attachment;
+    }
+
+    @Override
+    public void fold() {
+        fold(elements);
+        fold(filters);
+        fold(zooms);
+    }
 }

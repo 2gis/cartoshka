@@ -18,4 +18,10 @@ public class Ruleset extends Node {
     public Collection<Node> getRules() {
         return rules;
     }
+
+    @Override
+    public void fold() {
+        fold(rules);
+        fold(selectors);
+    }
 }

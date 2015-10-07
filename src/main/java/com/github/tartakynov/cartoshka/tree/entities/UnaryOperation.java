@@ -6,7 +6,7 @@ import com.github.tartakynov.cartoshka.scanners.TokenType;
 public class UnaryOperation extends Expression {
     private final TokenType operator;
 
-    private final Expression expression;
+    private Expression expression;
 
     public UnaryOperation(TokenType operator, Expression expression) {
         this.operator = operator;
@@ -21,5 +21,10 @@ public class UnaryOperation extends Expression {
     @Override
     public boolean isDynamic() {
         return expression.isDynamic();
+    }
+
+    @Override
+    public void fold() {
+        expression = fold(expression);
     }
 }

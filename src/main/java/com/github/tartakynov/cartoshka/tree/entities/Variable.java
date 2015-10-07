@@ -7,6 +7,7 @@ import com.github.tartakynov.cartoshka.exceptions.CartoshkaException;
 public class Variable extends Expression {
     private final String name;
     private final Context context;
+    private Value value;
 
     public Variable(Context context, String name) {
         this.context = context;
@@ -23,12 +24,19 @@ public class Variable extends Expression {
         return getValue().isDynamic();
     }
 
-    private Value getValue() {
-        Value value = context.getVariable(name);
+    private synchronized Value getValue() {
         if (value == null) {
-            throw new CartoshkaException(String.format("Undefined variable: %s", name));
+            value = context.getVariable(name);
+            if (value == null) {
+                throw new CartoshkaException(String.format("Undefined variable: %s", name));
+            }
         }
 
         return value;
+    }
+
+    @Override
+    public void fold() {
+        getValue().fold();
     }
 }

@@ -25,13 +25,35 @@ public final class CartoParser extends Scanner {
 
     private Context context;
 
+    private boolean includeVariables;
+
+    private boolean foldNodes;
+
     public CartoParser() {
         this.functions = new HashMap<>();
         this.sources = new LinkedList<>();
         this.context = new Context();
+        this.includeVariables = false;
+        this.foldNodes = true;
         for (Function function : Functions.BUILTIN_FUNCTIONS) {
             addOrReplaceFunction(function);
         }
+    }
+
+    public boolean getIncludeVariables() {
+        return includeVariables;
+    }
+
+    public void setIncludeVariables(boolean includeVariables) {
+        this.includeVariables = includeVariables;
+    }
+
+    public boolean getFoldNodes() {
+        return foldNodes;
+    }
+
+    public void setFoldNodes(boolean foldNodes) {
+        this.foldNodes = foldNodes;
     }
 
     public CartoParser addSource(Reader source) {
@@ -44,6 +66,12 @@ public final class CartoParser extends Scanner {
         for (Reader source : sources) {
             initialize(source);
             root.addAll(parsePrimary());
+        }
+
+        if (foldNodes) {
+            for (Node node : root) {
+                node.fold();
+            }
         }
 
         return root;
@@ -60,7 +88,11 @@ public final class CartoParser extends Scanner {
         while (peek().getType() != TokenType.EOS && peek().getType() != TokenType.RBRACE) {
             switch (peek().getType()) {
                 case VARIABLE:
-                    nodes.add(context.setVariable(parseRule()));
+                    Rule variable = context.setVariable(parseRule());
+                    if (includeVariables) {
+                        nodes.add(variable);
+                    }
+
                     break;
 
                 case IDENTIFIER:

@@ -32,4 +32,8 @@ public class Field extends Expression {
     public boolean isDynamic() {
         return true;
     }
+
+    @Override
+    public void fold() {
+    }
 }

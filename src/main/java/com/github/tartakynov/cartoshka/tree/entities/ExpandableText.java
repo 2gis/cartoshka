@@ -95,4 +95,8 @@ public class ExpandableText extends Expression {
     public boolean isDynamic() {
         return !fields.isEmpty() || hasDynamicExpression(variables.values());
     }
+
+    @Override
+    public void fold() {
+    }
 }
