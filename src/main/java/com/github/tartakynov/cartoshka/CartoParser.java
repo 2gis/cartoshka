@@ -144,7 +144,7 @@ public final class CartoParser extends Scanner {
                 return new Numeric(Double.valueOf(number), number.indexOf('.') >= 0);
 
             case STRING_LITERAL:
-                return new Quoted(next().getText());
+                return new ExpandableText(context, next().getText());
 
             case TRUE_LITERAL:
                 next();
@@ -377,8 +377,6 @@ public final class CartoParser extends Scanner {
                 if (literal.toString().equals(TokenType.ZOOM_KEYWORD.getStr())) {
                     return new Zoom(op.getType(), left, right);
                 }
-            } else if (literal.isQuoted()) {
-                left = new Field(literal.toString());
             }
         }
 

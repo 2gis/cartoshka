@@ -39,7 +39,7 @@ public abstract class Literal extends Expression {
         return false;
     }
 
-    public boolean isQuoted() {
+    public boolean isText() {
         return false;
     }
 
