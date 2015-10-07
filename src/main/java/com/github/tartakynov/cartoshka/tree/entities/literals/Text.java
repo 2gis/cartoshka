@@ -6,8 +6,16 @@ import com.github.tartakynov.cartoshka.tree.entities.Literal;
 public class Text extends Literal {
     private final String value;
 
+    private final boolean isURL;
+
     public Text(String value) {
         this.value = value;
+        this.isURL = false;
+    }
+
+    public Text(String value, boolean isURL) {
+        this.value = value;
+        this.isURL = isURL;
     }
 
     @Override
@@ -31,5 +39,10 @@ public class Text extends Literal {
 
     public String getValue() {
         return value;
+    }
+
+    @Override
+    public boolean isURL() {
+        return isURL;
     }
 }

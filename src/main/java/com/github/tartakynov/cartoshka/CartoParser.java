@@ -146,6 +146,9 @@ public final class CartoParser extends Scanner {
             case STRING_LITERAL:
                 return new ExpandableText(context, next().getText());
 
+            case URL:
+                return new ExpandableText(context, next().getText(), true);
+
             case TRUE_LITERAL:
                 next();
                 return new Boolean(true);
@@ -162,9 +165,6 @@ public final class CartoParser extends Scanner {
 
             case HASH:
                 return parseHexColor();
-
-            case URL:
-                return new Url(next().getText());
 
             case LBRACK:
                 expect(TokenType.LBRACK);

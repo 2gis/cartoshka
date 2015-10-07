@@ -15,9 +15,18 @@ public class ExpandableText extends Expression {
 
     private final String value;
 
+    private final boolean isURL;
+
     public ExpandableText(Context context, String value) {
         this.context = context;
         this.value = initialize(value);
+        this.isURL = false;
+    }
+
+    public ExpandableText(Context context, String value, boolean isURL) {
+        this.context = context;
+        this.value = initialize(value);
+        this.isURL = isURL;
     }
 
     private String initialize(String value) {
@@ -79,7 +88,7 @@ public class ExpandableText extends Expression {
             result = result.replaceAll(pattern, field.ev(feature).toString());
         }
 
-        return new Text(result);
+        return new Text(result, isURL);
     }
 
     @Override
