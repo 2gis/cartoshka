@@ -371,7 +371,7 @@ public final class CartoParser extends Scanner {
         Token op = expect(TokenType.EQ, TokenType.NE, TokenType.LT, TokenType.GT, TokenType.LTE, TokenType.GTE);
         Expression right = parseExpression();
         expect(TokenType.RBRACK);
-        if (left instanceof Literal) {
+        if (left.isLiteral()) {
             Literal literal = (Literal) left;
             if (literal.isKeyword()) {
                 if (literal.toString().equals(TokenType.ZOOM_KEYWORD.getStr())) {
