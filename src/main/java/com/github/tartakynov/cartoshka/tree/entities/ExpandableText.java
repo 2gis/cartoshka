@@ -55,8 +55,10 @@ public class ExpandableText extends Expression {
                     break;
             }
 
-            sb.append(value.charAt(start));
-            start++;
+            if (start < length) {
+                sb.append(value.charAt(start));
+                start++;
+            }
         }
 
         return sb.toString();

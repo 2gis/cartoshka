@@ -43,7 +43,7 @@ public class CartoParserTest {
 //        ClassLoader cl = this.getClass().getClassLoader();
 //        parser.addSource(new InputStreamReader(cl.getResourceAsStream("roads.mss")));
 //        parser.addSource(new InputStreamReader(cl.getResourceAsStream("style.mss")));
-        parser.addSource(new StringReader("@a: [test]; x: 1 + @a,2,lighten(rgb(100,110,120), 10%); z:  1 + ' expansion @{a}_' + [test] + \"_b\";"));
+        parser.addSource(new StringReader("@a: [test]; x: 1 + @a,2,lighten(rgb(100,110,120), 10%); z:  1 + '\\\" expansion @{a}_' + [test] + \"_b\";"));
         Queue<Node> queue = new LinkedBlockingQueue<>();
         queue.addAll(parser.parse());
         while (!queue.isEmpty()) {

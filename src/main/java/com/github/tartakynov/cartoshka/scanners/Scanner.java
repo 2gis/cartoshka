@@ -314,6 +314,9 @@ public class Scanner {
             } else if (c0_ == rightQuote) {
                 advance(); // consume quote
                 return TokenType.STRING_LITERAL;
+            } else if (c0_ == '\\') {
+                advance();
+                literal.append(c0_);
             } else {
                 literal.append(c0_);
             }
