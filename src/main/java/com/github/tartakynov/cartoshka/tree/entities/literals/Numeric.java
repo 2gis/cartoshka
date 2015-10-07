@@ -41,6 +41,8 @@ public class Numeric extends Literal {
                 case MOD:
                     return new Numeric(value % operand.toNumber(), hasDot || operand.hasDot());
             }
+        } else if (operand.isText() && operator == TokenType.ADD) {
+            return new Text(toString() + operand.toString());
         }
 
         return super.operate(operator, operand);
