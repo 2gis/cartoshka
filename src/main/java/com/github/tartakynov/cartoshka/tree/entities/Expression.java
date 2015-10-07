@@ -6,7 +6,7 @@ import com.github.tartakynov.cartoshka.tree.Node;
 import java.util.Collection;
 
 public abstract class Expression extends Node {
-    protected static boolean hasDynamicExpression(Collection<Expression> args) {
+    protected static boolean hasDynamicExpression(Collection<? extends Expression> args) {
         for (Expression arg : args) {
             if (arg.isDynamic()) {
                 return true;
