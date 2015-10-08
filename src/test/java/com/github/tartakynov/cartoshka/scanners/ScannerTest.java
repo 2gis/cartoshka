@@ -8,7 +8,7 @@ import java.io.StringReader;
 public class ScannerTest {
     private static Scanner createTokenizer(final String str) {
         Scanner scanner = new Scanner();
-        scanner.initialize(new StringReader(str));
+        scanner.initialize(new Source("test", new StringReader(str)));
         return scanner;
     }
 

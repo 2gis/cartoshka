@@ -61,7 +61,7 @@ public class Numeric extends Literal {
     @Override
     public String toString() {
         if (hasDot) {
-            return Double.toString(value);
+            return Double.toString(Math.round(value * 100d) / 100d);
         }
 
         return Integer.toString((int) value);

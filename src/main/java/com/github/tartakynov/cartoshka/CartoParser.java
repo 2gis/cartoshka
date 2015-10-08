@@ -3,6 +3,7 @@ package com.github.tartakynov.cartoshka;
 import com.github.tartakynov.cartoshka.exceptions.CartoshkaException;
 import com.github.tartakynov.cartoshka.functions.Functions;
 import com.github.tartakynov.cartoshka.scanners.Scanner;
+import com.github.tartakynov.cartoshka.scanners.Source;
 import com.github.tartakynov.cartoshka.scanners.Token;
 import com.github.tartakynov.cartoshka.scanners.TokenType;
 import com.github.tartakynov.cartoshka.tree.*;
@@ -14,12 +15,11 @@ import java.io.Reader;
 import java.util.*;
 
 public final class CartoParser extends Scanner {
-
     private static final int MaxArguments = 32;
 
     private final Map<String, Function> functions;
 
-    private final Collection<Reader> sources;
+    private final Collection<Source> sources;
 
     private Context context;
 
@@ -54,14 +54,14 @@ public final class CartoParser extends Scanner {
         this.foldNodes = foldNodes;
     }
 
-    public CartoParser addSource(Reader source) {
-        sources.add(source);
+    public CartoParser addSource(String name, Reader reader) {
+        sources.add(new Source(name, reader));
         return this;
     }
 
     public List<Node> parse() {
         List<Node> root = new ArrayList<>();
-        for (Reader source : sources) {
+        for (Source source : sources) {
             initialize(source);
             root.addAll(parsePrimary());
         }
@@ -379,7 +379,7 @@ public final class CartoParser extends Scanner {
                     break;
 
                 default:
-                    throw CartoshkaException.unexpectedToken(peek().getType().toString(), getCurrentPosition());
+                    throw CartoshkaException.unexpectedToken(peek().getType().toString(), getOffset());
             }
 
             segments++;

@@ -7,6 +7,7 @@ import java.io.Reader;
 import java.util.*;
 
 public class Scanner {
+
     protected static final Map<String, TokenType> KEYWORDS = new HashMap<>();
 
     protected static final Set<String> DIMENSION_UNITS = new HashSet<>(Arrays.asList("m", "cm", "in", "mm", "pt", "pc", "px", "%"));
@@ -24,7 +25,7 @@ public class Scanner {
 
     private final StringBuilder literal = new StringBuilder();
     protected char c0_;
-    private Reader source;
+    private Reader reader;
     private Token next;
     private Token current;
     private int offset;
@@ -37,15 +38,15 @@ public class Scanner {
         return c == '\n' || c == '\r';
     }
 
-    protected void initialize(Reader source, String name) {
+    protected void initialize(Source source) {
         this.offset = -1;
         this.eos = false;
         this.current = null;
-        this.source = source;
+        this.reader = source.reader;
         this.literal.setLength(0);
         this.line = 1;
         this.lineOffset = 0;
-        this.sourceName = name;
+        this.sourceName = source.name;
         advance();
         skipWhiteSpace();
         scan();
@@ -74,7 +75,7 @@ public class Scanner {
 
     protected boolean advance() {
         try {
-            int c = this.source.read();
+            int c = this.reader.read();
             if (c < 0) {
                 this.eos = true;
                 return false;
