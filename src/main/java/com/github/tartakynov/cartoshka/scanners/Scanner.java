@@ -29,6 +29,8 @@ public class Scanner {
     private Token current;
     private int position;
     private boolean eos;
+    private int line;
+    private int lineStart;
 
     private static boolean isLineTerminator(char c) {
         return c == '\n' || c == '\r';
@@ -40,6 +42,8 @@ public class Scanner {
         this.current = null;
         this.source = source;
         this.literal.setLength(0);
+        this.line = 1;
+        this.lineStart = 0;
         advance();
         skipWhiteSpace();
         scan();
@@ -76,6 +80,14 @@ public class Scanner {
 
             this.c0_ = (char) c;
             this.position++;
+            if (c0_ == '\n') {
+                line++;
+            }
+
+            if (c0_ == '\r' || c0_ == '\n') {
+                lineStart = position + 1;
+            }
+
             return true;
         } catch (IOException ex) {
             throw new RuntimeException(ex);
@@ -84,6 +96,14 @@ public class Scanner {
 
     protected int getCurrentPosition() {
         return this.position;
+    }
+
+    public int getLine() {
+        return this.line;
+    }
+
+    public int getLinePosition() {
+        return this.position - this.lineStart;
     }
 
     protected boolean isEOS() {
