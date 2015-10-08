@@ -42,7 +42,7 @@ public class Numeric extends Literal {
                     return new Numeric(value % operand.toNumber(), hasDot || operand.hasDot());
             }
         } else if (operand.isText() && operator == TokenType.ADD) {
-            return new Text(toString() + operand.toString(), false);
+            return new Text(toString() + operand.toString(), false, false);
         }
 
         return super.operate(operator, operand);
@@ -65,5 +65,14 @@ public class Numeric extends Literal {
         }
 
         return Integer.toString((int) value);
+    }
+
+    @Override
+    public int compareTo(Literal o) {
+        if (hasDot) {
+            return Long.compare(toNumber().longValue(), o.toNumber().longValue());
+        }
+
+        return Double.compare(value, o.toNumber());
     }
 }

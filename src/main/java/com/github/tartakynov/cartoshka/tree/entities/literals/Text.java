@@ -8,9 +8,12 @@ public class Text extends Literal {
 
     private final boolean isURL;
 
-    public Text(String value, boolean isURL) {
+    private final boolean isKeyword;
+
+    public Text(String value, boolean isURL, boolean isKeyword) {
         this.value = value;
         this.isURL = isURL;
+        this.isKeyword = isKeyword;
     }
 
     @Override
@@ -26,7 +29,7 @@ public class Text extends Literal {
     @Override
     public Literal operate(TokenType operator, Literal operand) {
         if (operator == TokenType.ADD && (operand.isNumeric() || operand.isText() || operand.isURL())) {
-            return new Text(this.toString() + operand.toString(), isURL);
+            return new Text(this.toString() + operand.toString(), isURL, false);
         }
 
         return super.operate(operator, operand);
@@ -39,5 +42,15 @@ public class Text extends Literal {
     @Override
     public boolean isURL() {
         return isURL;
+    }
+
+    @Override
+    public boolean isKeyword() {
+        return isKeyword;
+    }
+
+    @Override
+    public int compareTo(Literal o) {
+        return value.compareTo(o.toString());
     }
 }

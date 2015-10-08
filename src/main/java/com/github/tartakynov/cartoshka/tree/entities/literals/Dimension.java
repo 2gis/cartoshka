@@ -1,5 +1,6 @@
 package com.github.tartakynov.cartoshka.tree.entities.literals;
 
+import com.github.tartakynov.cartoshka.exceptions.CartoshkaException;
 import com.github.tartakynov.cartoshka.scanners.TokenType;
 import com.github.tartakynov.cartoshka.tree.entities.Literal;
 
@@ -81,5 +82,17 @@ public class Dimension extends Literal {
     @Override
     public String toString() {
         return String.format("%s%s", Double.toString(value), unit);
+    }
+
+    @Override
+    public int compareTo(Literal o) {
+        if (o.isDimension()) {
+            Dimension other = (Dimension) o;
+            if (other.getUnit().equals(unit)) {
+                return Double.compare(value, other.getValue());
+            }
+        }
+
+        throw CartoshkaException.incorrectComparison(this);
     }
 }

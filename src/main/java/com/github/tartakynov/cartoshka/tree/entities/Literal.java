@@ -4,7 +4,7 @@ import com.github.tartakynov.cartoshka.Feature;
 import com.github.tartakynov.cartoshka.exceptions.CartoshkaException;
 import com.github.tartakynov.cartoshka.scanners.TokenType;
 
-public abstract class Literal extends Expression {
+public abstract class Literal extends Expression implements Comparable<Literal> {
     @Override
     public Literal ev(Feature feature) {
         return this;

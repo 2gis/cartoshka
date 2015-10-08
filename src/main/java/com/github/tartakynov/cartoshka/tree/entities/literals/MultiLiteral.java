@@ -1,5 +1,6 @@
 package com.github.tartakynov.cartoshka.tree.entities.literals;
 
+import com.github.tartakynov.cartoshka.exceptions.CartoshkaException;
 import com.github.tartakynov.cartoshka.tree.entities.Literal;
 
 import java.util.Arrays;
@@ -44,5 +45,10 @@ public class MultiLiteral extends Literal {
     @Override
     public boolean isMulti() {
         return true;
+    }
+
+    @Override
+    public int compareTo(Literal o) {
+        throw CartoshkaException.incorrectComparison(this);
     }
 }

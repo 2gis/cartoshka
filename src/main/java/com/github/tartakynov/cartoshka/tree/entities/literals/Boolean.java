@@ -1,5 +1,6 @@
 package com.github.tartakynov.cartoshka.tree.entities.literals;
 
+import com.github.tartakynov.cartoshka.exceptions.CartoshkaException;
 import com.github.tartakynov.cartoshka.tree.entities.Literal;
 
 public class Boolean extends Literal {
@@ -21,5 +22,15 @@ public class Boolean extends Literal {
     @Override
     public String toString() {
         return this.value ? "true" : "false";
+    }
+
+    @Override
+    public int compareTo(Literal o) {
+        if (o.isBoolean()) {
+            Boolean other = (Boolean) o;
+            return java.lang.Boolean.compare(getValue(), other.getValue());
+        }
+
+        throw CartoshkaException.incorrectComparison(this);
     }
 }

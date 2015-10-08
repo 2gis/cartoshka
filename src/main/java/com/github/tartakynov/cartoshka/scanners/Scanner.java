@@ -1,6 +1,6 @@
 package com.github.tartakynov.cartoshka.scanners;
 
-import com.github.tartakynov.cartoshka.exceptions.UnexpectedCharException;
+import com.github.tartakynov.cartoshka.exceptions.CartoshkaException;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -62,7 +62,7 @@ public class Scanner {
 
     private void expect(char expected) {
         if (expected != c0_) {
-            throw new UnexpectedCharException(c0_, getCurrentPosition());
+            throw CartoshkaException.unexpectedChar(c0_, getCurrentPosition());
         }
     }
 

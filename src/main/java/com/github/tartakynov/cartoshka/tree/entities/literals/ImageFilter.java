@@ -1,5 +1,6 @@
 package com.github.tartakynov.cartoshka.tree.entities.literals;
 
+import com.github.tartakynov.cartoshka.exceptions.CartoshkaException;
 import com.github.tartakynov.cartoshka.tree.entities.Literal;
 
 public class ImageFilter extends Literal {
@@ -28,5 +29,10 @@ public class ImageFilter extends Literal {
 
     public MultiLiteral getArgs() {
         return args;
+    }
+
+    @Override
+    public int compareTo(Literal o) {
+        throw CartoshkaException.incorrectComparison(this);
     }
 }

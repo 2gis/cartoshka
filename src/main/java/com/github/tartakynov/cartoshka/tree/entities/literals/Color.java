@@ -1,5 +1,6 @@
 package com.github.tartakynov.cartoshka.tree.entities.literals;
 
+import com.github.tartakynov.cartoshka.exceptions.CartoshkaException;
 import com.github.tartakynov.cartoshka.scanners.TokenType;
 import com.github.tartakynov.cartoshka.tree.entities.Literal;
 
@@ -148,5 +149,20 @@ public class Color extends Literal {
         }
 
         return super.operate(operator, operand);
+    }
+
+    @Override
+    public int compareTo(Literal o) {
+        if (o.isColor()) {
+            Color other = (Color) o;
+            return (int) Math.round(1000 * Math.sqrt(
+                    Math.pow(getRed() - other.getRed(), 2)
+                            + Math.pow(getGreen() - other.getGreen(), 2)
+                            + Math.pow(getBlue() - other.getBlue(), 2)
+                            + Math.pow(100 * (getAlpha() - other.getAlpha()), 2)
+            ));
+        }
+
+        throw CartoshkaException.incorrectComparison(this);
     }
 }

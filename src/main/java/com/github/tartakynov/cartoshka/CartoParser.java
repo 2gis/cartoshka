@@ -1,8 +1,6 @@
 package com.github.tartakynov.cartoshka;
 
-import com.github.tartakynov.cartoshka.exceptions.ArgumentException;
 import com.github.tartakynov.cartoshka.exceptions.CartoshkaException;
-import com.github.tartakynov.cartoshka.exceptions.UnexpectedTokenException;
 import com.github.tartakynov.cartoshka.functions.Functions;
 import com.github.tartakynov.cartoshka.scanners.Scanner;
 import com.github.tartakynov.cartoshka.scanners.Token;
@@ -218,7 +216,7 @@ public final class CartoParser extends Scanner {
                     return Colors.Strings.get(identifier.getText());
                 }
 
-                return new Keyword(identifier.getText());
+                return new Text(identifier.getText(), false, true);
 
             default:
                 throw new CartoshkaException(String.format("Unhandled expression %s at %d", peek().getText(), peek().getStart()));
@@ -240,7 +238,7 @@ public final class CartoParser extends Scanner {
         if (function != null) {
             Collection<Expression> arguments = parseArgumentsExpression();
             if (function.getArgumentCount() != arguments.size()) {
-                throw ArgumentException.wrongArgumentsCount(functionName, function.getArgumentCount(), arguments.size());
+                throw CartoshkaException.incorrectArgumentCount(functionName, function.getArgumentCount(), arguments.size());
             }
 
             return new Call(function, arguments);
@@ -365,7 +363,7 @@ public final class CartoParser extends Scanner {
 
                 case ATTACHMENT:
                     if (attachment != null) {
-                        throw new UnexpectedTokenException(peek().getText(), peek().getStart());
+                        throw CartoshkaException.unexpectedToken(peek().getText(), peek().getStart());
                     }
 
                     attachment = next().getText();
@@ -398,7 +396,7 @@ public final class CartoParser extends Scanner {
                 return new Element(next().getText(), Element.ElementType.CLASS);
 
             case MUL:
-                return new Element("*", Element.ElementType.ID);
+                return new Element("*", Element.ElementType.WILDCARD);
         }
 
         return new Element(token.getText(), Element.ElementType.MAP);
@@ -434,6 +432,6 @@ public final class CartoParser extends Scanner {
             }
         }
 
-        throw new UnexpectedTokenException(token.getType().name(), token.getStart());
+        throw CartoshkaException.unexpectedToken(token.getType().name(), token.getStart());
     }
 }

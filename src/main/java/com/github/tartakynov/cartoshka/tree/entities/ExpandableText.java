@@ -88,7 +88,7 @@ public class ExpandableText extends Expression {
             result = result.replaceAll(pattern, field.ev(feature).toString());
         }
 
-        return new Text(result, isURL);
+        return new Text(result, isURL, false);
     }
 
     public boolean isPlain() {
