@@ -36,21 +36,10 @@ public class CartoParserTest {
     @Test
     public void test() {
         CartoParser parser = new CartoParser();
-//        ClassLoader cl = this.getClass().getClassLoader();
+        ClassLoader cl = this.getClass().getClassLoader();
 //        parser.addSource(new InputStreamReader(cl.getResourceAsStream("roads.mss")));
 //        parser.addSource(new InputStreamReader(cl.getResourceAsStream("style.mss")));
-        parser.addSource(new StringReader("#cities{\n" +
-                "  [scalerank=0][zoom>=4],\n" +
-                "  [scalerank=1][zoom>=5],\n" +
-                "  [scalerank=2][x=2][zoom>=6],\n" +
-                "  [scalerank=3][zoom>=7],\n" +
-                "  [scalerank=4][zoom>=8]{\n" +
-                "      text-name: \"[name_z]\";\n" +
-                "      text-fill: #494430;\n" +
-                "      text-halo-fill: #fff;\n" +
-                "      text-face-name: 'Open Sans';\n" +
-                "  }\n" +
-                "}\n"));
+        parser.addSource(new StringReader("a: mix(#ff0000, #0000ff, 50%); b: mix(rgba(100,0,0,1.0), rgba(0,100,0,0.5), 50%); c: agg-stack-blur(1, 2);"));
         Queue<Node> queue = new LinkedBlockingQueue<>();
         queue.addAll(parser.parse());
         while (!queue.isEmpty()) {

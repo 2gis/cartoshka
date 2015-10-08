@@ -39,6 +39,10 @@ public abstract class Literal extends Expression {
         return false;
     }
 
+    public boolean isImageFilter() {
+        return false;
+    }
+
     public boolean isText() {
         return false;
     }

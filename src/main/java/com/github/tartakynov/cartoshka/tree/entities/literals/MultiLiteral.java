@@ -2,6 +2,7 @@ package com.github.tartakynov.cartoshka.tree.entities.literals;
 
 import com.github.tartakynov.cartoshka.tree.entities.Literal;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -12,6 +13,10 @@ public class MultiLiteral extends Literal {
 
     public MultiLiteral(Collection<Literal> literals) {
         this.value = literals;
+    }
+
+    public MultiLiteral(Literal... literals) {
+        this.value = Arrays.asList(literals);
     }
 
     @Override

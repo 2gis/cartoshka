@@ -2,12 +2,11 @@ package com.github.tartakynov.cartoshka.functions;
 
 import com.github.tartakynov.cartoshka.Function;
 import com.github.tartakynov.cartoshka.tree.entities.Literal;
-import com.github.tartakynov.cartoshka.tree.entities.literals.Color;
-import com.github.tartakynov.cartoshka.tree.entities.literals.Dimension;
-import com.github.tartakynov.cartoshka.tree.entities.literals.Numeric;
+import com.github.tartakynov.cartoshka.tree.entities.literals.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 
 public class Functions {
@@ -234,4 +233,35 @@ public class Functions {
         add(Functions.greyscale);
         add(Functions.mix);
     }};
+
+    static {
+        HashMap<String, Integer> imageFilterFunctions = new HashMap<String, Integer>() {{
+            put("emboss", 0);
+            put("blur", 0);
+            put("gray", 0);
+            put("sobel", 0);
+            put("edge-detect", 0);
+            put("x-gradient", 0);
+            put("y-gradient", 0);
+            put("sharpen", 0);
+            put("agg-stack-blur", 2);
+            put("scale-hsla", 8);
+        }};
+
+        for (java.util.Map.Entry<String, Integer> entry : imageFilterFunctions.entrySet()) {
+            final String name = entry.getKey();
+            final int argc = entry.getValue();
+            BUILTIN_FUNCTIONS.add(new BaseFunction(name, argc) {
+                @Override
+                public Literal apply(Iterator<Literal> args) {
+                    ArrayList<Literal> arguments = new ArrayList<>();
+                    for (int i = 0; i < argc; i++) {
+                        arguments.add(args.next());
+                    }
+
+                    return new ImageFilter(getName(), new MultiLiteral(arguments));
+                }
+            });
+        }
+    }
 }
