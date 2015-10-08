@@ -197,6 +197,24 @@ public class Functions {
         }
     };
 
+    public static final Function mix = new BaseFunction("mix", 3) {
+        @Override
+        public Literal apply(Iterator<Literal> args) {
+            Color color1 = Arguments.color(args, "color1", getName());
+            Color color2 = Arguments.color(args, "color2", getName());
+            double p = Arguments.percent(args, "weight", getName());
+            double w = p * 2d - 1d;
+            double a = color1.getAlpha() - color2.getAlpha();
+            double w1 = (((w * a == -1) ? w : (w + a) / (1 + w * a)) + 1) / 2.0;
+            double w2 = 1d - w1;
+            int r = (int) Math.round(color1.getRed() * w1 + color2.getRed() * w2);
+            int g = (int) Math.round(color1.getGreen() * w1 + color2.getGreen() * w2);
+            int b = (int) Math.round(color1.getBlue() * w1 + color2.getBlue() * w2);
+            double alpha = color1.getAlpha() * p + color2.getAlpha() * (1 - p);
+            return Color.fromRGBA(r, g, b, alpha);
+        }
+    };
+
     public static final Collection<Function> BUILTIN_FUNCTIONS = new ArrayList<Function>() {{
         add(Functions.alpha);
         add(Functions.darken);
@@ -214,5 +232,6 @@ public class Functions {
         add(Functions.fadeout);
         add(Functions.spin);
         add(Functions.greyscale);
+        add(Functions.mix);
     }};
 }
