@@ -1,6 +1,7 @@
 package com.github.tartakynov.cartoshka.tree;
 
 import com.github.tartakynov.cartoshka.Feature;
+import com.github.tartakynov.cartoshka.exceptions.CartoshkaException;
 import com.github.tartakynov.cartoshka.scanners.TokenType;
 import com.github.tartakynov.cartoshka.tree.entities.Expression;
 import com.github.tartakynov.cartoshka.tree.entities.Literal;
@@ -60,6 +61,6 @@ public class Filter extends Node implements Evaluable<Boolean> {
                 return lh.compareTo(rh) >= 0;
         }
 
-        return false;
+        throw CartoshkaException.invalidOperation(this);
     }
 }

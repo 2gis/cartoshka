@@ -352,11 +352,11 @@ public final class CartoParser extends Scanner {
                     break;
 
                 case LBRACK:
-                    Filter filter = parseZoomOrFilter();
-                    if (filter instanceof Zoom) {
-                        zooms.add((Zoom) filter);
+                    expect(TokenType.LBRACK);
+                    if (peek().getType() == TokenType.ZOOM_KEYWORD) {
+                        zooms.add(parseZoom());
                     } else {
-                        filters.add(filter);
+                        filters.add(parseFilter());
                     }
 
                     break;
@@ -402,21 +402,22 @@ public final class CartoParser extends Scanner {
         return new Element(token.getText(), Element.ElementType.MAP);
     }
 
-    private Filter parseZoomOrFilter() {
-        expect(TokenType.LBRACK);
+    private Zoom parseZoom() {
+        expect(TokenType.ZOOM_KEYWORD);
+        Token op = expect(TokenType.EQ, TokenType.LT, TokenType.GT, TokenType.LTE, TokenType.GTE);
+        Expression expression = parseExpression();
+        expect(TokenType.RBRACK);
+        return new Zoom(op.getType(), expression);
+    }
+
+    private Filter parseFilter() {
         Expression left = parsePrimaryExpression();
         Token op = expect(TokenType.EQ, TokenType.NE, TokenType.LT, TokenType.GT, TokenType.LTE, TokenType.GTE);
         Expression right = parseExpression();
         expect(TokenType.RBRACK);
         if (left.isLiteral()) {
             Literal literal = (Literal) left;
-            if (literal.isKeyword()) {
-                if (literal.toString().equals(TokenType.ZOOM_KEYWORD.getStr())) {
-                    return new Zoom(op.getType(), left, right);
-                } else {
-                    left = new Field(literal.toString());
-                }
-            } else if (literal.isText()) {
+            if (literal.isText()) {
                 left = new Field(literal.toString());
             }
         }

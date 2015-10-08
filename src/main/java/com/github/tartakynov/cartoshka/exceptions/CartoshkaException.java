@@ -30,4 +30,8 @@ public class CartoshkaException extends RuntimeException {
     public static CartoshkaException incorrectArgumentCount(String func, int expected, int actual) {
         return new CartoshkaException(String.format("Wrong argument count for \"%s\", expected %d but given %d", func, expected, actual));
     }
+
+    public static CartoshkaException invalidOperation(Node node) {
+        return new CartoshkaException("Invalid operation");
+    }
 }
