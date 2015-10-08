@@ -5,7 +5,6 @@ import com.github.tartakynov.cartoshka.exceptions.CartoshkaException;
 import com.github.tartakynov.cartoshka.scanners.TokenType;
 import com.github.tartakynov.cartoshka.tree.entities.Expression;
 import com.github.tartakynov.cartoshka.tree.entities.Literal;
-import com.github.tartakynov.cartoshka.tree.entities.literals.Numeric;
 
 public class Zoom extends Node implements Evaluable<Double> {
     private final TokenType operator;
