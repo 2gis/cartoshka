@@ -369,13 +369,17 @@ public final class CartoParser extends Scanner {
                     attachment = next().getText();
                     break;
 
-                default:
+                case LBRACE:
+                case COMMA:
                     if (segments == 0) {
                         throw new CartoshkaException(String.format("Selector without segments at %d", peek().getEnd()));
                     }
 
                     done = true;
                     break;
+
+                default:
+                    throw CartoshkaException.unexpectedToken(peek().getType().toString(), getCurrentPosition());
             }
 
             segments++;

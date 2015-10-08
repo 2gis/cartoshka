@@ -127,6 +127,7 @@ public class Scanner {
                 case ' ':
                 case '\t':
                 case '\n':
+                case '\r':
                     token = select(TokenType.WHITESPACE);
                     break;
 
