@@ -27,23 +27,25 @@ public class Scanner {
     private Reader source;
     private Token next;
     private Token current;
-    private int position;
+    private int offset;
     private boolean eos;
     private int line;
-    private int lineStart;
+    private int lineOffset;
+    private String sourceName;
 
     private static boolean isLineTerminator(char c) {
         return c == '\n' || c == '\r';
     }
 
-    protected void initialize(Reader source) {
-        this.position = -1;
+    protected void initialize(Reader source, String name) {
+        this.offset = -1;
         this.eos = false;
         this.current = null;
         this.source = source;
         this.literal.setLength(0);
         this.line = 1;
-        this.lineStart = 0;
+        this.lineOffset = 0;
+        this.sourceName = name;
         advance();
         skipWhiteSpace();
         scan();
@@ -66,7 +68,7 @@ public class Scanner {
 
     private void expect(char expected) {
         if (expected != c0_) {
-            throw CartoshkaException.unexpectedChar(c0_, getCurrentPosition());
+            throw CartoshkaException.unexpectedChar(c0_, getOffset());
         }
     }
 
@@ -79,13 +81,13 @@ public class Scanner {
             }
 
             this.c0_ = (char) c;
-            this.position++;
+            this.offset++;
             if (c0_ == '\n') {
                 line++;
             }
 
             if (c0_ == '\r' || c0_ == '\n') {
-                lineStart = position + 1;
+                lineOffset = offset + 1;
             }
 
             return true;
@@ -94,8 +96,8 @@ public class Scanner {
         }
     }
 
-    protected int getCurrentPosition() {
-        return this.position;
+    protected int getOffset() {
+        return this.offset;
     }
 
     public int getLine() {
@@ -103,7 +105,11 @@ public class Scanner {
     }
 
     public int getLinePosition() {
-        return this.position - this.lineStart;
+        return this.offset - this.lineOffset;
+    }
+
+    public String getSourceName() {
+        return sourceName;
     }
 
     protected boolean isEOS() {
@@ -117,7 +123,7 @@ public class Scanner {
         literal.setLength(0);
 
         do {
-            posStart = getCurrentPosition();
+            posStart = getOffset();
             if (isEOS()) {
                 token = TokenType.EOS;
                 break;
@@ -279,7 +285,7 @@ public class Scanner {
             }
         } while (token == TokenType.WHITESPACE);
 
-        posEnd = getCurrentPosition();
+        posEnd = getOffset();
         next = new Token(token, posStart, posEnd, literal.toString());
     }
 
