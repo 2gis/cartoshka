@@ -1,8 +1,10 @@
 package com.github.tartakynov.cartoshka.tree;
 
+import com.github.tartakynov.cartoshka.Feature;
+
 import java.util.Collection;
 
-public class Selector extends Node {
+public class Selector extends Node implements Evaluable<Boolean> {
     private final Collection<Element> elements;
     private final Collection<Filter> filters;
     private final Collection<Zoom> zooms;
@@ -13,6 +15,16 @@ public class Selector extends Node {
         this.filters = filters;
         this.zooms = zooms;
         this.attachment = attachment;
+    }
+
+    private static boolean match(Collection<? extends Evaluable<Boolean>> items, Feature feature) {
+        for (Evaluable<Boolean> item : items) {
+            if (!item.ev(feature)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     public Collection<Element> getElements() {
@@ -29,6 +41,10 @@ public class Selector extends Node {
 
     public String getAttachment() {
         return attachment;
+    }
+
+    public Boolean ev(Feature feature) {
+        return match(elements, feature) && match(filters, feature);
     }
 
     @Override

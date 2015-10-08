@@ -1,9 +1,11 @@
 package com.github.tartakynov.cartoshka.tree;
 
+import com.github.tartakynov.cartoshka.Feature;
 import com.github.tartakynov.cartoshka.scanners.TokenType;
 import com.github.tartakynov.cartoshka.tree.entities.Expression;
+import com.github.tartakynov.cartoshka.tree.entities.Literal;
 
-public class Filter extends Node {
+public class Filter extends Node implements Evaluable<Boolean> {
     private final TokenType operator;
 
     private Expression left;
@@ -32,5 +34,32 @@ public class Filter extends Node {
     public void fold() {
         left = fold(left);
         right = fold(right);
+    }
+
+    @Override
+    public Boolean ev(Feature feature) {
+        Literal lh = left.ev(feature);
+        Literal rh = right.ev(feature);
+        switch (operator) {
+            case EQ:
+                return lh.compareTo(rh) == 0;
+
+            case NE:
+                return lh.compareTo(rh) != 0;
+
+            case LT:
+                return lh.compareTo(rh) < 0;
+
+            case GT:
+                return lh.compareTo(rh) > 0;
+
+            case LTE:
+                return lh.compareTo(rh) <= 0;
+
+            case GTE:
+                return lh.compareTo(rh) >= 0;
+        }
+
+        return false;
     }
 }
