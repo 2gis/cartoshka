@@ -41,7 +41,7 @@ public class ExpandableText extends Expression {
                         if (start < end) {
                             String name = value.substring(start + 2, end);
                             String pattern = ":@\\{" + name + "\\}";
-                            Location location = getInterpolatedLocation(start, end);
+                            Location location = getInterpolatedLocation(start + 1);
                             variables.put(pattern, new Variable(location, context, '@' + name));
                             sb.append(':');
                         }
@@ -54,7 +54,7 @@ public class ExpandableText extends Expression {
                     if (start < end) {
                         String name = value.substring(start + 1, end);
                         String pattern = String.format(":\\[%s\\]", name);
-                        Location location = getInterpolatedLocation(start, end);
+                        Location location = getInterpolatedLocation(start + 1);
                         fields.put(pattern, new Field(location, name));
                         sb.append(':');
                     }
@@ -103,7 +103,7 @@ public class ExpandableText extends Expression {
         fold(variables.values());
     }
 
-    private Location getInterpolatedLocation(int start, int end) {
+    private Location getInterpolatedLocation(int start) {
         return getLocation() == null
                 ? null
                 : new Location(getLocation().offset + start, getLocation().line, getLocation().linePos + start);

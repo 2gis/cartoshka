@@ -120,11 +120,10 @@ public final class CartoParser extends Scanner {
     // and before the `;`.
     private Value parseValue() {
         Collection<Expression> expressions = new ArrayList<>();
-        Location location = current().getLocation();
+        Location location = peek().getLocation();
         while (true) {
             Expression expression = parseExpression();
             expressions.add(expression);
-            location = Location.min(location, expression.getLocation());
             if (peek().getType() != TokenType.COMMA) {
                 break;
             }
@@ -414,11 +413,11 @@ public final class CartoParser extends Scanner {
     }
 
     private Zoom parseZoom() {
-        expect(TokenType.ZOOM_KEYWORD);
+        Token zoom = expect(TokenType.ZOOM_KEYWORD);
         Token op = expect(TokenType.EQ, TokenType.LT, TokenType.GT, TokenType.LTE, TokenType.GTE);
         Expression expression = parseExpression();
         expect(TokenType.RBRACK);
-        return new Zoom(op.getLocation(), op.getType(), expression);
+        return new Zoom(zoom.getLocation(), op.getType(), expression);
     }
 
     private Filter parseFilter() {
