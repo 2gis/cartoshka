@@ -12,6 +12,7 @@ public class Text extends Literal {
     private final boolean isKeyword;
 
     public Text(Location location, String value, boolean isURL, boolean isKeyword) {
+        super(location);
         this.value = value;
         this.isURL = isURL;
         this.isKeyword = isKeyword;

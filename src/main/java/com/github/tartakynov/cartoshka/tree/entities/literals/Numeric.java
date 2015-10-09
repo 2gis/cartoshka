@@ -9,6 +9,7 @@ public class Numeric extends Literal {
     private final boolean hasDot;
 
     public Numeric(Location location, double value, boolean hasDot) {
+        super(location);
         this.value = value;
         this.hasDot = hasDot;
     }

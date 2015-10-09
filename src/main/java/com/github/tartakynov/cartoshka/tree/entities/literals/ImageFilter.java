@@ -10,6 +10,7 @@ public class ImageFilter extends Literal {
     private final MultiLiteral args;
 
     public ImageFilter(Location location, String name, MultiLiteral args) {
+        super(location);
         this.name = name;
         this.args = args;
     }

@@ -11,6 +11,7 @@ public class Dimension extends Literal {
     private final String unit;
 
     public Dimension(Location location, double value, String unit) {
+        super(location);
         this.value = value;
         this.unit = unit;
     }

@@ -8,6 +8,7 @@ public class Boolean extends Literal {
     private final boolean value;
 
     public Boolean(Location location, boolean value) {
+        super(location);
         this.value = value;
     }
 

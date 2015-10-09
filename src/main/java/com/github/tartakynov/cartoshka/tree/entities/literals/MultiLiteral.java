@@ -1,5 +1,6 @@
 package com.github.tartakynov.cartoshka.tree.entities.literals;
 
+import com.github.tartakynov.cartoshka.Location;
 import com.github.tartakynov.cartoshka.exceptions.CartoshkaException;
 import com.github.tartakynov.cartoshka.tree.entities.Literal;
 
@@ -12,12 +13,9 @@ public class MultiLiteral extends Literal {
 
     private final StringBuilder builder = new StringBuilder();
 
-    public MultiLiteral(Collection<Literal> literals) {
+    public MultiLiteral(Location location, Collection<Literal> literals) {
+        super(location);
         this.value = literals;
-    }
-
-    public MultiLiteral(Literal... literals) {
-        this.value = Arrays.asList(literals);
     }
 
     @Override

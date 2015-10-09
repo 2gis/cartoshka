@@ -25,7 +25,7 @@ public class Value extends Expression {
             literals.add(expression.ev(feature));
         }
 
-        return new MultiLiteral(literals);
+        return new MultiLiteral(getLocation(), literals);
     }
 
     @Override

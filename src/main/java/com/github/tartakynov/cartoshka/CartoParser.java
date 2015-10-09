@@ -211,7 +211,8 @@ public final class CartoParser extends Scanner {
                 if (peek().getType() == TokenType.LPAREN) {
                     return parseFunctionCall();
                 } else if (Colors.Strings.containsKey(identifier.getText())) {
-                    return Colors.Strings.get(identifier.getText());
+                    double[] rgba = Colors.Strings.get(identifier.getText());
+                    return Color.fromRGBA(identifier.getLocation(), (int) rgba[0], (int) rgba[1], (int) rgba[2], (int) rgba[3]);
                 }
 
                 return new Text(identifier.getLocation(), identifier.getText(), false, true);
@@ -267,12 +268,12 @@ public final class CartoParser extends Scanner {
                 int r = Integer.parseInt(text.substring(0, 1) + text.substring(0, 1), 16);
                 int g = Integer.parseInt(text.substring(1, 2) + text.substring(1, 2), 16);
                 int b = Integer.parseInt(text.substring(2, 3) + text.substring(2, 3), 16);
-                return Color.fromRGBA(r, g, b, 1.0);
+                return Color.fromRGBA(token.getLocation(), r, g, b, 1.0);
             } else if (text.length() == 6) {
                 int r = Integer.parseInt(text.substring(0, 2), 16);
                 int g = Integer.parseInt(text.substring(2, 4), 16);
                 int b = Integer.parseInt(text.substring(4, 6), 16);
-                return Color.fromRGBA(r, g, b, 1.0);
+                return Color.fromRGBA(token.getLocation(), r, g, b, 1.0);
             }
         } catch (NumberFormatException ex) {
             ex.printStackTrace();
