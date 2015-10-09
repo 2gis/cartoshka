@@ -1,6 +1,7 @@
 package com.github.tartakynov.cartoshka.tree.entities;
 
 import com.github.tartakynov.cartoshka.Feature;
+import com.github.tartakynov.cartoshka.Location;
 import com.github.tartakynov.cartoshka.tree.entities.literals.MultiLiteral;
 
 import java.util.ArrayList;
@@ -10,7 +11,8 @@ import java.util.List;
 public class Value extends Expression {
     private Collection<Expression> expressions;
 
-    public Value(Collection<Expression> expressions) {
+    public Value(Location location, Collection<Expression> expressions) {
+        super(location);
         this.expressions = expressions;
     }
 

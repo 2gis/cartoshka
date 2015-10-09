@@ -120,8 +120,11 @@ public final class CartoParser extends Scanner {
     // and before the `;`.
     private Value parseValue() {
         Collection<Expression> expressions = new ArrayList<>();
+        Location location = current().getLocation();
         while (true) {
-            expressions.add(parseExpression());
+            Expression expression = parseExpression();
+            expressions.add(expression);
+            location = Location.combine(location, expression.getLocation());
             if (peek().getType() != TokenType.COMMA) {
                 break;
             }
@@ -129,7 +132,7 @@ public final class CartoParser extends Scanner {
             expect(TokenType.COMMA); // consume comma
         }
 
-        return new Value(expressions);
+        return new Value(location, expressions);
     }
 
     // Expressions either represent mathematical operations,
@@ -144,7 +147,7 @@ public final class CartoParser extends Scanner {
             while (peek().getType().getPrecedence() == prec1) {
                 Token op = expect(TokenType.ADD, TokenType.SUB, TokenType.MUL, TokenType.DIV, TokenType.MOD);
                 Expression right = parseBinaryExpression(prec1 + 1);
-                result = new BinaryOperation(op.getType(), result, right);
+                result = new BinaryOperation(op.getLocation(), op.getType(), result, right);
             }
         }
 
@@ -160,7 +163,7 @@ public final class CartoParser extends Scanner {
             case SUB:
                 Token op = next();
                 Expression expression = parseUnaryExpression();
-                return new UnaryOperation(op.getType(), expression);
+                return new UnaryOperation(op.getLocation(), op.getType(), expression);
 
             default:
                 return parsePrimaryExpression();
@@ -170,8 +173,8 @@ public final class CartoParser extends Scanner {
     private Expression parsePrimaryExpression() {
         switch (peek().getType()) {
             case NUMBER_LITERAL:
-                String number = next().getText();
-                return new Numeric(current().getLocation(), Double.valueOf(number), number.indexOf('.') >= 0);
+                Token number = next();
+                return new Numeric(number.getLocation(), Double.valueOf(number.getText()), number.getText().indexOf('.') >= 0);
 
             case TRUE_LITERAL:
                 return new Boolean(next().getLocation(), true);
@@ -180,7 +183,8 @@ public final class CartoParser extends Scanner {
                 return new Boolean(next().getLocation(), false);
 
             case VARIABLE:
-                return new Variable(context, next().getText());
+                Token variable = next();
+                return new Variable(variable.getLocation(), context, variable.getText());
 
             case DIMENSION_LITERAL:
                 return parseDimension();
@@ -192,7 +196,7 @@ public final class CartoParser extends Scanner {
                 expect(TokenType.LBRACK);
                 Token field = next();
                 expect(TokenType.RBRACK);
-                return new Field(field.getText());
+                return new Field(field.getLocation(), field.getText());
 
             case LPAREN:
                 expect(TokenType.LPAREN);
@@ -223,7 +227,8 @@ public final class CartoParser extends Scanner {
     }
 
     private Expression parseString(boolean isURL) {
-        ExpandableText text = new ExpandableText(context, next().getText(), isURL);
+        Token token = next();
+        ExpandableText text = new ExpandableText(token.getLocation(), context, token.getText(), isURL);
         if (text.isPlain()) {
             return text.ev(null);
         }
@@ -232,7 +237,8 @@ public final class CartoParser extends Scanner {
     }
 
     private Call parseFunctionCall() {
-        String functionName = current().getText();
+        Token token = current();
+        String functionName = token.getText();
         Function function = functions.get(functionName);
         if (function != null) {
             Collection<Expression> arguments = parseArgumentsExpression();
@@ -240,7 +246,7 @@ public final class CartoParser extends Scanner {
                 throw CartoshkaException.incorrectArgumentCount(functionName, function.getArgumentCount(), arguments.size());
             }
 
-            return new Call(function, arguments);
+            return new Call(token.getLocation(), function, arguments);
         }
 
         throw new CartoshkaException(String.format("Function [%s] not found", functionName));
@@ -421,7 +427,7 @@ public final class CartoParser extends Scanner {
         if (left.isLiteral()) {
             Literal literal = (Literal) left;
             if (literal.isText()) {
-                left = new Field(literal.toString());
+                left = new Field(literal.getLocation(), literal.toString());
             }
         }
 

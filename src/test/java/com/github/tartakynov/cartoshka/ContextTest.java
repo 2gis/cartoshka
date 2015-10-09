@@ -14,7 +14,7 @@ public class ContextTest {
     private static Rule createRule(String name, int value, boolean isVariable) {
         Collection<Expression> expressions = new LinkedList<>();
         expressions.add(new Numeric(null, value, false));
-        return new Rule(name, new Value(expressions), isVariable);
+        return new Rule(name, new Value(null, expressions), isVariable);
     }
 
     @Test

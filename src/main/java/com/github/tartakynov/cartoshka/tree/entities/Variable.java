@@ -2,6 +2,7 @@ package com.github.tartakynov.cartoshka.tree.entities;
 
 import com.github.tartakynov.cartoshka.Context;
 import com.github.tartakynov.cartoshka.Feature;
+import com.github.tartakynov.cartoshka.Location;
 import com.github.tartakynov.cartoshka.exceptions.CartoshkaException;
 
 public class Variable extends Expression {
@@ -9,7 +10,8 @@ public class Variable extends Expression {
     private final Context context;
     private Value value;
 
-    public Variable(Context context, String name) {
+    public Variable(Location location, Context context, String name) {
+        super(location);
         this.context = context;
         this.name = name;
     }

@@ -1,12 +1,14 @@
 package com.github.tartakynov.cartoshka.tree.entities;
 
 import com.github.tartakynov.cartoshka.Feature;
+import com.github.tartakynov.cartoshka.Location;
 import com.github.tartakynov.cartoshka.exceptions.CartoshkaException;
 
 public class Field extends Expression {
     private final String name;
 
-    public Field(String name) {
+    public Field(Location location, String name) {
+        super(location);
         this.name = name;
     }
 

@@ -7,7 +7,7 @@ import com.github.tartakynov.cartoshka.scanner.TokenType;
 
 public abstract class Literal extends Expression implements Comparable<Literal> {
     public Literal(Location location) {
-
+        super(location);
     }
 
     @Override
