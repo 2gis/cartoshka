@@ -7,6 +7,26 @@
     <groupId>ru.dgis</groupId>
     <artifactId>cartoshka</artifactId>
     <version>0.1-SNAPSHOT</version>
+    <packaging>jar</packaging>
+
+    <name>cartoshka</name>
+    <url>https://github.com/2gis/cartoshka</url>
+    <description>CartoCSS parser for Java</description>
+    <organization>
+        <name>2GIS L.L.C.</name>
+        <url>http://info.2gis.com/</url>
+    </organization>
+    <licenses>
+        <license>
+            <name>Mozilla Public License, Version 2.0</name>
+            <url>http://www.mozilla.org/MPL/2.0/index.txt</url>
+        </license>
+    </licenses>
+    <scm>
+        <connection>scm:git:git@github.com:2gis/cartoshka.git</connection>
+        <developerConnection>scm:git:git@github.com:2gis/cartoshka.git</developerConnection>
+        <url>git@github.com:2gis/cartoshka.git</url>
+    </scm>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -22,5 +42,4 @@
             <version>4.12</version>
         </dependency>
     </dependencies>
-
 </project>
