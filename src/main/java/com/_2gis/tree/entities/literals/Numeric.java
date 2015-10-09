@@ -1,0 +1,84 @@
+package com._2gis.tree.entities.literals;
+
+import com._2gis.Location;
+import com._2gis.scanner.TokenType;
+import com._2gis.tree.entities.Literal;
+
+public class Numeric extends Literal {
+    private final double value;
+    private final boolean hasDot;
+
+    public Numeric(Location location, double value, boolean hasDot) {
+        super(location);
+        this.value = value;
+        this.hasDot = hasDot;
+    }
+
+    public double getValue() {
+        return value;
+    }
+
+    @Override
+    public Literal operate(TokenType operator) {
+        if (operator == TokenType.SUB) {
+            return new Numeric(getLocation(), -value, hasDot);
+        }
+
+        return super.operate(operator);
+    }
+
+    @Override
+    public boolean hasDot() {
+        return hasDot;
+    }
+
+    @Override
+    public Literal operate(TokenType operator, Literal operand) {
+        if (operand.isNumeric()) {
+            switch (operator) {
+                case ADD:
+                    return new Numeric(Location.min(getLocation(), operand.getLocation()), value + operand.toNumber(), hasDot || operand.hasDot());
+                case SUB:
+                    return new Numeric(Location.min(getLocation(), operand.getLocation()), value - operand.toNumber(), hasDot || operand.hasDot());
+                case MUL:
+                    return new Numeric(Location.min(getLocation(), operand.getLocation()), value * operand.toNumber(), hasDot || operand.hasDot());
+                case DIV:
+                    return new Numeric(Location.min(getLocation(), operand.getLocation()), value / operand.toNumber(), hasDot || operand.hasDot());
+                case MOD:
+                    return new Numeric(Location.min(getLocation(), operand.getLocation()), value % operand.toNumber(), hasDot || operand.hasDot());
+            }
+        } else if (operand.isText() && operator == TokenType.ADD) {
+            return new Text(Location.min(getLocation(), operand.getLocation()), toString() + operand.toString(), false, false);
+        }
+
+        return super.operate(operator, operand);
+    }
+
+    @Override
+    public boolean isNumeric() {
+        return true;
+    }
+
+    @Override
+    public Double toNumber() {
+        return value;
+    }
+
+    @Override
+    public String toString() {
+        if (hasDot) {
+            return Double.toString(Math.round(value * 100d) / 100d);
+        }
+
+        return Integer.toString((int) value);
+    }
+
+    @Override
+    public int compareTo(Literal o) {
+        if (hasDot) {
+            return Long.compare(toNumber().longValue(), o.toNumber().longValue());
+        }
+
+        return Double.compare(value, o.toNumber());
+    }
+}
