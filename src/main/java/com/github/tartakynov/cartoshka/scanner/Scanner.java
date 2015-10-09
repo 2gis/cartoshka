@@ -289,7 +289,8 @@ public class Scanner {
             }
         } while (token == TokenType.WHITESPACE);
 
-        next = new Token(token, literal.toString(), new Location(tokenOffset, tokenLineStart, tokenLinePosition));
+        Location location = new Location(tokenOffset, tokenLineStart, tokenLinePosition, getOffset() - tokenOffset);
+        next = new Token(token, literal.toString(), location);
     }
 
     private TokenType skipSingleLineComment() {
