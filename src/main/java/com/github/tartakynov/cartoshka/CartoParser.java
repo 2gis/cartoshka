@@ -215,8 +215,8 @@ public final class CartoParser extends Scanner {
                 if (peek().getType() == TokenType.LPAREN) {
                     return parseFunctionCall();
                 } else if (Colors.Strings.containsKey(identifier.getText())) {
-                    double[] rgba = Colors.Strings.get(identifier.getText());
-                    return Color.fromRGBA(identifier.getLocation(), (int) rgba[0], (int) rgba[1], (int) rgba[2], (int) rgba[3]);
+                    int[] rgba = Colors.Strings.get(identifier.getText());
+                    return Color.fromRGBA(identifier.getLocation(), rgba[0], rgba[1], rgba[2], rgba[3]);
                 }
 
                 return new Text(identifier.getLocation(), identifier.getText(), false, true);
