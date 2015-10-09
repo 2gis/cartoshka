@@ -1,4 +1,4 @@
-package com.github.tartakynov.cartoshka.scanners;
+package com.github.tartakynov.cartoshka.scanner;
 
 import org.junit.Assert;
 import org.junit.Test;

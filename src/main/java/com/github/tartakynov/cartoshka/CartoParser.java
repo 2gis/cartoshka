@@ -363,7 +363,7 @@ public final class CartoParser extends Scanner {
 
                 case ATTACHMENT:
                     if (attachment != null) {
-                        throw CartoshkaException.unexpectedToken(peek().getText(), peek().getLocation().offset);
+                        throw CartoshkaException.unexpectedToken(peek());
                     }
 
                     attachment = next().getText();
@@ -379,7 +379,7 @@ public final class CartoParser extends Scanner {
                     break;
 
                 default:
-                    throw CartoshkaException.unexpectedToken(peek().getType().toString(), getOffset());
+                    throw CartoshkaException.unexpectedToken(peek());
             }
 
             segments++;
@@ -437,6 +437,6 @@ public final class CartoParser extends Scanner {
             }
         }
 
-        throw CartoshkaException.unexpectedToken(token.getType().name(), token.getLocation().offset);
+        throw CartoshkaException.unexpectedToken(token);
     }
 }
