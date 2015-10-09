@@ -15,7 +15,7 @@ import java.util.Set;
 public class ExpandableTextTest {
     private static Rule createRule(String name, int value, boolean isVariable) {
         Collection<Expression> expressions = new LinkedList<>();
-        expressions.add(new Numeric(value, false));
+        expressions.add(new Numeric(null, value, false));
         return new Rule(name, new Value(expressions), isVariable);
     }
 
@@ -34,9 +34,9 @@ public class ExpandableTextTest {
             @Override
             public Literal getField(String fieldName) {
                 if (fieldName.equals("a")) {
-                    return new Numeric(123, false);
+                    return new Numeric(null, 123, false);
                 } else if (fieldName.equals("Ab")) {
-                    return new Numeric(234, false);
+                    return new Numeric(null, 234, false);
                 }
 
                 return null;

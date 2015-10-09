@@ -171,15 +171,13 @@ public final class CartoParser extends Scanner {
         switch (peek().getType()) {
             case NUMBER_LITERAL:
                 String number = next().getText();
-                return new Numeric(Double.valueOf(number), number.indexOf('.') >= 0);
+                return new Numeric(current().getLocation(), Double.valueOf(number), number.indexOf('.') >= 0);
 
             case TRUE_LITERAL:
-                next();
-                return new Boolean(true);
+                return new Boolean(next().getLocation(), true);
 
             case FALSE_LITERAL:
-                next();
-                return new Boolean(false);
+                return new Boolean(next().getLocation(), false);
 
             case VARIABLE:
                 return new Variable(context, next().getText());
@@ -216,7 +214,7 @@ public final class CartoParser extends Scanner {
                     return Colors.Strings.get(identifier.getText());
                 }
 
-                return new Text(identifier.getText(), false, true);
+                return new Text(identifier.getLocation(), identifier.getText(), false, true);
 
             default:
                 throw new CartoshkaException(String.format("Unhandled expression %s at %d", peek().getText(), peek().getLocation().offset));
@@ -254,7 +252,7 @@ public final class CartoParser extends Scanner {
             if (DIMENSION_UNITS.contains(value.substring(value.length() - i))) {
                 String num = value.substring(0, value.length() - i);
                 String unit = value.substring(value.length() - i);
-                return new Dimension(Double.valueOf(num), unit);
+                return new Dimension(token.getLocation(), Double.valueOf(num), unit);
             }
         }
 

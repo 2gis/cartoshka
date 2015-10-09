@@ -18,7 +18,7 @@ public class Call extends Expression {
 
     @Override
     public Literal ev(final Feature feature) {
-        return function.apply(new Iterator<Literal>() {
+        return function.apply(getLocation(), new Iterator<Literal>() {
             Iterator<Expression> iterator = args.iterator();
 
             @Override

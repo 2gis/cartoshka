@@ -1,5 +1,6 @@
 package com.github.tartakynov.cartoshka.tree.entities.literals;
 
+import com.github.tartakynov.cartoshka.Location;
 import com.github.tartakynov.cartoshka.exceptions.CartoshkaException;
 import com.github.tartakynov.cartoshka.tree.entities.Literal;
 
@@ -8,7 +9,7 @@ public class ImageFilter extends Literal {
 
     private final MultiLiteral args;
 
-    public ImageFilter(String name, MultiLiteral args) {
+    public ImageFilter(Location location, String name, MultiLiteral args) {
         this.name = name;
         this.args = args;
     }

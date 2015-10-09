@@ -1,10 +1,17 @@
 package com.github.tartakynov.cartoshka.tree;
 
+import com.github.tartakynov.cartoshka.Location;
 import com.github.tartakynov.cartoshka.tree.entities.Expression;
 
 import java.util.Collection;
 
 public abstract class Node {
+    private Location location;
+
+    public Location getLocation() {
+        return location;
+    }
+
     protected static Expression fold(Expression expression) {
         if (!expression.isDynamic()) {
             return expression.ev(null);

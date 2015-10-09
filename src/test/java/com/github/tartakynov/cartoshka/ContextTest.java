@@ -13,7 +13,7 @@ import java.util.LinkedList;
 public class ContextTest {
     private static Rule createRule(String name, int value, boolean isVariable) {
         Collection<Expression> expressions = new LinkedList<>();
-        expressions.add(new Numeric(value, false));
+        expressions.add(new Numeric(null, value, false));
         return new Rule(name, new Value(expressions), isVariable);
     }
 

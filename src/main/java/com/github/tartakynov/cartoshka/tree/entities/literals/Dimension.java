@@ -1,5 +1,6 @@
 package com.github.tartakynov.cartoshka.tree.entities.literals;
 
+import com.github.tartakynov.cartoshka.Location;
 import com.github.tartakynov.cartoshka.exceptions.CartoshkaException;
 import com.github.tartakynov.cartoshka.scanner.TokenType;
 import com.github.tartakynov.cartoshka.tree.entities.Literal;
@@ -9,7 +10,7 @@ public class Dimension extends Literal {
 
     private final String unit;
 
-    public Dimension(double value, String unit) {
+    public Dimension(Location location, double value, String unit) {
         this.value = value;
         this.unit = unit;
     }
@@ -24,7 +25,11 @@ public class Dimension extends Literal {
 
     @Override
     public Literal operate(TokenType operator) {
-        return new Dimension(-value, unit);
+        if (operator == TokenType.SUB) {
+            return new Dimension(getLocation(), -value, unit);
+        }
+
+        return super.operate(operator);
     }
 
     @Override
@@ -44,15 +49,15 @@ public class Dimension extends Literal {
             if (right != null) {
                 switch (operator) {
                     case ADD:
-                        return new Dimension(left + right, unit);
+                        return new Dimension(Location.combine(getLocation(), operand.getLocation()), left + right, unit);
                     case SUB:
-                        return new Dimension(left - right, unit);
+                        return new Dimension(Location.combine(getLocation(), operand.getLocation()), left - right, unit);
                     case MUL:
-                        return new Dimension(left * right, unit);
+                        return new Dimension(Location.combine(getLocation(), operand.getLocation()), left * right, unit);
                     case DIV:
-                        return new Dimension(left / right, unit);
+                        return new Dimension(Location.combine(getLocation(), operand.getLocation()), left / right, unit);
                     case MOD:
-                        return new Dimension(left % right, unit);
+                        return new Dimension(Location.combine(getLocation(), operand.getLocation()), left % right, unit);
                 }
             }
         }

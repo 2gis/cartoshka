@@ -9,5 +9,5 @@ public interface Function {
 
     int getArgumentCount();
 
-    Literal apply(Iterator<Literal> args);
+    Literal apply(Location location, Iterator<Literal> args);
 }

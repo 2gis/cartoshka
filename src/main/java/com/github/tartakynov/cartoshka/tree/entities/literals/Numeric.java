@@ -1,5 +1,6 @@
 package com.github.tartakynov.cartoshka.tree.entities.literals;
 
+import com.github.tartakynov.cartoshka.Location;
 import com.github.tartakynov.cartoshka.scanner.TokenType;
 import com.github.tartakynov.cartoshka.tree.entities.Literal;
 
@@ -7,7 +8,7 @@ public class Numeric extends Literal {
     private final double value;
     private final boolean hasDot;
 
-    public Numeric(double value, boolean hasDot) {
+    public Numeric(Location location, double value, boolean hasDot) {
         this.value = value;
         this.hasDot = hasDot;
     }
@@ -18,7 +19,11 @@ public class Numeric extends Literal {
 
     @Override
     public Literal operate(TokenType operator) {
-        return new Numeric(-value, hasDot);
+        if (operator == TokenType.SUB) {
+            return new Numeric(getLocation(), -value, hasDot);
+        }
+
+        return super.operate(operator);
     }
 
     @Override
@@ -31,18 +36,18 @@ public class Numeric extends Literal {
         if (operand.isNumeric()) {
             switch (operator) {
                 case ADD:
-                    return new Numeric(value + operand.toNumber(), hasDot || operand.hasDot());
+                    return new Numeric(Location.combine(getLocation(), operand.getLocation()), value + operand.toNumber(), hasDot || operand.hasDot());
                 case SUB:
-                    return new Numeric(value - operand.toNumber(), hasDot || operand.hasDot());
+                    return new Numeric(Location.combine(getLocation(), operand.getLocation()), value - operand.toNumber(), hasDot || operand.hasDot());
                 case MUL:
-                    return new Numeric(value * operand.toNumber(), hasDot || operand.hasDot());
+                    return new Numeric(Location.combine(getLocation(), operand.getLocation()), value * operand.toNumber(), hasDot || operand.hasDot());
                 case DIV:
-                    return new Numeric(value / operand.toNumber(), hasDot || operand.hasDot());
+                    return new Numeric(Location.combine(getLocation(), operand.getLocation()), value / operand.toNumber(), hasDot || operand.hasDot());
                 case MOD:
-                    return new Numeric(value % operand.toNumber(), hasDot || operand.hasDot());
+                    return new Numeric(Location.combine(getLocation(), operand.getLocation()), value % operand.toNumber(), hasDot || operand.hasDot());
             }
         } else if (operand.isText() && operator == TokenType.ADD) {
-            return new Text(toString() + operand.toString(), false, false);
+            return new Text(Location.combine(getLocation(), operand.getLocation()), toString() + operand.toString(), false, false);
         }
 
         return super.operate(operator, operand);

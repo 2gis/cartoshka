@@ -1,12 +1,13 @@
 package com.github.tartakynov.cartoshka.tree.entities.literals;
 
+import com.github.tartakynov.cartoshka.Location;
 import com.github.tartakynov.cartoshka.exceptions.CartoshkaException;
 import com.github.tartakynov.cartoshka.tree.entities.Literal;
 
 public class Boolean extends Literal {
     private final boolean value;
 
-    public Boolean(boolean value) {
+    public Boolean(Location location, boolean value) {
         this.value = value;
     }
 

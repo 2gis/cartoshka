@@ -1,5 +1,6 @@
 package com.github.tartakynov.cartoshka.scanner;
 
+import com.github.tartakynov.cartoshka.Location;
 import com.github.tartakynov.cartoshka.exceptions.CartoshkaException;
 
 import java.io.IOException;
