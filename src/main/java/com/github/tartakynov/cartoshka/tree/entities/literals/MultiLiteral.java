@@ -4,7 +4,6 @@ import com.github.tartakynov.cartoshka.Location;
 import com.github.tartakynov.cartoshka.exceptions.CartoshkaException;
 import com.github.tartakynov.cartoshka.tree.entities.Literal;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 

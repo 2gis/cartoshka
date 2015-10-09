@@ -8,10 +8,6 @@ import java.util.Collection;
 public abstract class Node {
     private Location location;
 
-    public Location getLocation() {
-        return location;
-    }
-
     public Node(Location location) {
         this.location = location;
     }
@@ -29,6 +25,10 @@ public abstract class Node {
         for (Node node : nodes) {
             node.fold();
         }
+    }
+
+    public Location getLocation() {
+        return location;
     }
 
     public abstract void fold();
