@@ -33,6 +33,6 @@ public class Zoom extends Node implements Evaluable<Double> {
             return literal.toNumber();
         }
 
-        throw CartoshkaException.invalidOperation(this);
+        throw CartoshkaException.invalidOperation(getLocation());
     }
 }

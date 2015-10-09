@@ -221,7 +221,7 @@ public final class CartoParser extends Scanner {
                 return new Text(identifier.getLocation(), identifier.getText(), false, true);
 
             default:
-                throw new CartoshkaException(String.format("Unhandled expression %s at %d", peek().getText(), peek().getLocation().offset));
+                throw CartoshkaException.unexpectedToken(peek());
         }
     }
 
@@ -237,18 +237,17 @@ public final class CartoParser extends Scanner {
 
     private Call parseFunctionCall() {
         Token token = current();
-        String functionName = token.getText();
-        Function function = functions.get(functionName);
+        Function function = functions.get(token.getText());
         if (function != null) {
             Collection<Expression> arguments = parseArgumentsExpression();
             if (function.getArgumentCount() != arguments.size()) {
-                throw CartoshkaException.incorrectArgumentCount(functionName, function.getArgumentCount(), arguments.size());
+                throw CartoshkaException.functionIncorrectArgumentCount(token.getLocation(), function.getArgumentCount(), arguments.size());
             }
 
             return new Call(token.getLocation(), function, arguments);
         }
 
-        throw new CartoshkaException(String.format("Function [%s] not found", functionName));
+        throw CartoshkaException.undefinedName(token.getLocation());
     }
 
     private Dimension parseDimension() {
@@ -262,7 +261,7 @@ public final class CartoParser extends Scanner {
             }
         }
 
-        throw new CartoshkaException(String.format("Wrong unit for dimension at pos: %d", token.getLocation().offset));
+        throw CartoshkaException.invalidDimensionUnit(token.getLocation());
     }
 
     private Color parseHexColor() {
@@ -285,7 +284,7 @@ public final class CartoParser extends Scanner {
             // do nothing
         }
 
-        throw new CartoshkaException(String.format("Wrong hex color #%s at pos: %d", token.getText(), token.getLocation().offset));
+        throw CartoshkaException.invalidFormat(token.getLocation());
     }
 
     private Collection<Expression> parseArgumentsExpression() {
@@ -293,10 +292,9 @@ public final class CartoParser extends Scanner {
         expect(TokenType.LPAREN);
         boolean done = peek().getType() == TokenType.RPAREN;
         while (!done) {
-            Expression argument = parseExpression();
-            args.add(argument);
+            args.add(parseExpression());
             if (args.size() > MaxArguments) {
-                throw new CartoshkaException("too_many_arguments");
+                throw CartoshkaException.functionTooManyArguments(current().getLocation());
             }
 
             done = peek().getType() == TokenType.RPAREN;
@@ -378,7 +376,7 @@ public final class CartoParser extends Scanner {
                 case LBRACE:
                 case COMMA:
                     if (segments == 0) {
-                        throw new CartoshkaException(String.format("Selector without segments at %d", peek().getLocation().offset));
+                        throw CartoshkaException.selectorWithoutSegments(peek().getLocation());
                     }
 
                     done = true;

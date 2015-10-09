@@ -70,7 +70,7 @@ public class Scanner {
 
     private void expect(char expected) {
         if (expected != c0_) {
-            throw CartoshkaException.unexpectedChar(c0_, offset);
+            throw CartoshkaException.unexpectedChar(new Location(offset, line, lineOffset));
         }
     }
 

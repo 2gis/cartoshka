@@ -46,6 +46,6 @@ public class MultiLiteral extends Literal {
 
     @Override
     public int compareTo(Literal o) {
-        throw CartoshkaException.incorrectComparison(this);
+        throw CartoshkaException.incorrectComparison(getLocation());
     }
 }

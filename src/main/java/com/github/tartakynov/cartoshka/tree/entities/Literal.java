@@ -16,12 +16,11 @@ public abstract class Literal extends Expression implements Comparable<Literal> 
     }
 
     public Literal operate(TokenType operator, Literal operand) {
-        throw new CartoshkaException(String.format("Operator [%s] cannot be applied to given operands", operator.getStr()));
+        throw CartoshkaException.invalidOperation(getLocation());
     }
 
     public Literal operate(TokenType operator) {
-        String operandType = this.getClass().getSimpleName().toLowerCase();
-        throw new CartoshkaException(String.format("Operator [%s] cannot be applied to %s", operator.getStr(), operandType));
+        throw CartoshkaException.invalidOperation(getLocation());
     }
 
     public boolean isBoolean() {

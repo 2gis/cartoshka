@@ -33,6 +33,6 @@ public class Boolean extends Literal {
             return java.lang.Boolean.compare(getValue(), other.getValue());
         }
 
-        throw CartoshkaException.incorrectComparison(this);
+        throw CartoshkaException.incorrectComparison(getLocation());
     }
 }

@@ -19,12 +19,12 @@ public class Field extends Expression {
     @Override
     public Literal ev(Feature feature) {
         if (feature == null) {
-            throw new CartoshkaException(String.format("Feature is not provided to field: %s", name));
+            throw CartoshkaException.featureIsNotProvided(getLocation());
         }
 
         Literal field = feature.getField(name);
         if (field == null) {
-            throw new CartoshkaException(String.format("Field not found: %s", name));
+            throw CartoshkaException.fieldNotFound(getLocation());
         }
 
         return field;

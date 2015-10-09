@@ -30,7 +30,7 @@ public class Variable extends Expression {
         if (value == null) {
             value = context.getVariable(name);
             if (value == null) {
-                throw new CartoshkaException(String.format("Undefined variable: %s", name));
+                throw CartoshkaException.undefinedName(getLocation());
             }
         }
 

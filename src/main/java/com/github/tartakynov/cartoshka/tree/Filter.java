@@ -63,6 +63,6 @@ public class Filter extends Node implements Evaluable<Boolean> {
                 return lh.compareTo(rh) >= 0;
         }
 
-        throw CartoshkaException.invalidOperation(this);
+        throw CartoshkaException.invalidOperation(getLocation());
     }
 }

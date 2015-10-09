@@ -99,6 +99,6 @@ public class Dimension extends Literal {
             }
         }
 
-        throw CartoshkaException.incorrectComparison(this);
+        throw CartoshkaException.incorrectComparison(getLocation());
     }
 }

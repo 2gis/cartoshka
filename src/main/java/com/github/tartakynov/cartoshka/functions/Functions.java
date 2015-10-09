@@ -14,10 +14,10 @@ public class Functions {
     public static final Function hsla = new BaseFunction("hsla", 4) {
         @Override
         public Literal apply(Location location, Iterator<Literal> args) {
-            Double h = Arguments.numeric(args, "h", getName(), false);
-            Double s = Arguments.numeric(args, "s", getName(), false);
-            Double l = Arguments.numeric(args, "l", getName(), false);
-            Double a = Arguments.numeric(args, "a", getName(), false);
+            Double h = Arguments.numeric(args, false);
+            Double s = Arguments.numeric(args, false);
+            Double l = Arguments.numeric(args, false);
+            Double a = Arguments.numeric(args, false);
             return Color.fromHSLA(location, h.intValue(), s, l, a);
         }
     };
@@ -25,9 +25,9 @@ public class Functions {
     public static final Function hsl = new BaseFunction("hsl", 3) {
         @Override
         public Literal apply(Location location, Iterator<Literal> args) {
-            Double h = Arguments.numeric(args, "h", getName(), false);
-            Double s = Arguments.numeric(args, "s", getName(), false);
-            Double l = Arguments.numeric(args, "l", getName(), false);
+            Double h = Arguments.numeric(args, false);
+            Double s = Arguments.numeric(args, false);
+            Double l = Arguments.numeric(args, false);
             return Color.fromHSLA(location, h.intValue(), s, l, 1.0);
         }
     };
@@ -35,10 +35,10 @@ public class Functions {
     public static final Function rgba = new BaseFunction("rgba", 4) {
         @Override
         public Literal apply(Location location, Iterator<Literal> args) {
-            Double r = Arguments.numeric(args, "r", getName(), true);
-            Double g = Arguments.numeric(args, "g", getName(), true);
-            Double b = Arguments.numeric(args, "b", getName(), true);
-            Double a = Arguments.numeric(args, "a", getName(), false);
+            Double r = Arguments.numeric(args, true);
+            Double g = Arguments.numeric(args, true);
+            Double b = Arguments.numeric(args, true);
+            Double a = Arguments.numeric(args, false);
             return Color.fromRGBA(location, r.intValue(), g.intValue(), b.intValue(), a);
         }
     };
@@ -46,9 +46,9 @@ public class Functions {
     public static final Function rgb = new BaseFunction("rgb", 3) {
         @Override
         public Literal apply(Location location, Iterator<Literal> args) {
-            Double r = Arguments.numeric(args, "r", getName(), true);
-            Double g = Arguments.numeric(args, "g", getName(), true);
-            Double b = Arguments.numeric(args, "b", getName(), true);
+            Double r = Arguments.numeric(args, true);
+            Double g = Arguments.numeric(args, true);
+            Double b = Arguments.numeric(args, true);
             return Color.fromRGBA(location, r.intValue(), g.intValue(), b.intValue(), 1.0);
         }
     };
@@ -56,7 +56,7 @@ public class Functions {
     public static final Function hue = new BaseFunction("hue", 1) {
         @Override
         public Literal apply(Location location, Iterator<Literal> args) {
-            Color color = Arguments.color(args, "color", getName());
+            Color color = Arguments.color(args);
             return new Numeric(location, color.getHue(), false);
         }
     };
@@ -64,7 +64,7 @@ public class Functions {
     public static final Function saturation = new BaseFunction("saturation", 1) {
         @Override
         public Literal apply(Location location, Iterator<Literal> args) {
-            Color color = Arguments.color(args, "color", getName());
+            Color color = Arguments.color(args);
             return new Dimension(location, color.getSaturation() * 100, "%");
         }
     };
@@ -72,7 +72,7 @@ public class Functions {
     public static final Function lightness = new BaseFunction("lightness", 1) {
         @Override
         public Literal apply(Location location, Iterator<Literal> args) {
-            Color color = Arguments.color(args, "color", getName());
+            Color color = Arguments.color(args);
             return new Dimension(location, color.getLightness() * 100, "%");
         }
     };
@@ -80,7 +80,7 @@ public class Functions {
     public static final Function alpha = new BaseFunction("alpha", 1) {
         @Override
         public Literal apply(Location location, Iterator<Literal> args) {
-            Color color = Arguments.color(args, "color", getName());
+            Color color = Arguments.color(args);
             return new Dimension(location, color.getAlpha() * 100, "%");
         }
     };
@@ -88,8 +88,8 @@ public class Functions {
     public static final Function saturate = new BaseFunction("saturate", 2) {
         @Override
         public Literal apply(Location location, Iterator<Literal> args) {
-            Color color = Arguments.color(args, "color", getName());
-            Double amount = Arguments.numeric(args, "amount", getName(), false);
+            Color color = Arguments.color(args);
+            Double amount = Arguments.numeric(args, false);
             return Color.fromHSLA(
                     location,
                     color.getHue(),
@@ -103,8 +103,8 @@ public class Functions {
     public static final Function desaturate = new BaseFunction("desaturate", 2) {
         @Override
         public Literal apply(Location location, Iterator<Literal> args) {
-            Color color = Arguments.color(args, "color", getName());
-            Double amount = Arguments.numeric(args, "amount", getName(), false);
+            Color color = Arguments.color(args);
+            Double amount = Arguments.numeric(args, false);
             return Color.fromHSLA(
                     location,
                     color.getHue(),
@@ -118,8 +118,8 @@ public class Functions {
     public static final Function lighten = new BaseFunction("lighten", 2) {
         @Override
         public Literal apply(Location location, Iterator<Literal> args) {
-            Color color = Arguments.color(args, "color", getName());
-            Double amount = Arguments.numeric(args, "amount", getName(), false);
+            Color color = Arguments.color(args);
+            Double amount = Arguments.numeric(args, false);
             return Color.fromHSLA(
                     location,
                     color.getHue(),
@@ -133,8 +133,8 @@ public class Functions {
     public static final Function darken = new BaseFunction("darken", 2) {
         @Override
         public Literal apply(Location location, Iterator<Literal> args) {
-            Color color = Arguments.color(args, "color", getName());
-            Double amount = Arguments.numeric(args, "amount", getName(), false);
+            Color color = Arguments.color(args);
+            Double amount = Arguments.numeric(args, false);
             return Color.fromHSLA(
                     location,
                     color.getHue(),
@@ -148,8 +148,8 @@ public class Functions {
     public static final Function fadein = new BaseFunction("fadein", 2) {
         @Override
         public Literal apply(Location location, Iterator<Literal> args) {
-            Color color = Arguments.color(args, "color", getName());
-            Double amount = Arguments.numeric(args, "amount", getName(), false);
+            Color color = Arguments.color(args);
+            Double amount = Arguments.numeric(args, false);
             return Color.fromHSLA(
                     location,
                     color.getHue(),
@@ -163,8 +163,8 @@ public class Functions {
     public static final Function fadeout = new BaseFunction("fadeout", 2) {
         @Override
         public Literal apply(Location location, Iterator<Literal> args) {
-            Color color = Arguments.color(args, "color", getName());
-            Double amount = Arguments.numeric(args, "amount", getName(), false);
+            Color color = Arguments.color(args);
+            Double amount = Arguments.numeric(args, false);
             return Color.fromHSLA(
                     location,
                     color.getHue(),
@@ -178,8 +178,8 @@ public class Functions {
     public static final Function spin = new BaseFunction("spin", 2) {
         @Override
         public Literal apply(Location location, Iterator<Literal> args) {
-            Color color = Arguments.color(args, "color", getName());
-            int amount = Arguments.numeric(args, "amount", getName(), false).intValue();
+            Color color = Arguments.color(args);
+            int amount = Arguments.numeric(args, false).intValue();
             int hue = (color.getHue() + amount) % 360;
             return Color.fromHSLA(
                     location,
@@ -194,7 +194,7 @@ public class Functions {
     public static final Function greyscale = new BaseFunction("greyscale", 1) {
         @Override
         public Literal apply(Location location, Iterator<Literal> args) {
-            Color color = Arguments.color(args, "color", getName());
+            Color color = Arguments.color(args);
             return Color.fromHSLA(
                     location,
                     color.getHue(),
@@ -208,9 +208,9 @@ public class Functions {
     public static final Function mix = new BaseFunction("mix", 3) {
         @Override
         public Literal apply(Location location, Iterator<Literal> args) {
-            Color color1 = Arguments.color(args, "color1", getName());
-            Color color2 = Arguments.color(args, "color2", getName());
-            double p = Arguments.percent(args, "weight", getName());
+            Color color1 = Arguments.color(args);
+            Color color2 = Arguments.color(args);
+            double p = Arguments.percent(args);
             double w = p * 2d - 1d;
             double a = color1.getAlpha() - color2.getAlpha();
             double w1 = (((w * a == -1) ? w : (w + a) / (1 + w * a)) + 1) / 2.0;

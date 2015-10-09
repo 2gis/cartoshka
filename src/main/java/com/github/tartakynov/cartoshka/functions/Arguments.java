@@ -7,17 +7,17 @@ import com.github.tartakynov.cartoshka.tree.entities.literals.Color;
 import java.util.Iterator;
 
 public class Arguments {
-    public static Double numeric(Iterator<Literal> iter, String name, String func, boolean mapTo255) {
+    public static Double numeric(Iterator<Literal> iter, boolean mapTo255) {
         Literal literal = iter.next();
         Double arg = literal.toNumber();
         if (arg == null) {
-            throw CartoshkaException.incorrectArgumentType(func, name);
+            throw CartoshkaException.functionIncorrectArgumentType(literal.getLocation());
         }
 
         return (literal.hasDot() && mapTo255) ? arg * 0xFF : arg;
     }
 
-    public static Double percent(Iterator<Literal> iter, String name, String func) {
+    public static Double percent(Iterator<Literal> iter) {
         Literal literal = iter.next();
         if (literal.isDimension()) {
             // only percent-unit dimension should return a numeric value
@@ -27,10 +27,10 @@ public class Arguments {
         return literal.toNumber() / 100.0;
     }
 
-    public static Color color(Iterator<Literal> iter, String func, String name) {
+    public static Color color(Iterator<Literal> iter) {
         Literal arg = iter.next();
-        if (arg == null || !arg.isColor()) {
-            throw CartoshkaException.incorrectArgumentType(func, name);
+        if (!arg.isColor()) {
+            throw CartoshkaException.functionIncorrectArgumentType(arg.getLocation());
         }
 
         return (Color) arg;
