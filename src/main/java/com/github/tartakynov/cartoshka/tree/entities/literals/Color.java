@@ -1,5 +1,6 @@
 package com.github.tartakynov.cartoshka.tree.entities.literals;
 
+import com.github.tartakynov.cartoshka.Location;
 import com.github.tartakynov.cartoshka.exceptions.CartoshkaException;
 import com.github.tartakynov.cartoshka.scanner.TokenType;
 import com.github.tartakynov.cartoshka.tree.entities.Literal;
@@ -13,7 +14,8 @@ public class Color extends Literal {
     private final double saturation;
     private final double lightness;
 
-    private Color(int r, int g, int b, int h, double s, double l, double a) {
+    private Color(Location location, int r, int g, int b, int h, double s, double l, double a) {
+        super(location);
         this.alpha = Math.max(0.0, Math.min(a, 1.0));
         this.red = Math.max(0, Math.min(r, 0xFF));
         this.green = Math.max(0, Math.min(g, 0xFF));
@@ -36,7 +38,7 @@ public class Color extends Literal {
         return m1;
     }
 
-    public static Color fromRGBA(int r, int g, int b, double a) {
+    public static Color fromRGBA(Location location, int r, int g, int b, double a) {
         r = Math.max(0, Math.min(r, 0xFF));
         g = Math.max(0, Math.min(g, 0xFF));
         b = Math.max(0, Math.min(b, 0xFF));
@@ -66,10 +68,10 @@ public class Color extends Literal {
         }
 
         h = h * 360;
-        return new Color(r, g, b, (int) Math.round(h), s, l, a);
+        return new Color(location, r, g, b, (int) Math.round(h), s, l, a);
     }
 
-    public static Color fromHSLA(int h, double s, double l, double a) {
+    public static Color fromHSLA(Location location, int h, double s, double l, double a) {
         s = Math.max(0.0, Math.min(s, 1.0));
         l = Math.max(0.0, Math.min(l, 1.0));
         a = Math.max(0.0, Math.min(a, 1.0));
@@ -80,7 +82,7 @@ public class Color extends Literal {
         int r = (int) Math.round(hue(_h + 1.0 / 3, m2, m1) * 0xFF);
         int g = (int) Math.round(hue(_h, m2, m1) * 255);
         int b = (int) Math.round(hue(_h - 1.0 / 3, m2, m1) * 0xFF);
-        return new Color(r, g, b, h, s, l, a);
+        return new Color(location, r, g, b, h, s, l, a);
     }
 
     public int getHue() {
@@ -132,19 +134,19 @@ public class Color extends Literal {
             right = (Color) operand;
         } else if (operand.isDimension() && operand.toNumber() != null) {
             int v = (int) (operand.toNumber() * 0xFF);
-            right = fromRGBA(v, v, v, 1.0);
+            right = fromRGBA(Location.min(getLocation(), operand.getLocation()), v, v, v, 1.0);
         }
 
         if (right != null) {
             switch (operator) {
                 case ADD:
-                    return Color.fromRGBA(red + right.red, green + right.green, blue + right.blue, alpha);
+                    return Color.fromRGBA(Location.min(getLocation(), operand.getLocation()), red + right.red, green + right.green, blue + right.blue, alpha);
                 case SUB:
-                    return Color.fromRGBA(red - right.red, green - right.green, blue - right.blue, alpha);
+                    return Color.fromRGBA(Location.min(getLocation(), operand.getLocation()), red - right.red, green - right.green, blue - right.blue, alpha);
                 case MUL:
-                    return Color.fromRGBA(red * right.red, green * right.green, blue * right.blue, alpha);
+                    return Color.fromRGBA(Location.min(getLocation(), operand.getLocation()), red * right.red, green * right.green, blue * right.blue, alpha);
                 case DIV:
-                    return Color.fromRGBA(red / right.red, green / right.green, blue / right.blue, alpha);
+                    return Color.fromRGBA(Location.min(getLocation(), operand.getLocation()), red / right.red, green / right.green, blue / right.blue, alpha);
             }
         }
 

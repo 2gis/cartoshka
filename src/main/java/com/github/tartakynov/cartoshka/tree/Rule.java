@@ -1,5 +1,6 @@
 package com.github.tartakynov.cartoshka.tree;
 
+import com.github.tartakynov.cartoshka.Location;
 import com.github.tartakynov.cartoshka.tree.entities.Value;
 
 public class Rule extends Node {
@@ -9,7 +10,8 @@ public class Rule extends Node {
     private final boolean isVariable;
     private final boolean isDefaultInstance;
 
-    public Rule(String name, Value value, boolean isVariable) {
+    public Rule(Location location, String name, Value value, boolean isVariable) {
+        super(location);
         String[] parts = name.split("/");
         this.instance = parts.length == 1 ? "__default__" : parts[0];
         this.isDefaultInstance = parts.length == 1 || parts[0].equals("__default__");

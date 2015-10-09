@@ -2,6 +2,7 @@ package com.github.tartakynov.cartoshka.tree.entities;
 
 import com.github.tartakynov.cartoshka.Feature;
 import com.github.tartakynov.cartoshka.Function;
+import com.github.tartakynov.cartoshka.Location;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -11,14 +12,15 @@ public class Call extends Expression {
     private final Function function;
     private Collection<Expression> args;
 
-    public Call(Function function, Collection<Expression> args) {
+    public Call(Location location, Function function, Collection<Expression> args) {
+        super(location);
         this.function = function;
         this.args = args;
     }
 
     @Override
     public Literal ev(final Feature feature) {
-        return function.apply(new Iterator<Literal>() {
+        return function.apply(getLocation(), new Iterator<Literal>() {
             Iterator<Expression> iterator = args.iterator();
 
             @Override

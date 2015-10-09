@@ -2,6 +2,7 @@ package com.github.tartakynov.cartoshka.tree.entities;
 
 import com.github.tartakynov.cartoshka.Context;
 import com.github.tartakynov.cartoshka.Feature;
+import com.github.tartakynov.cartoshka.Location;
 import com.github.tartakynov.cartoshka.tree.entities.literals.Text;
 
 import java.util.HashMap;
@@ -17,13 +18,8 @@ public class ExpandableText extends Expression {
 
     private final boolean isURL;
 
-    public ExpandableText(Context context, String value) {
-        this.context = context;
-        this.value = initialize(value);
-        this.isURL = false;
-    }
-
-    public ExpandableText(Context context, String value, boolean isURL) {
+    public ExpandableText(Location location, Context context, String value, boolean isURL) {
+        super(location);
         this.context = context;
         this.value = initialize(value);
         this.isURL = isURL;
@@ -45,7 +41,8 @@ public class ExpandableText extends Expression {
                         if (start < end) {
                             String name = value.substring(start + 2, end);
                             String pattern = ":@\\{" + name + "\\}";
-                            variables.put(pattern, new Variable(context, '@' + name));
+                            Location location = getInterpolatedLocation(start + 1);
+                            variables.put(pattern, new Variable(location, context, '@' + name));
                             sb.append(':');
                         }
                     }
@@ -57,7 +54,8 @@ public class ExpandableText extends Expression {
                     if (start < end) {
                         String name = value.substring(start + 1, end);
                         String pattern = String.format(":\\[%s\\]", name);
-                        fields.put(pattern, new Field(name));
+                        Location location = getInterpolatedLocation(start + 1);
+                        fields.put(pattern, new Field(location, name));
                         sb.append(':');
                     }
 
@@ -88,7 +86,7 @@ public class ExpandableText extends Expression {
             result = result.replaceAll(pattern, field.ev(feature).toString());
         }
 
-        return new Text(result, isURL, false);
+        return new Text(getLocation(), result, isURL, false);
     }
 
     public boolean isPlain() {
@@ -103,5 +101,11 @@ public class ExpandableText extends Expression {
     @Override
     public void fold() {
         fold(variables.values());
+    }
+
+    private Location getInterpolatedLocation(int start) {
+        return getLocation() == null
+                ? null
+                : new Location(getLocation().offset + start, getLocation().line, getLocation().linePos + start);
     }
 }

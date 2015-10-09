@@ -1,6 +1,7 @@
 package com.github.tartakynov.cartoshka.tree.entities;
 
 import com.github.tartakynov.cartoshka.Feature;
+import com.github.tartakynov.cartoshka.Location;
 import com.github.tartakynov.cartoshka.scanner.TokenType;
 
 public class UnaryOperation extends Expression {
@@ -8,7 +9,8 @@ public class UnaryOperation extends Expression {
 
     private Expression expression;
 
-    public UnaryOperation(TokenType operator, Expression expression) {
+    public UnaryOperation(Location location, TokenType operator, Expression expression) {
+        super(location);
         this.operator = operator;
         this.expression = expression;
     }

@@ -1,6 +1,7 @@
 package com.github.tartakynov.cartoshka.tree;
 
 import com.github.tartakynov.cartoshka.Feature;
+import com.github.tartakynov.cartoshka.Location;
 
 import java.util.Collection;
 
@@ -8,7 +9,8 @@ public class Ruleset extends Node implements Evaluable<Boolean> {
     private final Collection<Selector> selectors;
     private final Collection<Node> rules;
 
-    public Ruleset(Collection<Selector> selectors, Collection<Node> rules) {
+    public Ruleset(Location location, Collection<Selector> selectors, Collection<Node> rules) {
+        super(location);
         this.selectors = selectors;
         this.rules = rules;
     }

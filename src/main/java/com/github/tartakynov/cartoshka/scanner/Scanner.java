@@ -1,5 +1,6 @@
 package com.github.tartakynov.cartoshka.scanner;
 
+import com.github.tartakynov.cartoshka.Location;
 import com.github.tartakynov.cartoshka.exceptions.CartoshkaException;
 
 import java.io.IOException;
@@ -289,7 +290,7 @@ public class Scanner {
             }
         } while (token == TokenType.WHITESPACE);
 
-        Location location = new Location(tokenOffset, tokenLineStart, tokenLinePosition, getOffset() - tokenOffset);
+        Location location = new Location(tokenOffset, tokenLineStart, tokenLinePosition);
         next = new Token(token, literal.toString(), location);
     }
 

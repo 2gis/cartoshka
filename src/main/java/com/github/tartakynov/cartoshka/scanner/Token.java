@@ -1,5 +1,7 @@
 package com.github.tartakynov.cartoshka.scanner;
 
+import com.github.tartakynov.cartoshka.Location;
+
 public class Token {
     private final TokenType type;
     private final String text;

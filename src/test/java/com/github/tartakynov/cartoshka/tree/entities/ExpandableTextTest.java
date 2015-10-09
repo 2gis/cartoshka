@@ -15,8 +15,8 @@ import java.util.Set;
 public class ExpandableTextTest {
     private static Rule createRule(String name, int value, boolean isVariable) {
         Collection<Expression> expressions = new LinkedList<>();
-        expressions.add(new Numeric(value, false));
-        return new Rule(name, new Value(expressions), isVariable);
+        expressions.add(new Numeric(null, value, false));
+        return new Rule(null, name, new Value(null, expressions), isVariable);
     }
 
     private static Feature featureMock() {
@@ -34,9 +34,9 @@ public class ExpandableTextTest {
             @Override
             public Literal getField(String fieldName) {
                 if (fieldName.equals("a")) {
-                    return new Numeric(123, false);
+                    return new Numeric(null, 123, false);
                 } else if (fieldName.equals("Ab")) {
-                    return new Numeric(234, false);
+                    return new Numeric(null, 234, false);
                 }
 
                 return null;
@@ -50,14 +50,14 @@ public class ExpandableTextTest {
         Feature feature = featureMock();
         context.setVariable(createRule("@b", 1, true));
 
-        ExpandableText et = new ExpandableText(context, "\\\\ \\[a\\] \\@{b} [a] @{b}");
+        ExpandableText et = new ExpandableText(null, context, "\\\\ \\[a\\] \\@{b} [a] @{b}", false);
         Assert.assertEquals("\\ [a] @{b} 123 1", et.ev(feature).toString());
     }
 
     @Test
     public void testFieldsInterpolation() {
         Feature feature = featureMock();
-        ExpandableText et = new ExpandableText(null, "[a] [a] [Ab] [a] [Ab]");
+        ExpandableText et = new ExpandableText(null, null, "[a] [a] [Ab] [a] [Ab]", false);
         Assert.assertEquals("123 123 234 123 234", et.ev(feature).toString());
     }
 
@@ -66,7 +66,7 @@ public class ExpandableTextTest {
         Context context = new Context();
         context.setVariable(createRule("@a", 1, true));
         context.setVariable(createRule("@b", 2, true));
-        ExpandableText et = new ExpandableText(context, "@{a} @{a} @{b} @{a} @{b}");
+        ExpandableText et = new ExpandableText(null, context, "@{a} @{a} @{b} @{a} @{b}", false);
         Assert.assertEquals("1 1 2 1 2", et.ev(null).toString());
     }
 
@@ -74,12 +74,12 @@ public class ExpandableTextTest {
     public void testIsDynamic() {
         Context context = new Context();
         Collection<Expression> expressions = new LinkedList<>();
-        expressions.add(new Field("f"));
-        context.setVariable(new Rule("@b", new Value(expressions), true));
+        expressions.add(new Field(null, "f"));
+        context.setVariable(new Rule(null, "@b", new Value(null, expressions), true));
         context.setVariable(createRule("@a", 1, true));
 
-        Assert.assertFalse(new ExpandableText(context, "@{a}").isDynamic());
-        Assert.assertTrue(new ExpandableText(context, "@{b}").isDynamic());
-        Assert.assertTrue(new ExpandableText(context, "@{a} [f]").isDynamic());
+        Assert.assertFalse(new ExpandableText(null, context, "@{a}", false).isDynamic());
+        Assert.assertTrue(new ExpandableText(null, context, "@{b}", false).isDynamic());
+        Assert.assertTrue(new ExpandableText(null, context, "@{a} [f]", false).isDynamic());
     }
 }

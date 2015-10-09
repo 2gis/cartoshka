@@ -112,7 +112,7 @@ public final class CartoParser extends Scanner {
         expect(TokenType.COLON);
         Value value = parseValue();
         expect(TokenType.SEMICOLON);
-        return new Rule(token.getText(), value, token.getType() == TokenType.VARIABLE);
+        return new Rule(token.getLocation(), token.getText(), value, token.getType() == TokenType.VARIABLE);
     }
 
     // A Value is a comma-delimited list of Expressions
@@ -120,8 +120,10 @@ public final class CartoParser extends Scanner {
     // and before the `;`.
     private Value parseValue() {
         Collection<Expression> expressions = new ArrayList<>();
+        Location location = peek().getLocation();
         while (true) {
-            expressions.add(parseExpression());
+            Expression expression = parseExpression();
+            expressions.add(expression);
             if (peek().getType() != TokenType.COMMA) {
                 break;
             }
@@ -129,7 +131,7 @@ public final class CartoParser extends Scanner {
             expect(TokenType.COMMA); // consume comma
         }
 
-        return new Value(expressions);
+        return new Value(location, expressions);
     }
 
     // Expressions either represent mathematical operations,
@@ -144,7 +146,7 @@ public final class CartoParser extends Scanner {
             while (peek().getType().getPrecedence() == prec1) {
                 Token op = expect(TokenType.ADD, TokenType.SUB, TokenType.MUL, TokenType.DIV, TokenType.MOD);
                 Expression right = parseBinaryExpression(prec1 + 1);
-                result = new BinaryOperation(op.getType(), result, right);
+                result = new BinaryOperation(op.getLocation(), op.getType(), result, right);
             }
         }
 
@@ -160,7 +162,7 @@ public final class CartoParser extends Scanner {
             case SUB:
                 Token op = next();
                 Expression expression = parseUnaryExpression();
-                return new UnaryOperation(op.getType(), expression);
+                return new UnaryOperation(op.getLocation(), op.getType(), expression);
 
             default:
                 return parsePrimaryExpression();
@@ -170,19 +172,18 @@ public final class CartoParser extends Scanner {
     private Expression parsePrimaryExpression() {
         switch (peek().getType()) {
             case NUMBER_LITERAL:
-                String number = next().getText();
-                return new Numeric(Double.valueOf(number), number.indexOf('.') >= 0);
+                Token number = next();
+                return new Numeric(number.getLocation(), Double.valueOf(number.getText()), number.getText().indexOf('.') >= 0);
 
             case TRUE_LITERAL:
-                next();
-                return new Boolean(true);
+                return new Boolean(next().getLocation(), true);
 
             case FALSE_LITERAL:
-                next();
-                return new Boolean(false);
+                return new Boolean(next().getLocation(), false);
 
             case VARIABLE:
-                return new Variable(context, next().getText());
+                Token variable = next();
+                return new Variable(variable.getLocation(), context, variable.getText());
 
             case DIMENSION_LITERAL:
                 return parseDimension();
@@ -194,7 +195,7 @@ public final class CartoParser extends Scanner {
                 expect(TokenType.LBRACK);
                 Token field = next();
                 expect(TokenType.RBRACK);
-                return new Field(field.getText());
+                return new Field(field.getLocation(), field.getText());
 
             case LPAREN:
                 expect(TokenType.LPAREN);
@@ -213,10 +214,11 @@ public final class CartoParser extends Scanner {
                 if (peek().getType() == TokenType.LPAREN) {
                     return parseFunctionCall();
                 } else if (Colors.Strings.containsKey(identifier.getText())) {
-                    return Colors.Strings.get(identifier.getText());
+                    int[] rgba = Colors.Strings.get(identifier.getText());
+                    return Color.fromRGBA(identifier.getLocation(), rgba[0], rgba[1], rgba[2], rgba[3]);
                 }
 
-                return new Text(identifier.getText(), false, true);
+                return new Text(identifier.getLocation(), identifier.getText(), false, true);
 
             default:
                 throw new CartoshkaException(String.format("Unhandled expression %s at %d", peek().getText(), peek().getLocation().offset));
@@ -224,7 +226,8 @@ public final class CartoParser extends Scanner {
     }
 
     private Expression parseString(boolean isURL) {
-        ExpandableText text = new ExpandableText(context, next().getText(), isURL);
+        Token token = next();
+        ExpandableText text = new ExpandableText(token.getLocation(), context, token.getText(), isURL);
         if (text.isPlain()) {
             return text.ev(null);
         }
@@ -233,7 +236,8 @@ public final class CartoParser extends Scanner {
     }
 
     private Call parseFunctionCall() {
-        String functionName = current().getText();
+        Token token = current();
+        String functionName = token.getText();
         Function function = functions.get(functionName);
         if (function != null) {
             Collection<Expression> arguments = parseArgumentsExpression();
@@ -241,7 +245,7 @@ public final class CartoParser extends Scanner {
                 throw CartoshkaException.incorrectArgumentCount(functionName, function.getArgumentCount(), arguments.size());
             }
 
-            return new Call(function, arguments);
+            return new Call(token.getLocation(), function, arguments);
         }
 
         throw new CartoshkaException(String.format("Function [%s] not found", functionName));
@@ -254,7 +258,7 @@ public final class CartoParser extends Scanner {
             if (DIMENSION_UNITS.contains(value.substring(value.length() - i))) {
                 String num = value.substring(0, value.length() - i);
                 String unit = value.substring(value.length() - i);
-                return new Dimension(Double.valueOf(num), unit);
+                return new Dimension(token.getLocation(), Double.valueOf(num), unit);
             }
         }
 
@@ -269,12 +273,12 @@ public final class CartoParser extends Scanner {
                 int r = Integer.parseInt(text.substring(0, 1) + text.substring(0, 1), 16);
                 int g = Integer.parseInt(text.substring(1, 2) + text.substring(1, 2), 16);
                 int b = Integer.parseInt(text.substring(2, 3) + text.substring(2, 3), 16);
-                return Color.fromRGBA(r, g, b, 1.0);
+                return Color.fromRGBA(token.getLocation(), r, g, b, 1.0);
             } else if (text.length() == 6) {
                 int r = Integer.parseInt(text.substring(0, 2), 16);
                 int g = Integer.parseInt(text.substring(2, 4), 16);
                 int b = Integer.parseInt(text.substring(4, 6), 16);
-                return Color.fromRGBA(r, g, b, 1.0);
+                return Color.fromRGBA(token.getLocation(), r, g, b, 1.0);
             }
         } catch (NumberFormatException ex) {
             ex.printStackTrace();
@@ -307,9 +311,10 @@ public final class CartoParser extends Scanner {
 
     private Node parseRuleSet() {
         // selectors block
+        Location location = peek().getLocation();
         Collection<Selector> selectors = parseSelectors();
         Collection<Node> rules = parseBlock();
-        return new Ruleset(selectors, rules);
+        return new Ruleset(location, selectors, rules);
     }
 
     private Collection<Node> parseBlock() {
@@ -341,6 +346,7 @@ public final class CartoParser extends Scanner {
         Collection<Zoom> zooms = new ArrayList<>();
         Collection<Filter> filters = new ArrayList<>();
         String attachment = null;
+        Location location = peek().getLocation();
         int segments = 0;
         while (!done) {
             switch (peek().getType()) {
@@ -385,7 +391,7 @@ public final class CartoParser extends Scanner {
             segments++;
         }
 
-        return new Selector(elements, filters, zooms, attachment);
+        return new Selector(location, elements, filters, zooms, attachment);
     }
 
     // Elements are the building blocks for Selectors. They consist of
@@ -394,27 +400,28 @@ public final class CartoParser extends Scanner {
         Token token = expect(TokenType.HASH, TokenType.PERIOD, TokenType.MUL, TokenType.MAP_KEYWORD);
         switch (token.getType()) {
             case HASH:
-                return new Element(token.getText(), Element.ElementType.ID);
+                return new Element(token.getLocation(), token.getText(), Element.ElementType.ID);
 
             case PERIOD:
-                return new Element(next().getText(), Element.ElementType.CLASS);
+                return new Element(token.getLocation(), next().getText(), Element.ElementType.CLASS);
 
             case MUL:
-                return new Element("*", Element.ElementType.WILDCARD);
+                return new Element(token.getLocation(), "*", Element.ElementType.WILDCARD);
         }
 
-        return new Element(token.getText(), Element.ElementType.MAP);
+        return new Element(token.getLocation(), token.getText(), Element.ElementType.MAP);
     }
 
     private Zoom parseZoom() {
-        expect(TokenType.ZOOM_KEYWORD);
+        Token zoom = expect(TokenType.ZOOM_KEYWORD);
         Token op = expect(TokenType.EQ, TokenType.LT, TokenType.GT, TokenType.LTE, TokenType.GTE);
         Expression expression = parseExpression();
         expect(TokenType.RBRACK);
-        return new Zoom(op.getType(), expression);
+        return new Zoom(zoom.getLocation(), op.getType(), expression);
     }
 
     private Filter parseFilter() {
+        Location location = peek().getLocation();
         Expression left = parsePrimaryExpression();
         Token op = expect(TokenType.EQ, TokenType.NE, TokenType.LT, TokenType.GT, TokenType.LTE, TokenType.GTE);
         Expression right = parseExpression();
@@ -422,11 +429,11 @@ public final class CartoParser extends Scanner {
         if (left.isLiteral()) {
             Literal literal = (Literal) left;
             if (literal.isText()) {
-                left = new Field(literal.toString());
+                left = new Field(literal.getLocation(), literal.toString());
             }
         }
 
-        return new Filter(op.getType(), left, right);
+        return new Filter(location, op.getType(), left, right);
     }
 
     private Token expect(TokenType... types) {

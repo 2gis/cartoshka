@@ -1,12 +1,17 @@
 package com.github.tartakynov.cartoshka.tree.entities;
 
 import com.github.tartakynov.cartoshka.Feature;
+import com.github.tartakynov.cartoshka.Location;
 import com.github.tartakynov.cartoshka.tree.Evaluable;
 import com.github.tartakynov.cartoshka.tree.Node;
 
 import java.util.Collection;
 
 public abstract class Expression extends Node implements Evaluable<Literal> {
+    public Expression(Location location) {
+        super(location);
+    }
+
     protected static boolean hasDynamicExpression(Collection<? extends Expression> args) {
         for (Expression arg : args) {
             if (arg.isDynamic()) {

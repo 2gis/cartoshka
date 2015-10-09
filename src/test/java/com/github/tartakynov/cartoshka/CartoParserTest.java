@@ -28,7 +28,7 @@ public class CartoParserTest {
 
             @Override
             public Literal getField(String fieldName) {
-                return new Numeric(100500, false);
+                return new Numeric(null, 100500, false);
             }
         };
     }

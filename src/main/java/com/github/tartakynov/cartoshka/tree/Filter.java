@@ -1,6 +1,7 @@
 package com.github.tartakynov.cartoshka.tree;
 
 import com.github.tartakynov.cartoshka.Feature;
+import com.github.tartakynov.cartoshka.Location;
 import com.github.tartakynov.cartoshka.exceptions.CartoshkaException;
 import com.github.tartakynov.cartoshka.scanner.TokenType;
 import com.github.tartakynov.cartoshka.tree.entities.Expression;
@@ -13,7 +14,8 @@ public class Filter extends Node implements Evaluable<Boolean> {
 
     private Expression right;
 
-    public Filter(TokenType operator, Expression left, Expression right) {
+    public Filter(Location location, TokenType operator, Expression left, Expression right) {
+        super(location);
         this.operator = operator;
         this.left = left;
         this.right = right;

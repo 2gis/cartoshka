@@ -13,8 +13,8 @@ import java.util.LinkedList;
 public class ContextTest {
     private static Rule createRule(String name, int value, boolean isVariable) {
         Collection<Expression> expressions = new LinkedList<>();
-        expressions.add(new Numeric(value, false));
-        return new Rule(name, new Value(expressions), isVariable);
+        expressions.add(new Numeric(null, value, false));
+        return new Rule(null, name, new Value(null, expressions), isVariable);
     }
 
     @Test

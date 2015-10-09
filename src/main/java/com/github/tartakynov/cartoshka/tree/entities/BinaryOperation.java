@@ -1,6 +1,7 @@
 package com.github.tartakynov.cartoshka.tree.entities;
 
 import com.github.tartakynov.cartoshka.Feature;
+import com.github.tartakynov.cartoshka.Location;
 import com.github.tartakynov.cartoshka.scanner.TokenType;
 
 public class BinaryOperation extends Expression {
@@ -10,7 +11,8 @@ public class BinaryOperation extends Expression {
 
     private Expression right;
 
-    public BinaryOperation(TokenType operator, Expression left, Expression right) {
+    public BinaryOperation(Location location, TokenType operator, Expression left, Expression right) {
+        super(location);
         this.operator = operator;
         this.left = left;
         this.right = right;
