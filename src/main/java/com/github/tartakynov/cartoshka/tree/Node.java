@@ -12,6 +12,10 @@ public abstract class Node {
         return location;
     }
 
+    public Node(Location location) {
+        this.location = location;
+    }
+
     protected static Expression fold(Expression expression) {
         if (!expression.isDynamic()) {
             return expression.ev(null);

@@ -1,6 +1,7 @@
 package com.github.tartakynov.cartoshka.tree;
 
 import com.github.tartakynov.cartoshka.Feature;
+import com.github.tartakynov.cartoshka.Location;
 
 import java.util.Collection;
 
@@ -10,7 +11,8 @@ public class Selector extends Node implements Evaluable<Boolean> {
     private final Collection<Zoom> zooms;
     private final String attachment;
 
-    public Selector(Collection<Element> elements, Collection<Filter> filters, Collection<Zoom> zooms, String attachment) {
+    public Selector(Location location, Collection<Element> elements, Collection<Filter> filters, Collection<Zoom> zooms, String attachment) {
+        super(location);
         this.elements = elements;
         this.filters = filters;
         this.zooms = zooms;

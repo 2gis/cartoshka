@@ -1,12 +1,14 @@
 package com.github.tartakynov.cartoshka.tree;
 
 import com.github.tartakynov.cartoshka.Feature;
+import com.github.tartakynov.cartoshka.Location;
 
 public class Element extends Node implements Evaluable<Boolean> {
     private final String value;
     private final ElementType type;
 
-    public Element(String value, ElementType type) {
+    public Element(Location location, String value, ElementType type) {
+        super(location);
         this.value = value;
         this.type = type;
     }

@@ -1,6 +1,7 @@
 package com.github.tartakynov.cartoshka.tree;
 
 import com.github.tartakynov.cartoshka.Feature;
+import com.github.tartakynov.cartoshka.Location;
 import com.github.tartakynov.cartoshka.exceptions.CartoshkaException;
 import com.github.tartakynov.cartoshka.scanner.TokenType;
 import com.github.tartakynov.cartoshka.tree.entities.Expression;
@@ -10,7 +11,8 @@ public class Zoom extends Node implements Evaluable<Double> {
     private final TokenType operator;
     private Expression expression;
 
-    public Zoom(TokenType operator, Expression expression) {
+    public Zoom(Location location, TokenType operator, Expression expression) {
+        super(location);
         this.operator = operator;
         this.expression = expression;
     }

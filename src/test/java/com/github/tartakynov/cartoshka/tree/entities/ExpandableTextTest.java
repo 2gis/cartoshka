@@ -16,7 +16,7 @@ public class ExpandableTextTest {
     private static Rule createRule(String name, int value, boolean isVariable) {
         Collection<Expression> expressions = new LinkedList<>();
         expressions.add(new Numeric(null, value, false));
-        return new Rule(name, new Value(null, expressions), isVariable);
+        return new Rule(null, name, new Value(null, expressions), isVariable);
     }
 
     private static Feature featureMock() {
@@ -75,7 +75,7 @@ public class ExpandableTextTest {
         Context context = new Context();
         Collection<Expression> expressions = new LinkedList<>();
         expressions.add(new Field(null, "f"));
-        context.setVariable(new Rule("@b", new Value(null, expressions), true));
+        context.setVariable(new Rule(null, "@b", new Value(null, expressions), true));
         context.setVariable(createRule("@a", 1, true));
 
         Assert.assertFalse(new ExpandableText(null, context, "@{a}", false).isDynamic());

@@ -112,7 +112,7 @@ public final class CartoParser extends Scanner {
         expect(TokenType.COLON);
         Value value = parseValue();
         expect(TokenType.SEMICOLON);
-        return new Rule(token.getText(), value, token.getType() == TokenType.VARIABLE);
+        return new Rule(token.getLocation(), token.getText(), value, token.getType() == TokenType.VARIABLE);
     }
 
     // A Value is a comma-delimited list of Expressions
@@ -312,9 +312,10 @@ public final class CartoParser extends Scanner {
 
     private Node parseRuleSet() {
         // selectors block
+        Location location = peek().getLocation();
         Collection<Selector> selectors = parseSelectors();
         Collection<Node> rules = parseBlock();
-        return new Ruleset(selectors, rules);
+        return new Ruleset(location, selectors, rules);
     }
 
     private Collection<Node> parseBlock() {
@@ -346,6 +347,7 @@ public final class CartoParser extends Scanner {
         Collection<Zoom> zooms = new ArrayList<>();
         Collection<Filter> filters = new ArrayList<>();
         String attachment = null;
+        Location location = peek().getLocation();
         int segments = 0;
         while (!done) {
             switch (peek().getType()) {
@@ -390,7 +392,7 @@ public final class CartoParser extends Scanner {
             segments++;
         }
 
-        return new Selector(elements, filters, zooms, attachment);
+        return new Selector(location, elements, filters, zooms, attachment);
     }
 
     // Elements are the building blocks for Selectors. They consist of
@@ -399,16 +401,16 @@ public final class CartoParser extends Scanner {
         Token token = expect(TokenType.HASH, TokenType.PERIOD, TokenType.MUL, TokenType.MAP_KEYWORD);
         switch (token.getType()) {
             case HASH:
-                return new Element(token.getText(), Element.ElementType.ID);
+                return new Element(token.getLocation(), token.getText(), Element.ElementType.ID);
 
             case PERIOD:
-                return new Element(next().getText(), Element.ElementType.CLASS);
+                return new Element(token.getLocation(), next().getText(), Element.ElementType.CLASS);
 
             case MUL:
-                return new Element("*", Element.ElementType.WILDCARD);
+                return new Element(token.getLocation(), "*", Element.ElementType.WILDCARD);
         }
 
-        return new Element(token.getText(), Element.ElementType.MAP);
+        return new Element(token.getLocation(), token.getText(), Element.ElementType.MAP);
     }
 
     private Zoom parseZoom() {
@@ -416,10 +418,11 @@ public final class CartoParser extends Scanner {
         Token op = expect(TokenType.EQ, TokenType.LT, TokenType.GT, TokenType.LTE, TokenType.GTE);
         Expression expression = parseExpression();
         expect(TokenType.RBRACK);
-        return new Zoom(op.getType(), expression);
+        return new Zoom(op.getLocation(), op.getType(), expression);
     }
 
     private Filter parseFilter() {
+        Location location = peek().getLocation();
         Expression left = parsePrimaryExpression();
         Token op = expect(TokenType.EQ, TokenType.NE, TokenType.LT, TokenType.GT, TokenType.LTE, TokenType.GTE);
         Expression right = parseExpression();
@@ -431,7 +434,7 @@ public final class CartoParser extends Scanner {
             }
         }
 
-        return new Filter(op.getType(), left, right);
+        return new Filter(location, op.getType(), left, right);
     }
 
     private Token expect(TokenType... types) {

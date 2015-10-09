@@ -9,7 +9,7 @@ import java.util.Collection;
 
 public abstract class Expression extends Node implements Evaluable<Literal> {
     public Expression(Location location) {
-
+        super(location);
     }
 
     protected static boolean hasDynamicExpression(Collection<? extends Expression> args) {
