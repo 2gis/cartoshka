@@ -1,8 +1,8 @@
 package com.github.tartakynov.cartoshka.tree.entities;
 
+import com.github.tartakynov.cartoshka.CartoshkaException;
 import com.github.tartakynov.cartoshka.Feature;
 import com.github.tartakynov.cartoshka.Location;
-import com.github.tartakynov.cartoshka.exceptions.CartoshkaException;
 import com.github.tartakynov.cartoshka.scanner.TokenType;
 
 public abstract class Literal extends Expression implements Comparable<Literal> {

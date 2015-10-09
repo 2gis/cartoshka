@@ -1,7 +1,6 @@
 package com.github.tartakynov.cartoshka;
 
-import com.github.tartakynov.cartoshka.exceptions.CartoshkaException;
-import com.github.tartakynov.cartoshka.functions.Functions;
+import com.github.tartakynov.cartoshka.function.Functions;
 import com.github.tartakynov.cartoshka.scanner.Scanner;
 import com.github.tartakynov.cartoshka.scanner.Source;
 import com.github.tartakynov.cartoshka.scanner.Token;
@@ -247,7 +246,7 @@ public final class CartoParser extends Scanner {
             return new Call(token.getLocation(), function, arguments);
         }
 
-        throw CartoshkaException.undefinedName(token.getLocation());
+        throw CartoshkaException.undefinedFunction(token.getLocation());
     }
 
     private Dimension parseDimension() {

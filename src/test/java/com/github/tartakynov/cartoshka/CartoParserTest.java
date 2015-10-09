@@ -38,8 +38,8 @@ public class CartoParserTest {
     public void test() {
         CartoParser parser = new CartoParser();
         ClassLoader cl = this.getClass().getClassLoader();
-        parser.addSource("roads.mss", new InputStreamReader(cl.getResourceAsStream("roads.mss")));
-        parser.addSource("style.mss", new InputStreamReader(cl.getResourceAsStream("style.mss")));
+//        parser.addSource("roads.mss", new InputStreamReader(cl.getResourceAsStream("roads.mss")));
+//        parser.addSource("style.mss", new InputStreamReader(cl.getResourceAsStream("style.mss")));
         parser.addSource("test", new StringReader("@x: [field]; y: @x + 1; z: blur();"));
         Queue<Node> queue = new LinkedBlockingQueue<>();
         queue.addAll(parser.parse());

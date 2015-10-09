@@ -1,6 +1,6 @@
-package com.github.tartakynov.cartoshka.functions;
+package com.github.tartakynov.cartoshka.function;
 
-import com.github.tartakynov.cartoshka.exceptions.CartoshkaException;
+import com.github.tartakynov.cartoshka.CartoshkaException;
 import com.github.tartakynov.cartoshka.tree.entities.Literal;
 import com.github.tartakynov.cartoshka.tree.entities.literals.Color;
 

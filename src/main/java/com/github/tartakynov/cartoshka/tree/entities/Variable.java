@@ -1,9 +1,9 @@
 package com.github.tartakynov.cartoshka.tree.entities;
 
+import com.github.tartakynov.cartoshka.CartoshkaException;
 import com.github.tartakynov.cartoshka.Context;
 import com.github.tartakynov.cartoshka.Feature;
 import com.github.tartakynov.cartoshka.Location;
-import com.github.tartakynov.cartoshka.exceptions.CartoshkaException;
 
 public class Variable extends Expression {
     private final String name;
@@ -30,7 +30,7 @@ public class Variable extends Expression {
         if (value == null) {
             value = context.getVariable(name);
             if (value == null) {
-                throw CartoshkaException.undefinedName(getLocation());
+                throw CartoshkaException.undefinedVariable(getLocation());
             }
         }
 

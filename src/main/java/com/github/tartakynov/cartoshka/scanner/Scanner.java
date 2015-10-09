@@ -1,7 +1,7 @@
 package com.github.tartakynov.cartoshka.scanner;
 
+import com.github.tartakynov.cartoshka.CartoshkaException;
 import com.github.tartakynov.cartoshka.Location;
-import com.github.tartakynov.cartoshka.exceptions.CartoshkaException;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -70,7 +70,7 @@ public class Scanner {
 
     private void expect(char expected) {
         if (expected != c0_) {
-            throw CartoshkaException.unexpectedChar(new Location(offset, line, lineOffset));
+            throw CartoshkaException.unexpectedChar(new Location(offset, line, lineOffset), c0_);
         }
     }
 

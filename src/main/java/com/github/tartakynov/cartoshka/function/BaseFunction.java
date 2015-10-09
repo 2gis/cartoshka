@@ -1,4 +1,4 @@
-package com.github.tartakynov.cartoshka.functions;
+package com.github.tartakynov.cartoshka.function;
 
 import com.github.tartakynov.cartoshka.Function;
 
