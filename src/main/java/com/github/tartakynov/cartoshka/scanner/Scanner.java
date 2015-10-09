@@ -1,4 +1,4 @@
-package com.github.tartakynov.cartoshka.scanners;
+package com.github.tartakynov.cartoshka.scanner;
 
 import com.github.tartakynov.cartoshka.exceptions.CartoshkaException;
 
@@ -69,7 +69,7 @@ public class Scanner {
 
     private void expect(char expected) {
         if (expected != c0_) {
-            throw CartoshkaException.unexpectedChar(c0_, getOffset());
+            throw CartoshkaException.unexpectedChar(c0_, offset);
         }
     }
 
@@ -101,11 +101,11 @@ public class Scanner {
         return this.offset;
     }
 
-    public int getLine() {
+    protected int getLine() {
         return this.line;
     }
 
-    public int getLinePosition() {
+    protected int getLinePosition() {
         return this.offset - this.lineOffset;
     }
 
@@ -118,13 +118,16 @@ public class Scanner {
     }
 
     protected void scan() {
-        int posStart;
-        int posEnd;
+        int tokenOffset;
+        int tokenLineStart;
+        int tokenLinePosition;
         TokenType token;
         literal.setLength(0);
 
         do {
-            posStart = getOffset();
+            tokenOffset = getOffset();
+            tokenLineStart = getLine();
+            tokenLinePosition = getLinePosition();
             if (isEOS()) {
                 token = TokenType.EOS;
                 break;
@@ -286,8 +289,7 @@ public class Scanner {
             }
         } while (token == TokenType.WHITESPACE);
 
-        posEnd = getOffset();
-        next = new Token(token, posStart, posEnd, literal.toString());
+        next = new Token(token, literal.toString(), new Location(tokenOffset, tokenLineStart, tokenLinePosition));
     }
 
     private TokenType skipSingleLineComment() {

@@ -1,6 +1,6 @@
 package com.github.tartakynov.cartoshka.tree.entities.literals;
 
-import com.github.tartakynov.cartoshka.scanners.TokenType;
+import com.github.tartakynov.cartoshka.scanner.TokenType;
 import com.github.tartakynov.cartoshka.tree.entities.Literal;
 
 public class Text extends Literal {

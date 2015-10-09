@@ -2,7 +2,7 @@ package com.github.tartakynov.cartoshka.tree;
 
 import com.github.tartakynov.cartoshka.Feature;
 import com.github.tartakynov.cartoshka.exceptions.CartoshkaException;
-import com.github.tartakynov.cartoshka.scanners.TokenType;
+import com.github.tartakynov.cartoshka.scanner.TokenType;
 import com.github.tartakynov.cartoshka.tree.entities.Expression;
 import com.github.tartakynov.cartoshka.tree.entities.Literal;
 

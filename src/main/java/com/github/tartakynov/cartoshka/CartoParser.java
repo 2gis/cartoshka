@@ -2,10 +2,10 @@ package com.github.tartakynov.cartoshka;
 
 import com.github.tartakynov.cartoshka.exceptions.CartoshkaException;
 import com.github.tartakynov.cartoshka.functions.Functions;
-import com.github.tartakynov.cartoshka.scanners.Scanner;
-import com.github.tartakynov.cartoshka.scanners.Source;
-import com.github.tartakynov.cartoshka.scanners.Token;
-import com.github.tartakynov.cartoshka.scanners.TokenType;
+import com.github.tartakynov.cartoshka.scanner.Scanner;
+import com.github.tartakynov.cartoshka.scanner.Source;
+import com.github.tartakynov.cartoshka.scanner.Token;
+import com.github.tartakynov.cartoshka.scanner.TokenType;
 import com.github.tartakynov.cartoshka.tree.*;
 import com.github.tartakynov.cartoshka.tree.entities.*;
 import com.github.tartakynov.cartoshka.tree.entities.literals.Boolean;
@@ -219,7 +219,7 @@ public final class CartoParser extends Scanner {
                 return new Text(identifier.getText(), false, true);
 
             default:
-                throw new CartoshkaException(String.format("Unhandled expression %s at %d", peek().getText(), peek().getStart()));
+                throw new CartoshkaException(String.format("Unhandled expression %s at %d", peek().getText(), peek().getLocation().offset));
         }
     }
 
@@ -258,7 +258,7 @@ public final class CartoParser extends Scanner {
             }
         }
 
-        throw new CartoshkaException(String.format("Wrong unit for dimension at pos: %d", token.getStart()));
+        throw new CartoshkaException(String.format("Wrong unit for dimension at pos: %d", token.getLocation().offset));
     }
 
     private Color parseHexColor() {
@@ -281,7 +281,7 @@ public final class CartoParser extends Scanner {
             // do nothing
         }
 
-        throw new CartoshkaException(String.format("Wrong hex color #%s at pos: %d", token.getText(), token.getStart()));
+        throw new CartoshkaException(String.format("Wrong hex color #%s at pos: %d", token.getText(), token.getLocation().offset));
     }
 
     private Collection<Expression> parseArgumentsExpression() {
@@ -363,7 +363,7 @@ public final class CartoParser extends Scanner {
 
                 case ATTACHMENT:
                     if (attachment != null) {
-                        throw CartoshkaException.unexpectedToken(peek().getText(), peek().getStart());
+                        throw CartoshkaException.unexpectedToken(peek().getText(), peek().getLocation().offset);
                     }
 
                     attachment = next().getText();
@@ -372,7 +372,7 @@ public final class CartoParser extends Scanner {
                 case LBRACE:
                 case COMMA:
                     if (segments == 0) {
-                        throw new CartoshkaException(String.format("Selector without segments at %d", peek().getEnd()));
+                        throw new CartoshkaException(String.format("Selector without segments at %d", peek().getLocation().offset));
                     }
 
                     done = true;
@@ -437,6 +437,6 @@ public final class CartoParser extends Scanner {
             }
         }
 
-        throw CartoshkaException.unexpectedToken(token.getType().name(), token.getStart());
+        throw CartoshkaException.unexpectedToken(token.getType().name(), token.getLocation().offset);
     }
 }
