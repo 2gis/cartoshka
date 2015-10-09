@@ -11,23 +11,23 @@ public class CartoshkaException extends RuntimeException {
     }
 
     public static CartoshkaException featureIsNotProvided(Location location) {
-        throw new CartoshkaException(location, "Unable to evaluate the expression without feature");
+        return new CartoshkaException(location, "Unable to evaluate the expression without feature");
     }
 
     public static CartoshkaException fieldNotFound(Location location) {
-        throw new CartoshkaException(location, "Field not found");
+        return new CartoshkaException(location, "Field not found");
     }
 
     public static CartoshkaException invalidDimensionUnit(Location location) {
-        throw new CartoshkaException(location, "Invalid dimension unit");
+        return new CartoshkaException(location, "Invalid dimension unit");
     }
 
     public static CartoshkaException invalidFormat(Location location) {
-        throw new CartoshkaException(location, "Invalid format");
+        return new CartoshkaException(location, "Invalid format");
     }
 
     public static CartoshkaException invalidOperation(Location location) {
-        throw new CartoshkaException(location, "Invalid operation");
+        return new CartoshkaException(location, "Invalid operation");
     }
 
     public static ClassCastException incorrectComparison(Location location) {
@@ -35,35 +35,35 @@ public class CartoshkaException extends RuntimeException {
     }
 
     public static CartoshkaException functionTooManyArguments(Location location) {
-        throw new CartoshkaException(location, "Too many arguments");
+        return new CartoshkaException(location, "Too many arguments");
     }
 
     public static CartoshkaException functionIncorrectArgumentType(Location location) {
-        throw new CartoshkaException(location, "Incorrect type");
+        return new CartoshkaException(location, "Incorrect type");
     }
 
     public static CartoshkaException functionIncorrectArgumentCount(Location location, int expected, int actual) {
-        throw new CartoshkaException(location, "Incorrect arguments count, expected %d but given %d", expected, actual);
+        return new CartoshkaException(location, "Incorrect arguments count, expected %d but given %d", expected, actual);
     }
 
     public static CartoshkaException selectorWithoutSegments(Location location) {
-        throw new CartoshkaException(location, "Selector without segments");
+        return new CartoshkaException(location, "Selector without segments");
     }
 
     public static CartoshkaException undefinedFunction(Location location) {
-        throw new CartoshkaException(location, "Undefined name");
+        return new CartoshkaException(location, "Undefined name");
     }
 
     public static CartoshkaException undefinedVariable(Location location) {
-        throw new CartoshkaException(location, "Undefined variable");
+        return new CartoshkaException(location, "Undefined variable");
     }
 
     public static CartoshkaException unexpectedToken(Token token) {
-        throw new CartoshkaException(token.getLocation(), "Unexpected token %s", token.getType().name());
+        return new CartoshkaException(token.getLocation(), "Unexpected token %s", token.getType().name());
     }
 
     public static CartoshkaException unexpectedChar(Location location, char c) {
-        throw new CartoshkaException(location, "Unexpected char %c", c);
+        return new CartoshkaException(location, "Unexpected char %c", c);
     }
 
     public Location getLocation() {
