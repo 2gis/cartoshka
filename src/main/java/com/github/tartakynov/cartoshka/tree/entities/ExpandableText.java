@@ -106,6 +106,6 @@ public class ExpandableText extends Expression {
     private Location getInterpolatedLocation(int start, int end) {
         return getLocation() == null
                 ? null
-                : new Location(getLocation().offset + start, getLocation().line, getLocation().linePos + start, end - start);
+                : new Location(getLocation().offset + start, getLocation().line, getLocation().linePos + start);
     }
 }

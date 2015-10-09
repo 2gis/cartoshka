@@ -290,7 +290,7 @@ public class Scanner {
             }
         } while (token == TokenType.WHITESPACE);
 
-        Location location = new Location(tokenOffset, tokenLineStart, tokenLinePosition, getOffset() - tokenOffset);
+        Location location = new Location(tokenOffset, tokenLineStart, tokenLinePosition);
         next = new Token(token, literal.toString(), location);
     }
 

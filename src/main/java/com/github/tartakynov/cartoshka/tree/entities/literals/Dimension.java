@@ -50,15 +50,15 @@ public class Dimension extends Literal {
             if (right != null) {
                 switch (operator) {
                     case ADD:
-                        return new Dimension(Location.combine(getLocation(), operand.getLocation()), left + right, unit);
+                        return new Dimension(Location.min(getLocation(), operand.getLocation()), left + right, unit);
                     case SUB:
-                        return new Dimension(Location.combine(getLocation(), operand.getLocation()), left - right, unit);
+                        return new Dimension(Location.min(getLocation(), operand.getLocation()), left - right, unit);
                     case MUL:
-                        return new Dimension(Location.combine(getLocation(), operand.getLocation()), left * right, unit);
+                        return new Dimension(Location.min(getLocation(), operand.getLocation()), left * right, unit);
                     case DIV:
-                        return new Dimension(Location.combine(getLocation(), operand.getLocation()), left / right, unit);
+                        return new Dimension(Location.min(getLocation(), operand.getLocation()), left / right, unit);
                     case MOD:
-                        return new Dimension(Location.combine(getLocation(), operand.getLocation()), left % right, unit);
+                        return new Dimension(Location.min(getLocation(), operand.getLocation()), left % right, unit);
                 }
             }
         }

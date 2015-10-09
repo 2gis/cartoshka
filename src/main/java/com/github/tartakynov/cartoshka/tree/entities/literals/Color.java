@@ -134,19 +134,19 @@ public class Color extends Literal {
             right = (Color) operand;
         } else if (operand.isDimension() && operand.toNumber() != null) {
             int v = (int) (operand.toNumber() * 0xFF);
-            right = fromRGBA(Location.combine(getLocation(), operand.getLocation()), v, v, v, 1.0);
+            right = fromRGBA(Location.min(getLocation(), operand.getLocation()), v, v, v, 1.0);
         }
 
         if (right != null) {
             switch (operator) {
                 case ADD:
-                    return Color.fromRGBA(Location.combine(getLocation(), operand.getLocation()), red + right.red, green + right.green, blue + right.blue, alpha);
+                    return Color.fromRGBA(Location.min(getLocation(), operand.getLocation()), red + right.red, green + right.green, blue + right.blue, alpha);
                 case SUB:
-                    return Color.fromRGBA(Location.combine(getLocation(), operand.getLocation()), red - right.red, green - right.green, blue - right.blue, alpha);
+                    return Color.fromRGBA(Location.min(getLocation(), operand.getLocation()), red - right.red, green - right.green, blue - right.blue, alpha);
                 case MUL:
-                    return Color.fromRGBA(Location.combine(getLocation(), operand.getLocation()), red * right.red, green * right.green, blue * right.blue, alpha);
+                    return Color.fromRGBA(Location.min(getLocation(), operand.getLocation()), red * right.red, green * right.green, blue * right.blue, alpha);
                 case DIV:
-                    return Color.fromRGBA(Location.combine(getLocation(), operand.getLocation()), red / right.red, green / right.green, blue / right.blue, alpha);
+                    return Color.fromRGBA(Location.min(getLocation(), operand.getLocation()), red / right.red, green / right.green, blue / right.blue, alpha);
             }
         }
 

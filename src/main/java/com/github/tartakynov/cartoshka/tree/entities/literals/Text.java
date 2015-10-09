@@ -31,7 +31,7 @@ public class Text extends Literal {
     @Override
     public Literal operate(TokenType operator, Literal operand) {
         if (operator == TokenType.ADD && (operand.isNumeric() || operand.isText() || operand.isURL())) {
-            return new Text(Location.combine(getLocation(), operand.getLocation()), this.toString() + operand.toString(), isURL, false);
+            return new Text(Location.min(getLocation(), operand.getLocation()), this.toString() + operand.toString(), isURL, false);
         }
 
         return super.operate(operator, operand);

@@ -37,18 +37,18 @@ public class Numeric extends Literal {
         if (operand.isNumeric()) {
             switch (operator) {
                 case ADD:
-                    return new Numeric(Location.combine(getLocation(), operand.getLocation()), value + operand.toNumber(), hasDot || operand.hasDot());
+                    return new Numeric(Location.min(getLocation(), operand.getLocation()), value + operand.toNumber(), hasDot || operand.hasDot());
                 case SUB:
-                    return new Numeric(Location.combine(getLocation(), operand.getLocation()), value - operand.toNumber(), hasDot || operand.hasDot());
+                    return new Numeric(Location.min(getLocation(), operand.getLocation()), value - operand.toNumber(), hasDot || operand.hasDot());
                 case MUL:
-                    return new Numeric(Location.combine(getLocation(), operand.getLocation()), value * operand.toNumber(), hasDot || operand.hasDot());
+                    return new Numeric(Location.min(getLocation(), operand.getLocation()), value * operand.toNumber(), hasDot || operand.hasDot());
                 case DIV:
-                    return new Numeric(Location.combine(getLocation(), operand.getLocation()), value / operand.toNumber(), hasDot || operand.hasDot());
+                    return new Numeric(Location.min(getLocation(), operand.getLocation()), value / operand.toNumber(), hasDot || operand.hasDot());
                 case MOD:
-                    return new Numeric(Location.combine(getLocation(), operand.getLocation()), value % operand.toNumber(), hasDot || operand.hasDot());
+                    return new Numeric(Location.min(getLocation(), operand.getLocation()), value % operand.toNumber(), hasDot || operand.hasDot());
             }
         } else if (operand.isText() && operator == TokenType.ADD) {
-            return new Text(Location.combine(getLocation(), operand.getLocation()), toString() + operand.toString(), false, false);
+            return new Text(Location.min(getLocation(), operand.getLocation()), toString() + operand.toString(), false, false);
         }
 
         return super.operate(operator, operand);

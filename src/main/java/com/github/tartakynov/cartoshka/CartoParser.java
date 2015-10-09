@@ -124,7 +124,7 @@ public final class CartoParser extends Scanner {
         while (true) {
             Expression expression = parseExpression();
             expressions.add(expression);
-            location = Location.combine(location, expression.getLocation());
+            location = Location.min(location, expression.getLocation());
             if (peek().getType() != TokenType.COMMA) {
                 break;
             }
