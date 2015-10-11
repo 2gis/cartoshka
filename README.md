@@ -4,6 +4,7 @@
 
 [![GitHub license](https://img.shields.io/badge/license-MPL 2.0-blue.svg?style=flat-square)](LICENSE)
 [![Build status](https://travis-ci.org/2gis/cartoshka.svg?branch=master)](https://travis-ci.org/2gis/cartoshka)
+[![Coverage Status](https://coveralls.io/repos/2gis/cartoshka/badge.svg?branch=master&service=github)](https://coveralls.io/github/2gis/cartoshka?branch=master)
 
 ## Features
 
