@@ -2,8 +2,8 @@ package com._2gis.cartoshka.function;
 
 import com._2gis.cartoshka.Function;
 import com._2gis.cartoshka.Location;
-import com._2gis.cartoshka.tree.entities.literals.*;
 import com._2gis.cartoshka.tree.entities.Literal;
+import com._2gis.cartoshka.tree.entities.literals.*;
 
 import java.util.ArrayList;
 import java.util.Collection;

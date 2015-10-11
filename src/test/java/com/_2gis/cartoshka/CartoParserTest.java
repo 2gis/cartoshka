@@ -1,7 +1,7 @@
 package com._2gis.cartoshka;
 
-import com._2gis.cartoshka.tree.entities.literals.Numeric;
 import com._2gis.cartoshka.tree.entities.Literal;
+import com._2gis.cartoshka.tree.entities.literals.Numeric;
 import org.junit.Test;
 
 import java.util.HashSet;
