@@ -16,6 +16,11 @@ public class UnaryOperation extends Expression {
     }
 
     @Override
+    public String toString() {
+        return String.format("%s%s", operator.getStr(), expression.toString());
+    }
+
+    @Override
     public Literal ev(Feature feature) {
         return expression.ev(feature).operate(operator);
     }

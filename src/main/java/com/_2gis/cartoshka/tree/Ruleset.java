@@ -24,6 +24,11 @@ public class Ruleset extends Node implements Evaluable<Boolean> {
     }
 
     @Override
+    public String toString() {
+        return String.format("%s {\n%s\n}", collectionToString(selectors, ", "), collectionToString(rules, "\n"));
+    }
+
+    @Override
     public void fold() {
         fold(rules);
         fold(selectors);

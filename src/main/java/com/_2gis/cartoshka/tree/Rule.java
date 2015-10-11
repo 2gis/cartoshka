@@ -41,6 +41,11 @@ public class Rule extends Node {
     }
 
     @Override
+    public String toString() {
+        return String.format("%s%s: %s", isDefaultInstance ? "" : instance, name, value.toString());
+    }
+
+    @Override
     public void fold() {
         value.fold();
     }

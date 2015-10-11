@@ -32,6 +32,11 @@ public class BinaryOperation extends Expression {
     }
 
     @Override
+    public String toString() {
+        return String.format("%s %s %s", left.toString(), operator.getStr(), right.toString());
+    }
+
+    @Override
     public boolean isDynamic() {
         return left.isDynamic() || right.isDynamic();
     }

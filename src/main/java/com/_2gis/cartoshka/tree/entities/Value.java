@@ -17,6 +17,11 @@ public class Value extends Expression {
     }
 
     @Override
+    public String toString() {
+        return collectionToString(expressions, ", ");
+    }
+
+    @Override
     public Literal ev(Feature feature) {
         if (expressions.size() == 1) {
             return expressions.iterator().next().ev(feature);

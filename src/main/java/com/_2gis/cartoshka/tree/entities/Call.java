@@ -54,4 +54,9 @@ public class Call extends Expression {
 
         args = newArgs;
     }
+
+    @Override
+    public String toString() {
+        return String.format("%s(%s)", function.getName(), collectionToString(args, ", "));
+    }
 }

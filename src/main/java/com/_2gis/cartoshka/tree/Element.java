@@ -45,6 +45,11 @@ public class Element extends Node implements Evaluable<Boolean> {
     }
 
     @Override
+    public String toString() {
+        return value;
+    }
+
+    @Override
     public void fold() {
     }
 

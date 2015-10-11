@@ -72,6 +72,11 @@ public class ExpandableText extends Expression {
     }
 
     @Override
+    public String toString() {
+        return value;
+    }
+
+    @Override
     public Literal ev(Feature feature) {
         String result = value;
         for (java.util.Map.Entry<String, Variable> entry : variables.entrySet()) {
