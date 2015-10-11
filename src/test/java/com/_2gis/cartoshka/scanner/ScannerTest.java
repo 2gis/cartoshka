@@ -26,12 +26,33 @@ public class ScannerTest {
 
     @Test
     public void testNumbers() {
-        Scanner scanner = createTokenizer("3.1415926535897932384 26e-2");
+        Scanner scanner = createTokenizer("3.1415926535897932384 26e-2 123_test 1.0E+X 1.0e+2 1.0e2 .12");
         Assert.assertEquals(TokenType.NUMBER_LITERAL, scanner.next().getType());
         Assert.assertEquals("3.1415926535897932384", scanner.current().getText());
 
         Assert.assertEquals(TokenType.NUMBER_LITERAL, scanner.next().getType());
         Assert.assertEquals("26e-2", scanner.current().getText());
+
+        Assert.assertEquals(TokenType.ILLEGAL, scanner.next().getType());
+        Assert.assertEquals("123", scanner.current().getText());
+
+        Assert.assertEquals(TokenType.IDENTIFIER, scanner.next().getType());
+        Assert.assertEquals("_test", scanner.current().getText());
+
+        Assert.assertEquals(TokenType.ILLEGAL, scanner.next().getType());
+        Assert.assertEquals("1.0E+", scanner.current().getText());
+
+        Assert.assertEquals(TokenType.IDENTIFIER, scanner.next().getType());
+        Assert.assertEquals("X", scanner.current().getText());
+
+        Assert.assertEquals(TokenType.NUMBER_LITERAL, scanner.next().getType());
+        Assert.assertEquals("1.0e+2", scanner.current().getText());
+
+        Assert.assertEquals(TokenType.NUMBER_LITERAL, scanner.next().getType());
+        Assert.assertEquals("1.0e2", scanner.current().getText());
+
+        Assert.assertEquals(TokenType.NUMBER_LITERAL, scanner.next().getType());
+        Assert.assertEquals(".12", scanner.current().getText());
 
         Assert.assertEquals(TokenType.EOS, scanner.next().getType());
     }
@@ -61,7 +82,7 @@ public class ScannerTest {
 
     @Test
     public void testHashes() {
-        Scanner scanner = createTokenizer("#first-1 #second-2 #012 #012345 #707d05");
+        Scanner scanner = createTokenizer("#first-1 #second-2 #012 #012345 #707d05 #*");
         Assert.assertEquals(TokenType.HASH, scanner.next().getType());
         Assert.assertEquals("first-1", scanner.current().getText());
 
@@ -77,18 +98,23 @@ public class ScannerTest {
         Assert.assertEquals(TokenType.HASH, scanner.next().getType());
         Assert.assertEquals("707d05", scanner.current().getText());
 
+        Assert.assertEquals(TokenType.ILLEGAL, scanner.next().getType());
+        Assert.assertEquals(TokenType.MUL, scanner.next().getType());
+
         Assert.assertEquals(TokenType.EOS, scanner.next().getType());
     }
 
     @Test
     public void testVariables() {
-        Scanner scanner = createTokenizer("@first-1 @second-2");
+        Scanner scanner = createTokenizer("@first-1 @second-2 @1");
         Assert.assertEquals(TokenType.VARIABLE, scanner.next().getType());
         Assert.assertEquals("@first-1", scanner.current().getText());
 
         Assert.assertEquals(TokenType.VARIABLE, scanner.next().getType());
         Assert.assertEquals("@second-2", scanner.current().getText());
 
+        Assert.assertEquals(TokenType.ILLEGAL, scanner.next().getType());
+        Assert.assertEquals(TokenType.NUMBER_LITERAL, scanner.next().getType());
         Assert.assertEquals(TokenType.EOS, scanner.next().getType());
     }
 
@@ -102,6 +128,31 @@ public class ScannerTest {
         Assert.assertEquals(TokenType.NUMBER_LITERAL, scanner.next().getType());
         Assert.assertEquals("1", scanner.current().getText());
 
+        Assert.assertEquals(TokenType.EOS, scanner.next().getType());
+    }
+
+    @Test
+    public void testHtmlComment() {
+        Scanner scanner = createTokenizer("< <! <!- <!-- --> 1");
+        Assert.assertEquals(TokenType.LT, scanner.next().getType());
+        Assert.assertEquals(TokenType.ILLEGAL, scanner.next().getType());
+        Assert.assertEquals(TokenType.ILLEGAL, scanner.next().getType());
+        Assert.assertEquals(TokenType.NUMBER_LITERAL, scanner.next().getType());
+        Assert.assertEquals(TokenType.EOS, scanner.next().getType());
+
+        scanner = createTokenizer("<!");
+        Assert.assertEquals(TokenType.ILLEGAL, scanner.next().getType());
+        Assert.assertEquals(TokenType.EOS, scanner.next().getType());
+
+        scanner = createTokenizer("<!-- comment -");
+        Assert.assertEquals(TokenType.ILLEGAL, scanner.next().getType());
+        Assert.assertEquals(TokenType.EOS, scanner.next().getType());
+
+        scanner = createTokenizer("<!-- comment --");
+        Assert.assertEquals(TokenType.ILLEGAL, scanner.next().getType());
+        Assert.assertEquals(TokenType.EOS, scanner.next().getType());
+
+        scanner = createTokenizer("<!-- comment -- -> -->");
         Assert.assertEquals(TokenType.EOS, scanner.next().getType());
     }
 
@@ -164,15 +215,17 @@ public class ScannerTest {
 
     @Test
     public void testAttachment() {
-        Scanner scanner = createTokenizer("::a/b ::abcd ::-a/b");
+        Scanner scanner = createTokenizer("::_a/-b ::-abcd ::-a/b ::x/");
         Assert.assertEquals(TokenType.ATTACHMENT, scanner.next().getType());
-        Assert.assertEquals("a/b", scanner.current().getText());
+        Assert.assertEquals("_a/-b", scanner.current().getText());
 
         Assert.assertEquals(TokenType.ATTACHMENT, scanner.next().getType());
-        Assert.assertEquals("abcd", scanner.current().getText());
+        Assert.assertEquals("-abcd", scanner.current().getText());
 
         Assert.assertEquals(TokenType.ATTACHMENT, scanner.next().getType());
         Assert.assertEquals("-a/b", scanner.current().getText());
+
+        Assert.assertEquals(TokenType.ILLEGAL, scanner.next().getType());
 
         Assert.assertEquals(TokenType.EOS, scanner.next().getType());
     }

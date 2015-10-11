@@ -236,7 +236,12 @@ public class Scanner {
                     break;
 
                 case '.':
-                    token = select(TokenType.PERIOD);
+                    advance();
+                    if (Character.isDigit(c0_)) {
+                        token = scanNumberOrDimension(true);
+                    } else {
+                        token = select(TokenType.PERIOD);
+                    }
                     break;
 
                 case '(':
