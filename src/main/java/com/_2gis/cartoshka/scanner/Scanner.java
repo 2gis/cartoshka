@@ -352,14 +352,46 @@ public class Scanner {
                 advance(); // consume quote
                 return TokenType.STRING_LITERAL;
             } else if (c0_ == '\\') {
-                advance();
-                literal.append(c0_);
+                if (!scanEscape()) {
+                    return TokenType.ILLEGAL;
+                }
             } else {
                 literal.append(c0_);
             }
         }
 
         return TokenType.ILLEGAL;
+    }
+
+    private boolean scanEscape() {
+        advance();
+        char c = c0_;
+        switch (c) {
+            case '\'':
+            case '"':
+            case '\\':
+                break;
+            case 'b':
+                c = '\b';
+                break;
+            case 'f':
+                c = '\f';
+                break;
+            case 'n':
+                c = '\n';
+                break;
+            case 'r':
+                c = '\r';
+                break;
+            case 't':
+                c = '\t';
+                break;
+            default:
+                return false;
+        }
+
+        literal.append(c);
+        return true;
     }
 
     private TokenType scanNumberOrDimension(boolean seen_period) {

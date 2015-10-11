@@ -17,10 +17,45 @@ public class ScannerTest {
         Scanner scanner = createTokenizer("\'abraca\' \"dabra\"");
         Assert.assertEquals(TokenType.STRING_LITERAL, scanner.next().getType());
         Assert.assertEquals("abraca", scanner.current().getText());
-
         Assert.assertEquals(TokenType.STRING_LITERAL, scanner.next().getType());
         Assert.assertEquals("dabra", scanner.current().getText());
+        Assert.assertEquals(TokenType.EOS, scanner.next().getType());
 
+        scanner = createTokenizer("'abraca\ndabra'");
+        Assert.assertEquals(TokenType.ILLEGAL, scanner.next().getType());
+        Assert.assertEquals("abraca", scanner.current().getText());
+
+        Assert.assertEquals(TokenType.IDENTIFIER, scanner.next().getType());
+        Assert.assertEquals("dabra", scanner.current().getText());
+
+        Assert.assertEquals(TokenType.ILLEGAL, scanner.next().getType());
+        Assert.assertEquals(TokenType.EOS, scanner.next().getType());
+    }
+
+    @Test
+    public void testQuotedTextEscapes() {
+        Scanner scanner = createTokenizer("'a\\tb' 'a\\nb' 'a\\\\b' \"a\\\"b\" 'a\\\'b' 'a\\bb' 'a\\fb' 'a\\rb' 'a\\xb'");
+        Assert.assertEquals(TokenType.STRING_LITERAL, scanner.next().getType());
+        Assert.assertEquals("a\tb", scanner.current().getText());
+        Assert.assertEquals(TokenType.STRING_LITERAL, scanner.next().getType());
+        Assert.assertEquals("a\nb", scanner.current().getText());
+        Assert.assertEquals(TokenType.STRING_LITERAL, scanner.next().getType());
+        Assert.assertEquals("a\\b", scanner.current().getText());
+        Assert.assertEquals(TokenType.STRING_LITERAL, scanner.next().getType());
+        Assert.assertEquals("a\"b", scanner.current().getText());
+        Assert.assertEquals(TokenType.STRING_LITERAL, scanner.next().getType());
+        Assert.assertEquals("a\'b", scanner.current().getText());
+        Assert.assertEquals(TokenType.STRING_LITERAL, scanner.next().getType());
+        Assert.assertEquals("a\bb", scanner.current().getText());
+        Assert.assertEquals(TokenType.STRING_LITERAL, scanner.next().getType());
+        Assert.assertEquals("a\fb", scanner.current().getText());
+        Assert.assertEquals(TokenType.STRING_LITERAL, scanner.next().getType());
+        Assert.assertEquals("a\rb", scanner.current().getText());
+        Assert.assertEquals(TokenType.ILLEGAL, scanner.next().getType());
+        Assert.assertEquals("a", scanner.current().getText());
+        Assert.assertEquals(TokenType.IDENTIFIER, scanner.next().getType());
+        Assert.assertEquals("xb", scanner.current().getText());
+        Assert.assertEquals(TokenType.ILLEGAL, scanner.next().getType());
         Assert.assertEquals(TokenType.EOS, scanner.next().getType());
     }
 
