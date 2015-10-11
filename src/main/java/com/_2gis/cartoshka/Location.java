@@ -1,13 +1,16 @@
 package com._2gis.cartoshka;
 
 public class Location {
+    public final String name;
+
     public final int offset;
 
     public final int line;
 
     public final int linePos;
 
-    public Location(int offset, int line, int linePos) {
+    public Location(String name, int offset, int line, int linePos) {
+        this.name = name;
         this.offset = offset;
         this.line = line;
         this.linePos = linePos;

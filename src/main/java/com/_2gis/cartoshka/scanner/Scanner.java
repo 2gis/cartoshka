@@ -1,6 +1,5 @@
 package com._2gis.cartoshka.scanner;
 
-import com._2gis.cartoshka.CartoshkaException;
 import com._2gis.cartoshka.Location;
 
 import java.io.IOException;
@@ -66,12 +65,6 @@ public class Scanner {
 
     protected Token current() {
         return current;
-    }
-
-    private void expect(char expected) {
-        if (expected != c0_) {
-            throw CartoshkaException.unexpectedChar(new Location(offset, line, lineOffset), c0_);
-        }
     }
 
     protected boolean advance() {
@@ -295,7 +288,7 @@ public class Scanner {
             }
         } while (token == TokenType.WHITESPACE);
 
-        Location location = new Location(tokenOffset, tokenLineStart, tokenLinePosition);
+        Location location = new Location(getSourceName(), tokenOffset, tokenLineStart, tokenLinePosition);
         next = new Token(token, literal.toString(), location);
     }
 
@@ -311,7 +304,6 @@ public class Scanner {
     }
 
     private TokenType skipMultiLineComment() {
-        expect('*');
         char c = c0_;
         while (advance()) {
             if (c == '*' && c0_ == '/') {
@@ -344,7 +336,6 @@ public class Scanner {
     }
 
     private TokenType scanString(char leftQuote, char rightQuote) {
-        expect(leftQuote);
         while (advance()) {
             if (isLineTerminator(c0_)) {
                 break;
@@ -475,7 +466,6 @@ public class Scanner {
     }
 
     private TokenType scanVariable() {
-        expect('@');
         addLiteralCharAdvance(); // consume @
         if (Character.isJavaIdentifierStart(c0_)) {
             scanIdentifierPart();
@@ -486,7 +476,6 @@ public class Scanner {
     }
 
     private TokenType scanHash() {
-        expect('#');
         advance(); // consume #
         if (Character.isJavaIdentifierPart(c0_)) {
             scanIdentifierPart();
@@ -512,7 +501,6 @@ public class Scanner {
     }
 
     private TokenType scanUrl() {
-        expect('(');
         scanString('(', ')');
 
         // trim quotes
@@ -525,7 +513,6 @@ public class Scanner {
     }
 
     private TokenType scanAttachment() {
-        expect(':');
         advance(); // consume :
         boolean hasLetters = false;
         do {
@@ -551,7 +538,6 @@ public class Scanner {
     }
 
     private TokenType scanHtmlComment() {
-        expect('!');
         advance();
         if (c0_ == '-' && advance()) {
             if (c0_ == '-') {
