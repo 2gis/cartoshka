@@ -43,7 +43,17 @@ Given a parser with folding
 When the following source is parsed:
     @one: 0.5 + 0.5;
     @two: @one * 2;
-    x: 'one = @{one}, two = @{two}, three = [field]';
-Then rule x is:
-    one = 1.0, two = 2.0, three = [field]
-
+    x: '@ one = @{one}, two = @{two}, three = [field]';
+    y: '@ one = \[one\], two = \@{two}';
+    a: '@';
+    b: '@{';
+    c: '[';
+    d: '@{two}';
+    e: '[three] @{two}';
+Then rule x is: @ one = 1.0, two = 2.0, three = [field]
+Then rule y is: @ one = [one], two = @{two}
+Then rule a is: @
+Then rule b is: @{
+Then rule c is: [
+Then rule d is: 2.0
+Then rule e is: [three] 2.0

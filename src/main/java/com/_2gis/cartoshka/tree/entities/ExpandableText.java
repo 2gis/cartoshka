@@ -5,113 +5,126 @@ import com._2gis.cartoshka.Feature;
 import com._2gis.cartoshka.Location;
 import com._2gis.cartoshka.tree.entities.literals.Text;
 
-import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Stack;
 
 public class ExpandableText extends Expression {
-    private final HashMap<String, Field> fields = new HashMap<>();
-
-    private final HashMap<String, Variable> variables = new HashMap<>();
-
     private final Context context;
 
-    private final String value;
-
-    private final String pattern;
+    private final List<Expression> expressions;
 
     private final boolean isURL;
 
     public ExpandableText(Location location, Context context, String value, boolean isURL) {
         super(location);
         this.context = context;
-        this.value = value;
-        this.pattern = initialize(value);
         this.isURL = isURL;
+        this.expressions = parse(value);
     }
 
-    private String initialize(String value) {
+    private List<Expression> parse(String value) {
+        int size = value.length();
         int start = 0;
-        int length = value.length();
+        List<Expression> expressions = new LinkedList<>();
         StringBuilder sb = new StringBuilder();
-        while (start < length) {
+        while (start < size) {
             switch (value.charAt(start)) {
                 case '\\':
                     start++;
                     break;
 
                 case '@':
-                    if (value.charAt(start + 1) == '{') {
-                        int end = value.indexOf('}', start + 3);
+                    if ((start + 1) < size && value.charAt(start + 1) == '{') {
+                        start += 2;
+                        int end = value.indexOf('}', start);
                         if (start < end) {
-                            String name = value.substring(start + 2, end);
-                            String pattern = ":@\\{" + name + "\\}";
-                            Location location = getInterpolatedLocation(start + 1);
-                            variables.put(pattern, new Variable(location, context, '@' + name));
-                            sb.append(':');
+                            String name = value.substring(start, end);
+                            if (sb.length() > 0) {
+                                expressions.add(new Text(getLocation(), sb.toString(), false, false));
+                                sb.setLength(0);
+                            }
+
+                            expressions.add(new Variable(getSubLocation(start), context, "@" + name));
                         }
+
+                        start = end + 1;
                     }
 
                     break;
 
                 case '[':
-                    int end = value.indexOf(']', start + 1);
+                    start++;
+                    int end = value.indexOf(']', start);
                     if (start < end) {
-                        String name = value.substring(start + 1, end);
-                        String pattern = String.format(":\\[%s\\]", name);
-                        Location location = getInterpolatedLocation(start + 1);
-                        fields.put(pattern, new Field(location, name));
-                        sb.append(':');
+                        String name = value.substring(start, end);
+                        if (sb.length() > 0) {
+                            expressions.add(new Text(getLocation(), sb.toString(), false, false));
+                            sb.setLength(0);
+                        }
+
+                        expressions.add(new Field(getSubLocation(start), name));
                     }
 
+                    start = end + 1;
                     break;
             }
 
-            if (start < length) {
+            if (start < size) {
                 sb.append(value.charAt(start));
                 start++;
             }
         }
 
-        return sb.toString();
+        if (sb.length() > 0) {
+            expressions.add(new Text(null, sb.toString(), false, false));
+        }
+
+        return expressions;
     }
 
     @Override
     public String toString() {
-        return value;
+        return collectionToString(expressions, "");
     }
 
     @Override
     public Literal ev(Feature feature) {
-        String result = pattern;
-        for (java.util.Map.Entry<String, Variable> entry : variables.entrySet()) {
-            String pattern = entry.getKey();
-            Variable var = entry.getValue();
-            result = result.replaceAll(pattern, var.ev(feature).toString());
+        StringBuilder builder = new StringBuilder();
+        for (Expression expression : expressions) {
+            builder.append(expression.ev(feature).toString());
         }
 
-        for (java.util.Map.Entry<String, Field> entry : fields.entrySet()) {
-            String pattern = entry.getKey();
-            Field field = entry.getValue();
-            result = result.replaceAll(pattern, field.ev(feature).toString());
-        }
-
-        return new Text(getLocation(), result, isURL, false);
+        return new Text(getLocation(), builder.toString(), isURL, false);
     }
 
     public boolean isPlain() {
-        return fields.isEmpty() && variables.isEmpty();
+        return expressions.size() == 1 && (expressions.get(0).isLiteral());
     }
 
     @Override
     public boolean isDynamic() {
-        return !fields.isEmpty() || hasDynamicExpression(variables.values());
+        return hasDynamicExpression(expressions);
     }
 
     @Override
     public void fold() {
-        fold(variables.values());
+        Stack<Expression> stack = new Stack<>();
+        for (Expression ex : expressions) {
+            ex.fold();
+            if (!stack.isEmpty() && !stack.peek().isDynamic() && !ex.isDynamic()) {
+                Expression nex = stack.pop();
+                stack.push(new Text(null, nex.ev(null).toString() + ex.ev(null).toString(), false, false));
+            } else {
+                stack.push(ex);
+            }
+        }
+
+        expressions.clear();
+        expressions.addAll(stack);
     }
 
-    private Location getInterpolatedLocation(int start) {
+    private Location getSubLocation(int start) {
         return getLocation() == null
                 ? null
                 : new Location(getLocation().name, getLocation().offset + start, getLocation().line, getLocation().linePos + start);
