@@ -377,6 +377,11 @@ public class Scanner {
             case 't':
                 c = '\t';
                 break;
+            case '[':
+            case ']':
+            case '@':
+                literal.append('\\');
+                break;
             default:
                 return false;
         }
