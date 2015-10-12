@@ -54,6 +54,23 @@ public class ParserSteps {
         Assert.fail(String.format("Rule %s not found", rule));
     }
 
+    @Then("rule $rule evaluates into:$value")
+    public void thenEvaluatesInto(@Named("rule") String rule, @Named("value") String value) {
+        for (Node node : nodes) {
+            if (node instanceof Rule) {
+                Rule r = (Rule) node;
+                if (r.getName().equals(rule)) {
+                    String expected = value.trim();
+                    String given = r.getValue().ev(null).toString().trim();
+                    Assert.assertEquals(expected, given);
+                    return;
+                }
+            }
+        }
+
+        Assert.fail(String.format("Rule %s not found", rule));
+    }
+
     @Then("variable is undefined")
     public void thenVariableUndefined() {
         try {

@@ -57,3 +57,17 @@ Then rule b is: @{
 Then rule c is: [
 Then rule d is: 2.0
 Then rule e is: [three] 2.0
+
+Scenario: Multiple Values Evaluation
+Given a parser without folding
+When the following source is parsed:
+    xyz: 1 + 2, 2 + 3, 3 + 4;
+Then rule xyz is: 1 + 2, 2 + 3, 3 + 4
+Then rule xyz evaluates into: [3, 5, 7]
+
+Scenario: Function call
+Given a parser with folding
+When the following source is parsed:
+    @one: 1;
+    x: rgb(@one, [two], 3);
+Then rule x is: rgb(1, [two], 3)
