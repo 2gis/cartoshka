@@ -42,6 +42,7 @@ public class Colors {
         put("darkseagreen", new int[]{143, 188, 143, 1});
         put("darkslateblue", new int[]{72, 61, 139, 1});
         put("darkslategrey", new int[]{47, 79, 79, 1});
+        put("darkslategray", new int[]{47, 79, 79, 1});
         put("darkturquoise", new int[]{0, 206, 209, 1});
         put("darkviolet", new int[]{148, 0, 211, 1});
         put("deeppink", new int[]{255, 20, 147, 1});
@@ -123,10 +124,12 @@ public class Colors {
         put("plum", new int[]{221, 160, 221, 1});
         put("powderblue", new int[]{176, 224, 230, 1});
         put("purple", new int[]{128, 0, 128, 1});
+        put("rebeccapurple", new int[]{102, 51, 153, 1});
         put("red", new int[]{255, 0, 0, 1});
         put("rosybrown", new int[]{188, 143, 143, 1});
         put("royalblue", new int[]{65, 105, 225, 1});
         put("sputlebrown", new int[]{139, 69, 19, 1});
+        put("saddlebrown", new int[]{139, 69, 19, 1});
         put("salmon", new int[]{250, 128, 114, 1});
         put("sandybrown", new int[]{244, 164, 96, 1});
         put("seagreen", new int[]{46, 139, 87, 1});

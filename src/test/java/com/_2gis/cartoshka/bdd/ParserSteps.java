@@ -4,6 +4,8 @@ import com._2gis.cartoshka.CartoParser;
 import com._2gis.cartoshka.CartoshkaException;
 import com._2gis.cartoshka.tree.Node;
 import com._2gis.cartoshka.tree.Rule;
+import com._2gis.cartoshka.tree.entities.Literal;
+import com._2gis.cartoshka.tree.entities.literals.Color;
 import org.jbehave.core.annotations.Given;
 import org.jbehave.core.annotations.Named;
 import org.jbehave.core.annotations.Then;
@@ -69,6 +71,27 @@ public class ParserSteps {
         }
 
         Assert.fail(String.format("Rule %s not found", rule));
+    }
+
+    @Then("color $rule as hex is:$value")
+    public void thenColorAsHex(@Named("rule") String rule, @Named("value") String value) {
+        for (Node node : nodes) {
+            if (node instanceof Rule) {
+                Rule r = (Rule) node;
+                if (r.getName().equals(rule)) {
+                    Literal literal = r.getValue().ev(null);
+                    if (literal.isColor()) {
+                        Color color = (Color) literal;
+                        String expected = value.trim();
+                        String given = String.format("#%02X%02X%02X", color.getRed(), color.getGreen(), color.getBlue());
+                        Assert.assertEquals(expected, given);
+                        return;
+                    }
+                }
+            }
+        }
+
+        Assert.fail(String.format("Color %s not found", rule));
     }
 
     @Then("variable is undefined")
