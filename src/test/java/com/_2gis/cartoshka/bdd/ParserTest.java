@@ -15,7 +15,7 @@ import java.util.List;
 
 import static org.jbehave.core.io.CodeLocations.codeLocationFromClass;
 
-public class Test extends JUnitStories {
+public class ParserTest extends JUnitStories {
     @Override
     public final Configuration configuration() {
         return new MostUsefulConfiguration()
@@ -27,11 +27,11 @@ public class Test extends JUnitStories {
 
     @Override
     public final List<String> storyPaths() {
-        return new StoryFinder().findPaths(codeLocationFromClass(this.getClass()), "test.story", "");
+        return new StoryFinder().findPaths(codeLocationFromClass(this.getClass()), "parser_*.story", "");
     }
 
     @Override
     public InjectableStepsFactory stepsFactory() {
-        return new InstanceStepsFactory(configuration(), new Steps());
+        return new InstanceStepsFactory(configuration(), new ParserSteps());
     }
 }
