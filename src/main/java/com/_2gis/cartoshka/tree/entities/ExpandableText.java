@@ -16,12 +16,15 @@ public class ExpandableText extends Expression {
 
     private final String value;
 
+    private final String pattern;
+
     private final boolean isURL;
 
     public ExpandableText(Location location, Context context, String value, boolean isURL) {
         super(location);
         this.context = context;
-        this.value = initialize(value);
+        this.value = value;
+        this.pattern = initialize(value);
         this.isURL = isURL;
     }
 
@@ -78,7 +81,7 @@ public class ExpandableText extends Expression {
 
     @Override
     public Literal ev(Feature feature) {
-        String result = value;
+        String result = pattern;
         for (java.util.Map.Entry<String, Variable> entry : variables.entrySet()) {
             String pattern = entry.getKey();
             Variable var = entry.getValue();
