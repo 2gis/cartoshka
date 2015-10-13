@@ -3,6 +3,7 @@ package com._2gis.cartoshka.tree.entities;
 import com._2gis.cartoshka.Feature;
 import com._2gis.cartoshka.Location;
 import com._2gis.cartoshka.scanner.TokenType;
+import com._2gis.cartoshka.tree.Visitor;
 
 public class UnaryOperation extends Expression {
     private final TokenType operator;
@@ -13,6 +14,11 @@ public class UnaryOperation extends Expression {
         super(location);
         this.operator = operator;
         this.expression = expression;
+    }
+
+    @Override
+    public void accept(Visitor visitor) {
+        visitor.visitUnaryOperation(this);
     }
 
     @Override

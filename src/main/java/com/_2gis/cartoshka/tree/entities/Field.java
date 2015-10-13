@@ -3,6 +3,7 @@ package com._2gis.cartoshka.tree.entities;
 import com._2gis.cartoshka.CartoshkaException;
 import com._2gis.cartoshka.Feature;
 import com._2gis.cartoshka.Location;
+import com._2gis.cartoshka.tree.Visitor;
 
 public class Field extends Expression {
     private final String name;
@@ -14,6 +15,11 @@ public class Field extends Expression {
 
     public String getName() {
         return name;
+    }
+
+    @Override
+    public void accept(Visitor visitor) {
+        visitor.visitField(this);
     }
 
     @Override

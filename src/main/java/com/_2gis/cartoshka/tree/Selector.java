@@ -50,6 +50,11 @@ public class Selector extends Node implements Evaluable<Boolean> {
     }
 
     @Override
+    public void accept(Visitor visitor) {
+        visitor.visitSelector(this);
+    }
+
+    @Override
     public String toString() {
         return String.format("%s%s%s%s", collectionToString(elements, " "), collectionToString(filters, ""), collectionToString(zooms, ""), attachment);
     }

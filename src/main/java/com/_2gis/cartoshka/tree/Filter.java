@@ -34,6 +34,11 @@ public class Filter extends Node implements Evaluable<Boolean> {
     }
 
     @Override
+    public void accept(Visitor visitor) {
+        visitor.visitFilter(this);
+    }
+
+    @Override
     public String toString() {
         return String.format("[%s %s %s]", left.toString(), operator.getStr(), right.toString());
     }

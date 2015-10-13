@@ -2,6 +2,7 @@ package com._2gis.cartoshka.tree.entities.literals;
 
 import com._2gis.cartoshka.CartoshkaException;
 import com._2gis.cartoshka.Location;
+import com._2gis.cartoshka.tree.Visitor;
 import com._2gis.cartoshka.tree.entities.Literal;
 
 public class ImageFilter extends Literal {
@@ -13,6 +14,11 @@ public class ImageFilter extends Literal {
         super(location);
         this.name = name;
         this.args = args;
+    }
+
+    @Override
+    public void accept(Visitor visitor) {
+        visitor.visitImageFilter(this);
     }
 
     @Override

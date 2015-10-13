@@ -3,6 +3,7 @@ package com._2gis.cartoshka.tree.entities;
 import com._2gis.cartoshka.Feature;
 import com._2gis.cartoshka.Location;
 import com._2gis.cartoshka.scanner.TokenType;
+import com._2gis.cartoshka.tree.Visitor;
 
 public class BinaryOperation extends Expression {
     private final TokenType operator;
@@ -29,6 +30,11 @@ public class BinaryOperation extends Expression {
         }
 
         return leftOp.operate(operator, rightOp);
+    }
+
+    @Override
+    public void accept(Visitor visitor) {
+        visitor.visitBinaryOperation(this);
     }
 
     @Override

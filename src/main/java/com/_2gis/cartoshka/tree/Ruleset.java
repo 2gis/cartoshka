@@ -15,6 +15,10 @@ public class Ruleset extends Node implements Evaluable<Boolean> {
         this.rules = rules;
     }
 
+    public void accept(Visitor visitor) {
+        visitor.visitRuleset(this);
+    }
+
     public Collection<Selector> getSelectors() {
         return selectors;
     }

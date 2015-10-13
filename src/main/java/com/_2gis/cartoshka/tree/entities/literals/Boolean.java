@@ -2,6 +2,7 @@ package com._2gis.cartoshka.tree.entities.literals;
 
 import com._2gis.cartoshka.CartoshkaException;
 import com._2gis.cartoshka.Location;
+import com._2gis.cartoshka.tree.Visitor;
 import com._2gis.cartoshka.tree.entities.Literal;
 
 public class Boolean extends Literal {
@@ -19,6 +20,11 @@ public class Boolean extends Literal {
     @Override
     public boolean isBoolean() {
         return true;
+    }
+
+    @Override
+    public void accept(Visitor visitor) {
+        visitor.visitBoolean(this);
     }
 
     @Override

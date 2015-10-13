@@ -4,6 +4,7 @@ import com._2gis.cartoshka.CartoshkaException;
 import com._2gis.cartoshka.Context;
 import com._2gis.cartoshka.Feature;
 import com._2gis.cartoshka.Location;
+import com._2gis.cartoshka.tree.Visitor;
 
 public class Variable extends Expression {
     private final String name;
@@ -14,6 +15,11 @@ public class Variable extends Expression {
         super(location);
         this.context = context;
         this.name = name;
+    }
+
+    @Override
+    public void accept(Visitor visitor) {
+        visitor.visitVariable(this);
     }
 
     @Override

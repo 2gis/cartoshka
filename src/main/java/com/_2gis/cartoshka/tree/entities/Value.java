@@ -2,6 +2,7 @@ package com._2gis.cartoshka.tree.entities;
 
 import com._2gis.cartoshka.Feature;
 import com._2gis.cartoshka.Location;
+import com._2gis.cartoshka.tree.Visitor;
 import com._2gis.cartoshka.tree.entities.literals.MultiLiteral;
 
 import java.util.ArrayList;
@@ -14,6 +15,11 @@ public class Value extends Expression {
     public Value(Location location, Collection<Expression> expressions) {
         super(location);
         this.expressions = expressions;
+    }
+
+    @Override
+    public void accept(Visitor visitor) {
+        visitor.visitValue(this);
     }
 
     @Override

@@ -45,6 +45,11 @@ public class Element extends Node implements Evaluable<Boolean> {
     }
 
     @Override
+    public void accept(Visitor visitor) {
+        visitor.visitElement(this);
+    }
+
+    @Override
     public String toString() {
         return value;
     }

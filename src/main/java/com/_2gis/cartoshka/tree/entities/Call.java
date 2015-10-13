@@ -3,6 +3,7 @@ package com._2gis.cartoshka.tree.entities;
 import com._2gis.cartoshka.Feature;
 import com._2gis.cartoshka.Function;
 import com._2gis.cartoshka.Location;
+import com._2gis.cartoshka.tree.Visitor;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -53,6 +54,11 @@ public class Call extends Expression {
         }
 
         args = newArgs;
+    }
+
+    @Override
+    public void accept(Visitor visitor) {
+        visitor.visitCall(this);
     }
 
     @Override

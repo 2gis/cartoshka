@@ -45,6 +45,11 @@ public class Rule extends Node {
     }
 
     @Override
+    public void accept(Visitor visitor) {
+        visitor.visitRule(this);
+    }
+
+    @Override
     public String toString() {
         return String.format("%s%s: %s", isDefaultInstance ? "" : instance, name, value.toString());
     }

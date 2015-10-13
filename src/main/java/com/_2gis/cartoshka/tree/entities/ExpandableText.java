@@ -3,6 +3,7 @@ package com._2gis.cartoshka.tree.entities;
 import com._2gis.cartoshka.Context;
 import com._2gis.cartoshka.Feature;
 import com._2gis.cartoshka.Location;
+import com._2gis.cartoshka.tree.Visitor;
 import com._2gis.cartoshka.tree.entities.literals.Text;
 
 import java.util.LinkedList;
@@ -81,6 +82,11 @@ public class ExpandableText extends Expression {
         }
 
         return expressions;
+    }
+
+    @Override
+    public void accept(Visitor visitor) {
+        visitor.visitExpandableText(this);
     }
 
     @Override

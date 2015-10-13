@@ -43,6 +43,8 @@ public abstract class Node {
         return builder.toString();
     }
 
+    public abstract void accept(Visitor visitor);
+
     public Location getLocation() {
         return location;
     }

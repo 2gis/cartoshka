@@ -22,6 +22,11 @@ public class Zoom extends Node implements Evaluable<Double> {
     }
 
     @Override
+    public void accept(Visitor visitor) {
+        visitor.visitZoom(this);
+    }
+
+    @Override
     public String toString() {
         return String.format("[zoom %s %s]", operator.getStr(), expression.toString());
     }
