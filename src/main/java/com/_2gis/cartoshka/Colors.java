@@ -3,7 +3,7 @@ package com._2gis.cartoshka;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Colors {
+class Colors {
     public final static Map<String, int[]> Strings = new HashMap<String, int[]>() {{
         put("aliceblue", new int[]{240, 248, 255, 1});
         put("antiquewhite", new int[]{250, 235, 215, 1});

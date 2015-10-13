@@ -7,8 +7,8 @@ import com._2gis.cartoshka.tree.entities.literals.Color;
 import java.util.Iterator;
 
 public class Arguments {
-    public static Double numeric(Iterator<Literal> iter, boolean mapTo255) {
-        Literal literal = iter.next();
+    public static Double numeric(Iterator<Literal> args, boolean mapTo255) {
+        Literal literal = args.next();
         Double arg = literal.toNumber();
         if (arg == null) {
             throw CartoshkaException.functionIncorrectArgumentType(literal.getLocation());
@@ -17,8 +17,8 @@ public class Arguments {
         return ((literal.hasDot() || literal.isDimension()) && mapTo255) ? arg * 0xFF : arg;
     }
 
-    public static Double percent(Iterator<Literal> iter) {
-        Literal literal = iter.next();
+    public static Double percent(Iterator<Literal> args) {
+        Literal literal = args.next();
         if (literal.isDimension()) {
             // only percent-unit dimension should return a numeric value
             return literal.toNumber();
@@ -27,8 +27,8 @@ public class Arguments {
         return literal.toNumber() / 100.0;
     }
 
-    public static Color color(Iterator<Literal> iter) {
-        Literal arg = iter.next();
+    public static Color color(Iterator<Literal> args) {
+        Literal arg = args.next();
         if (!arg.isColor()) {
             throw CartoshkaException.functionIncorrectArgumentType(arg.getLocation());
         }

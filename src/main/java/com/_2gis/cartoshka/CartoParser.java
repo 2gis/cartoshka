@@ -138,12 +138,12 @@ public final class CartoParser extends com._2gis.cartoshka.scanner.Scanner {
         return parseBinaryExpression(1);
     }
 
-    private Expression parseBinaryExpression(int prec) {
+    private Expression parseBinaryExpression(int precedence) {
         Expression result = parseUnaryExpression();
-        for (int prec1 = peek().getType().getPrecedence(); prec1 >= prec; prec1--) {
-            while (peek().getType().getPrecedence() == prec1) {
+        for (int precedence1 = peek().getType().getPrecedence(); precedence1 >= precedence; precedence1--) {
+            while (peek().getType().getPrecedence() == precedence1) {
                 Token op = expect(TokenType.ADD, TokenType.SUB, TokenType.MUL, TokenType.DIV, TokenType.MOD);
-                Expression right = parseBinaryExpression(prec1 + 1);
+                Expression right = parseBinaryExpression(precedence1 + 1);
                 result = new BinaryOperation(op.getLocation(), op.getType(), result, right);
             }
         }
