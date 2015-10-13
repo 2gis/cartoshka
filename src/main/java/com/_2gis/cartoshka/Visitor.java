@@ -3,49 +3,50 @@ package com._2gis.cartoshka;
 import com._2gis.cartoshka.tree.*;
 import com._2gis.cartoshka.tree.entities.*;
 import com._2gis.cartoshka.tree.entities.literals.*;
+import com.sun.istack.internal.Nullable;
 
 public interface Visitor<R, P> {
-    R visitRuleset(Ruleset ruleset, P params);
+    R visitRuleset(Ruleset ruleset, @Nullable P params);
 
-    R visitRule(Rule rule, P params);
+    R visitRule(Rule rule, @Nullable P params);
 
-    R visitSelector(Selector selector, P params);
+    R visitSelector(Selector selector, @Nullable P params);
 
-    R visitZoom(Zoom zoom, P params);
+    R visitZoom(Zoom zoom, @Nullable P params);
 
-    R visitFilter(Filter filter, P params);
+    R visitFilter(Filter filter, @Nullable P params);
 
-    R visitElement(Element element, P params);
+    R visitElement(Element element, @Nullable P params);
 
     // E X P R E S S I O N S
 
-    R visitValue(Value value, P params);
+    R visitValue(Value value, @Nullable P params);
 
-    R visitVariable(Variable variable, P params);
+    R visitVariable(Variable variable, @Nullable P params);
 
-    R visitUnaryOperation(UnaryOperation operation, P params);
+    R visitUnaryOperation(UnaryOperation operation, @Nullable P params);
 
-    R visitField(Field field, P params);
+    R visitField(Field field, @Nullable P params);
 
-    R visitExpandableText(ExpandableText text, P params);
+    R visitExpandableText(ExpandableText text, @Nullable P params);
 
-    R visitCall(Call call, P params);
+    R visitCall(Call call, @Nullable P params);
 
-    R visitBinaryOperation(BinaryOperation operation, P params);
+    R visitBinaryOperation(BinaryOperation operation, @Nullable P params);
 
     // L I T E R A L S
 
-    R visitBoolean(com._2gis.cartoshka.tree.entities.literals.Boolean value, P params);
+    R visitBoolean(com._2gis.cartoshka.tree.entities.literals.Boolean value, @Nullable P params);
 
-    R visitColor(Color color, P params);
+    R visitColor(Color color, @Nullable P params);
 
-    R visitDimension(Dimension dimension, P params);
+    R visitDimension(Dimension dimension, @Nullable P params);
 
-    R visitImageFilter(ImageFilter filter, P params);
+    R visitImageFilter(ImageFilter filter, @Nullable P params);
 
-    R visitMultiLiteral(MultiLiteral multiLiteral, P params);
+    R visitMultiLiteral(MultiLiteral multiLiteral, @Nullable P params);
 
-    R visitNumber(Numeric number, P params);
+    R visitNumber(Numeric number, @Nullable P params);
 
-    R visitText(Text text, P params);
+    R visitText(Text text, @Nullable P params);
 }
