@@ -3,7 +3,7 @@ Given a parser with folding
 When the following source is parsed:
     @one: 1;
     y: -@one;
-    z: -[two];
+    z: +(-[two]);
 Then rule y is:
     -1
 Then rule z is:
@@ -71,3 +71,25 @@ When the following source is parsed:
     @one: 1;
     x: rgb(@one, [two], 3);
 Then rule x is: rgb(1, [two], 3)
+
+Scenario: Dimension
+Given a parser with folding
+When the following source is parsed:
+    a: 10%, 10m, 10cm, 10in, 10mm, 10pt, 10pc, 10px;
+    b: 10.0%, 10.0m, 10.0cm, 10.0in, 10.0mm, 10.0pt, 10.0pc, 10.0px;
+    c: 10% + 20%;
+    d: 10% - 20.0%;
+    e: 10% * 20%;
+    f: 10% / 20%;
+    g: 10% / 20.0%;
+    h: 26% % 23%;
+    i: -100%;
+Then rule a is: 10%, 10m, 10cm, 10in, 10mm, 10pt, 10pc, 10px
+Then rule b is: 10.0%, 10.0m, 10.0cm, 10.0in, 10.0mm, 10.0pt, 10.0pc, 10.0px
+Then rule c is: 30%
+Then rule d is: -10.0%
+Then rule e is: 200%
+Then rule f is: 0%
+Then rule g is: 0.5%
+Then rule h is: 3%
+Then rule i is: -100%

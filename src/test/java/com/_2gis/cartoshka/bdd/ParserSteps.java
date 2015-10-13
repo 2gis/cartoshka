@@ -2,8 +2,7 @@ package com._2gis.cartoshka.bdd;
 
 import com._2gis.cartoshka.CartoParser;
 import com._2gis.cartoshka.CartoshkaException;
-import com._2gis.cartoshka.tree.Node;
-import com._2gis.cartoshka.tree.Rule;
+import com._2gis.cartoshka.tree.*;
 import com._2gis.cartoshka.tree.entities.Literal;
 import com._2gis.cartoshka.tree.entities.literals.Color;
 import org.jbehave.core.annotations.Given;
@@ -14,6 +13,8 @@ import org.junit.Assert;
 
 import java.io.StringReader;
 import java.util.List;
+import java.util.Queue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 public class ParserSteps {
     private CartoParser parser = null;
@@ -41,15 +42,19 @@ public class ParserSteps {
 
     @Then("rule $rule is:$value")
     public void thenRuleIs(@Named("rule") String rule, @Named("value") String value) {
-        for (Node node : nodes) {
+        Queue<Node> queue = new LinkedBlockingQueue<>(nodes);
+        while (!queue.isEmpty()) {
+            Node node = queue.poll();
             if (node instanceof Rule) {
                 Rule r = (Rule) node;
-                if (r.getName().equals(rule)) {
+                if (r.getFullName().equals(rule)) {
                     String expected = value.trim();
                     String given = r.getValue().toString().trim();
                     Assert.assertEquals(expected, given);
                     return;
                 }
+            } else if (node instanceof Ruleset) {
+                queue.addAll(((Ruleset) node).getRules());
             }
         }
 
@@ -58,15 +63,19 @@ public class ParserSteps {
 
     @Then("rule $rule evaluates into:$value")
     public void thenEvaluatesInto(@Named("rule") String rule, @Named("value") String value) {
-        for (Node node : nodes) {
+        Queue<Node> queue = new LinkedBlockingQueue<>(nodes);
+        while (!queue.isEmpty()) {
+            Node node = queue.poll();
             if (node instanceof Rule) {
                 Rule r = (Rule) node;
-                if (r.getName().equals(rule)) {
+                if (r.getFullName().equals(rule)) {
                     String expected = value.trim();
                     String given = r.getValue().ev(null).toString().trim();
                     Assert.assertEquals(expected, given);
                     return;
                 }
+            } else if (node instanceof Ruleset) {
+                queue.addAll(((Ruleset) node).getRules());
             }
         }
 
@@ -75,10 +84,12 @@ public class ParserSteps {
 
     @Then("color $rule as hex is:$value")
     public void thenColorAsHex(@Named("rule") String rule, @Named("value") String value) {
-        for (Node node : nodes) {
+        Queue<Node> queue = new LinkedBlockingQueue<>(nodes);
+        while (!queue.isEmpty()) {
+            Node node = queue.poll();
             if (node instanceof Rule) {
                 Rule r = (Rule) node;
-                if (r.getName().equals(rule)) {
+                if (r.getFullName().equals(rule)) {
                     Literal literal = r.getValue().ev(null);
                     if (literal.isColor()) {
                         Color color = (Color) literal;
@@ -88,6 +99,8 @@ public class ParserSteps {
                         return;
                     }
                 }
+            } else if (node instanceof Ruleset) {
+                queue.addAll(((Ruleset) node).getRules());
             }
         }
 
@@ -108,4 +121,91 @@ public class ParserSteps {
 
         Assert.fail("No undefined variables");
     }
+
+    private Ruleset getRulesetByNum(int num) {
+        Queue<Node> queue = new LinkedBlockingQueue<>(nodes);
+        int index = 0;
+        while (!queue.isEmpty()) {
+            Node node = queue.poll();
+            if (node instanceof Ruleset) {
+                index++;
+                Ruleset ruleset = (Ruleset) node;
+                if (index == num) {
+                    return ruleset;
+                } else {
+                    queue.addAll(ruleset.getRules());
+                }
+            }
+        }
+
+        return null;
+    }
+
+    @Then("ruleset $num contains classes:$classes")
+    public void thenRulesetContainsClasses(@Named("num") int num, @Named("classes") String classes) {
+        Ruleset ruleset = getRulesetByNum(num);
+        Assert.assertNotNull(String.format("Ruleset %d not found", num), ruleset);
+        StringBuilder sb = new StringBuilder();
+        for (Selector selector : ruleset.getSelectors()) {
+            for (Element element : selector.getElements()) {
+                if (element.getType() == Element.ElementType.CLASS) {
+                    sb.append(element.toString());
+                    sb.append(", ");
+                }
+            }
+        }
+
+        sb.setLength(sb.length() - 2);
+        Assert.assertEquals(classes.trim(), sb.toString());
+    }
+
+    @Then("ruleset $num contains ids:$ids")
+    public void thenRulesetContainsIds(@Named("num") int num, @Named("ids") String ids) {
+        Ruleset ruleset = getRulesetByNum(num);
+        Assert.assertNotNull(String.format("Ruleset %d not found", num), ruleset);
+        StringBuilder sb = new StringBuilder();
+        for (Selector selector : ruleset.getSelectors()) {
+            for (Element element : selector.getElements()) {
+                if (element.getType() == Element.ElementType.ID) {
+                    sb.append(element.toString());
+                    sb.append(", ");
+                }
+            }
+        }
+
+        sb.setLength(sb.length() - 2);
+        Assert.assertEquals(ids.trim(), sb.toString());
+    }
+
+    @Then("ruleset $num contains attachments:$attachments")
+    public void thenRulesetContainsAttachment(@Named("num") int num, @Named("$attachments") String attachments) {
+        Ruleset ruleset = getRulesetByNum(num);
+        Assert.assertNotNull(String.format("Ruleset %d not found", num), ruleset);
+        StringBuilder sb = new StringBuilder();
+        for (Selector selector : ruleset.getSelectors()) {
+            sb.append(selector.getAttachment());
+            sb.append(", ");
+        }
+
+        sb.setLength(sb.length() - 2);
+        Assert.assertEquals(attachments.trim(), sb.toString());
+    }
+
+    @Then("ruleset $num contains filters:$filters")
+    public void thenRulesetContainsFilters(@Named("num") int num, @Named("filters") String filters) {
+        Ruleset ruleset = getRulesetByNum(num);
+        Assert.assertNotNull(String.format("Ruleset %d not found", num), ruleset);
+        StringBuilder sb = new StringBuilder();
+        for (Selector selector : ruleset.getSelectors()) {
+            for (Filter filter : selector.getFilters()) {
+                sb.append(filter.toString());
+                sb.append(", ");
+            }
+        }
+
+        sb.setLength(sb.length() - 2);
+        Assert.assertEquals(filters.trim(), sb.toString());
+    }
+//    Then ruleset 3 zoom >= 10
+
 }

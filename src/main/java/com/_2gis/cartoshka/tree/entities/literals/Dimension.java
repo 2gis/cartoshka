@@ -10,10 +10,13 @@ public class Dimension extends Literal {
 
     private final String unit;
 
-    public Dimension(Location location, double value, String unit) {
+    private final boolean hasDot;
+
+    public Dimension(Location location, double value, String unit, boolean hasDot) {
         super(location);
         this.value = value;
         this.unit = unit;
+        this.hasDot = hasDot;
     }
 
     public double getValue() {
@@ -27,7 +30,7 @@ public class Dimension extends Literal {
     @Override
     public Literal operate(TokenType operator) {
         if (operator == TokenType.SUB) {
-            return new Dimension(getLocation(), -value, unit);
+            return new Dimension(getLocation(), -value, unit, hasDot);
         }
 
         return super.operate(operator);
@@ -50,15 +53,15 @@ public class Dimension extends Literal {
             if (right != null) {
                 switch (operator) {
                     case ADD:
-                        return new Dimension(Location.min(getLocation(), operand.getLocation()), left + right, unit);
+                        return new Dimension(Location.min(getLocation(), operand.getLocation()), left + right, unit, hasDot || operand.hasDot());
                     case SUB:
-                        return new Dimension(Location.min(getLocation(), operand.getLocation()), left - right, unit);
+                        return new Dimension(Location.min(getLocation(), operand.getLocation()), left - right, unit, hasDot || operand.hasDot());
                     case MUL:
-                        return new Dimension(Location.min(getLocation(), operand.getLocation()), left * right, unit);
+                        return new Dimension(Location.min(getLocation(), operand.getLocation()), left * right, unit, hasDot || operand.hasDot());
                     case DIV:
-                        return new Dimension(Location.min(getLocation(), operand.getLocation()), left / right, unit);
+                        return new Dimension(Location.min(getLocation(), operand.getLocation()), left / right, unit, hasDot || operand.hasDot());
                     case MOD:
-                        return new Dimension(Location.min(getLocation(), operand.getLocation()), left % right, unit);
+                        return new Dimension(Location.min(getLocation(), operand.getLocation()), left % right, unit, hasDot || operand.hasDot());
                 }
             }
         }
@@ -82,12 +85,16 @@ public class Dimension extends Literal {
 
     @Override
     public boolean hasDot() {
-        return unit.equals("%");
+        return hasDot;
     }
 
     @Override
     public String toString() {
-        return String.format("%s%s", Double.toString(value), unit);
+        if (hasDot) {
+            return String.format("%s%s", Double.toString(Math.round(value * 100d) / 100d), unit);
+        }
+
+        return String.format("%s%s", Integer.toString((int) value), unit);
     }
 
     @Override

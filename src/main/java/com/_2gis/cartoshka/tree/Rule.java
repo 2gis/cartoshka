@@ -24,6 +24,10 @@ public class Rule extends Node {
         return instance;
     }
 
+    public String getFullName() {
+        return isDefaultInstance ? name : String.format("%s/%s", instance, name);
+    }
+
     public String getName() {
         return name;
     }

@@ -233,7 +233,7 @@ public class Scanner {
                     if (Character.isDigit(c0_)) {
                         token = scanNumberOrDimension(true);
                     } else {
-                        token = select(TokenType.PERIOD);
+                        token = TokenType.PERIOD;
                     }
                     break;
 
@@ -531,11 +531,13 @@ public class Scanner {
                 advance();
             }
 
-            while (Character.isLetter(c0_) || c0_ == '_' || c0_ == '-') {
-                literal.append(c0_);
-                hasLetters = true;
-                if (!advance()) {
-                    break;
+            if (Character.isJavaIdentifierStart(c0_) || c0_ == '-') {
+                while (Character.isJavaIdentifierPart(c0_) || c0_ == '-') {
+                    literal.append(c0_);
+                    hasLetters = true;
+                    if (!advance()) {
+                        break;
+                    }
                 }
             }
         } while (c0_ == '/');

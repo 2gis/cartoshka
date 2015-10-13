@@ -14,7 +14,7 @@ public class Arguments {
             throw CartoshkaException.functionIncorrectArgumentType(literal.getLocation());
         }
 
-        return (literal.hasDot() && mapTo255) ? arg * 0xFF : arg;
+        return ((literal.hasDot() || literal.isDimension()) && mapTo255) ? arg * 0xFF : arg;
     }
 
     public static Double percent(Iterator<Literal> iter) {

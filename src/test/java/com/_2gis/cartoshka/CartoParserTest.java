@@ -1,10 +1,13 @@
 package com._2gis.cartoshka;
 
+import com._2gis.cartoshka.tree.Node;
 import com._2gis.cartoshka.tree.entities.Literal;
 import com._2gis.cartoshka.tree.entities.literals.Numeric;
 import org.junit.Test;
 
+import java.io.StringReader;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class CartoParserTest {
@@ -29,7 +32,11 @@ public class CartoParserTest {
 
     @Test
     public void test() {
-//        CartoParser parser = new CartoParser();
+
+        CartoParser parser = new CartoParser();
+        parser.addSource("test", new StringReader("a: 10%, 10m, 10cm, 10in, 10mm, 10pt, 10pc, 10px;"));
+        List<Node> nodes = parser.parse();
+        nodes.toArray();
 //        ClassLoader cl = this.getClass().getClassLoader();
 //        parser.addSource("roads.mss", new InputStreamReader(cl.getResourceAsStream("roads.mss")));
 //        parser.addSource("style.mss", new InputStreamReader(cl.getResourceAsStream("style.mss")));

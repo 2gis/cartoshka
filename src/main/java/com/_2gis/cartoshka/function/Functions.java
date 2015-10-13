@@ -65,7 +65,9 @@ public class Functions {
         @Override
         public Literal apply(Location location, Iterator<Literal> args) {
             Color color = Arguments.color(args);
-            return new Dimension(location, color.getSaturation() * 100, "%");
+            double value = color.getSaturation();
+            boolean hasDot = Double.compare(value % 1, 1d) != 0;
+            return new Dimension(location, value * 100, "%", hasDot);
         }
     };
 
@@ -73,7 +75,9 @@ public class Functions {
         @Override
         public Literal apply(Location location, Iterator<Literal> args) {
             Color color = Arguments.color(args);
-            return new Dimension(location, color.getLightness() * 100, "%");
+            double value = color.getLightness();
+            boolean hasDot = Double.compare(value % 1, 1d) != 0;
+            return new Dimension(location, value * 100, "%", hasDot);
         }
     };
 
@@ -81,7 +85,9 @@ public class Functions {
         @Override
         public Literal apply(Location location, Iterator<Literal> args) {
             Color color = Arguments.color(args);
-            return new Dimension(location, color.getAlpha() * 100, "%");
+            double value = color.getAlpha();
+            boolean hasDot = Double.compare(value % 1, 1d) != 0;
+            return new Dimension(location, value * 100, "%", hasDot);
         }
     };
 

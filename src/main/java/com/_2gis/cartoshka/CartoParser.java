@@ -251,11 +251,11 @@ public final class CartoParser extends com._2gis.cartoshka.scanner.Scanner {
     private Dimension parseDimension() {
         Token token = expect(TokenType.DIMENSION_LITERAL);
         String value = token.getText();
-        for (int i = 1; i <= 2; i++) {
-            if (DIMENSION_UNITS.contains(value.substring(value.length() - i))) {
+        for (int i = 2; i >= 1; i--) {
+            String unit = value.substring(value.length() - i);
+            if (DIMENSION_UNITS.contains(unit)) {
                 String num = value.substring(0, value.length() - i);
-                String unit = value.substring(value.length() - i);
-                return new Dimension(token.getLocation(), Double.valueOf(num), unit);
+                return new Dimension(token.getLocation(), Double.valueOf(num), unit, num.indexOf('.') >= 0);
             }
         }
 

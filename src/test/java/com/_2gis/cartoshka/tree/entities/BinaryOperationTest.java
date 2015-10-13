@@ -13,7 +13,7 @@ public class BinaryOperationTest {
         Literal result;
         Color colorResult;
         Color color = Color.fromRGBA(null, 1, 2, 3, 0.5);
-        Dimension dimension = new Dimension(null, 50, "%");
+        Dimension dimension = new Dimension(null, 50, "%", false);
 
         result = new BinaryOperation(null, TokenType.ADD, color, dimension).ev(null);
         Assert.assertTrue(result.isColor());
@@ -37,7 +37,7 @@ public class BinaryOperationTest {
         Literal result;
         Dimension dimensionResult;
         Numeric numeric = new Numeric(null, 1, false);
-        Dimension dimension = new Dimension(null, 50, "%");
+        Dimension dimension = new Dimension(null, 50, "%", false);
 
         result = new BinaryOperation(null, TokenType.ADD, numeric, dimension).ev(null);
         Assert.assertTrue(result.isDimension());
