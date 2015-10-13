@@ -4,48 +4,48 @@ import com._2gis.cartoshka.tree.*;
 import com._2gis.cartoshka.tree.entities.*;
 import com._2gis.cartoshka.tree.entities.literals.*;
 
-public interface Visitor {
-    void visitRuleset(Ruleset ruleset);
+public interface Visitor<R, P> {
+    R visitRuleset(Ruleset ruleset, P params);
 
-    void visitRule(Rule rule);
+    R visitRule(Rule rule, P params);
 
-    void visitSelector(Selector selector);
+    R visitSelector(Selector selector, P params);
 
-    void visitZoom(Zoom zoom);
+    R visitZoom(Zoom zoom, P params);
 
-    void visitFilter(Filter filter);
+    R visitFilter(Filter filter, P params);
 
-    void visitElement(Element element);
+    R visitElement(Element element, P params);
 
     // E X P R E S S I O N S
 
-    void visitValue(Value value);
+    R visitValue(Value value, P params);
 
-    void visitVariable(Variable variable);
+    R visitVariable(Variable variable, P params);
 
-    void visitUnaryOperation(UnaryOperation operation);
+    R visitUnaryOperation(UnaryOperation operation, P params);
 
-    void visitField(Field field);
+    R visitField(Field field, P params);
 
-    void visitExpandableText(ExpandableText text);
+    R visitExpandableText(ExpandableText text, P params);
 
-    void visitCall(Call call);
+    R visitCall(Call call, P params);
 
-    void visitBinaryOperation(BinaryOperation operation);
+    R visitBinaryOperation(BinaryOperation operation, P params);
 
     // L I T E R A L S
 
-    void visitBoolean(com._2gis.cartoshka.tree.entities.literals.Boolean value);
+    R visitBoolean(com._2gis.cartoshka.tree.entities.literals.Boolean value, P params);
 
-    void visitColor(Color color);
+    R visitColor(Color color, P params);
 
-    void visitDimension(Dimension dimension);
+    R visitDimension(Dimension dimension, P params);
 
-    void visitImageFilter(ImageFilter filter);
+    R visitImageFilter(ImageFilter filter, P params);
 
-    void visitMultiLiteral(MultiLiteral multiLiteral);
+    R visitMultiLiteral(MultiLiteral multiLiteral, P params);
 
-    void visitNumber(Numeric number);
+    R visitNumber(Numeric number, P params);
 
-    void visitText(Text text);
+    R visitText(Text text, P params);
 }

@@ -85,8 +85,8 @@ public class ExpandableText extends Expression {
     }
 
     @Override
-    public void accept(Visitor visitor) {
-        visitor.visitExpandableText(this);
+    public <R, P> R accept(Visitor<R, P> visitor, P params) {
+        return visitor.visitExpandableText(this, params);
     }
 
     @Override

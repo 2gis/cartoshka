@@ -47,8 +47,8 @@ public class Element extends Node implements Evaluable<Boolean> {
     }
 
     @Override
-    public void accept(Visitor visitor) {
-        visitor.visitElement(this);
+    public <R, P> R accept(Visitor<R, P> visitor, P params) {
+        return visitor.visitElement(this, params);
     }
 
     @Override

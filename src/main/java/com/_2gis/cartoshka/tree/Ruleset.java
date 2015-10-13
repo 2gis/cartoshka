@@ -17,16 +17,17 @@ public class Ruleset extends Node implements Evaluable<Boolean> {
         this.rules = rules;
     }
 
-    public void accept(Visitor visitor) {
-        visitor.visitRuleset(this);
-    }
-
     public Collection<Selector> getSelectors() {
         return selectors;
     }
 
     public Collection<Node> getRules() {
         return rules;
+    }
+
+    @Override
+    public <R, P> R accept(Visitor<R, P> visitor, P params) {
+        return visitor.visitRuleset(this, params);
     }
 
     @Override

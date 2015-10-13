@@ -32,8 +32,8 @@ public class Filter extends Node implements Evaluable<Boolean> {
     }
 
     @Override
-    public void accept(Visitor visitor) {
-        visitor.visitFilter(this);
+    public <R, P> R accept(Visitor<R, P> visitor, P params) {
+        return visitor.visitFilter(this, params);
     }
 
     @Override

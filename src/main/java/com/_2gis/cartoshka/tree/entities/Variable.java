@@ -14,8 +14,8 @@ public class Variable extends Expression {
     }
 
     @Override
-    public void accept(Visitor visitor) {
-        visitor.visitVariable(this);
+    public <R, P> R accept(Visitor<R, P> visitor, P params) {
+        return visitor.visitVariable(this, params);
     }
 
     @Override

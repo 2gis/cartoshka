@@ -18,8 +18,8 @@ public class Field extends Expression {
     }
 
     @Override
-    public void accept(Visitor visitor) {
-        visitor.visitField(this);
+    public <R, P> R accept(Visitor<R, P> visitor, P params) {
+        return visitor.visitField(this, params);
     }
 
     @Override

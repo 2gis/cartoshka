@@ -46,8 +46,8 @@ public class Rule extends Node {
     }
 
     @Override
-    public void accept(Visitor visitor) {
-        visitor.visitRule(this);
+    public <R, P> R accept(Visitor<R, P> visitor, P params) {
+        return visitor.visitRule(this, params);
     }
 
     @Override

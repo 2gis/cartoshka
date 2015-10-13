@@ -44,7 +44,7 @@ public abstract class Node {
         return builder.toString();
     }
 
-    public abstract void accept(Visitor visitor);
+    public abstract <R, P> R accept(Visitor<R, P> visitor, P params);
 
     public Location getLocation() {
         return location;

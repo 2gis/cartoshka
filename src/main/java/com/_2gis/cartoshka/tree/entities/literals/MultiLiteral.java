@@ -16,8 +16,8 @@ public class MultiLiteral extends Literal {
     }
 
     @Override
-    public void accept(Visitor visitor) {
-        visitor.visitMultiLiteral(this);
+    public <R, P> R accept(Visitor<R, P> visitor, P params) {
+        return visitor.visitMultiLiteral(this, params);
     }
 
     @Override

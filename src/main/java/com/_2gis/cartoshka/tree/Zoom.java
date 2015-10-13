@@ -20,8 +20,8 @@ public class Zoom extends Node implements Evaluable<Double> {
     }
 
     @Override
-    public void accept(Visitor visitor) {
-        visitor.visitZoom(this);
+    public <R, P> R accept(Visitor<R, P> visitor, P params) {
+        return visitor.visitZoom(this, params);
     }
 
     @Override

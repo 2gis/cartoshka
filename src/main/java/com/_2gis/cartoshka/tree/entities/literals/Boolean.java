@@ -23,8 +23,8 @@ public class Boolean extends Literal {
     }
 
     @Override
-    public void accept(Visitor visitor) {
-        visitor.visitBoolean(this);
+    public <R, P> R accept(Visitor<R, P> visitor, P params) {
+        return visitor.visitBoolean(this, params);
     }
 
     @Override

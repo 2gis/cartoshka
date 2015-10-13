@@ -57,8 +57,8 @@ public class Call extends Expression {
     }
 
     @Override
-    public void accept(Visitor visitor) {
-        visitor.visitCall(this);
+    public <R, P> R accept(Visitor<R, P> visitor, P params) {
+        return visitor.visitCall(this, params);
     }
 
     @Override
