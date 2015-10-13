@@ -1,7 +1,9 @@
 package com._2gis.cartoshka.tree;
 
+import com._2gis.cartoshka.Evaluable;
 import com._2gis.cartoshka.Feature;
 import com._2gis.cartoshka.Location;
+import com._2gis.cartoshka.Visitor;
 
 public class Element extends Node implements Evaluable<Boolean> {
     private final String value;

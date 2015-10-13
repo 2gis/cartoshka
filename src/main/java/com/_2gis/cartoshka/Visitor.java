@@ -1,5 +1,6 @@
-package com._2gis.cartoshka.tree;
+package com._2gis.cartoshka;
 
+import com._2gis.cartoshka.tree.*;
 import com._2gis.cartoshka.tree.entities.*;
 import com._2gis.cartoshka.tree.entities.literals.*;
 

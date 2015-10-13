@@ -1,7 +1,9 @@
 package com._2gis.cartoshka.tree;
 
+import com._2gis.cartoshka.Evaluable;
 import com._2gis.cartoshka.Feature;
 import com._2gis.cartoshka.Location;
+import com._2gis.cartoshka.Visitor;
 
 import java.util.Collection;
 

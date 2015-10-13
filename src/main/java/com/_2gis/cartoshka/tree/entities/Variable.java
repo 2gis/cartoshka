@@ -1,10 +1,6 @@
 package com._2gis.cartoshka.tree.entities;
 
-import com._2gis.cartoshka.CartoshkaException;
-import com._2gis.cartoshka.Context;
-import com._2gis.cartoshka.Feature;
-import com._2gis.cartoshka.Location;
-import com._2gis.cartoshka.tree.Visitor;
+import com._2gis.cartoshka.*;
 
 public class Variable extends Expression {
     private final String name;

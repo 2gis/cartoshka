@@ -2,7 +2,7 @@ package com._2gis.cartoshka.tree.entities;
 
 import com._2gis.cartoshka.Feature;
 import com._2gis.cartoshka.Location;
-import com._2gis.cartoshka.tree.Visitor;
+import com._2gis.cartoshka.Visitor;
 import com._2gis.cartoshka.tree.entities.literals.MultiLiteral;
 
 import java.util.ArrayList;

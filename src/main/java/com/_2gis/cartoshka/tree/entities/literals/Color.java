@@ -2,8 +2,8 @@ package com._2gis.cartoshka.tree.entities.literals;
 
 import com._2gis.cartoshka.CartoshkaException;
 import com._2gis.cartoshka.Location;
+import com._2gis.cartoshka.Visitor;
 import com._2gis.cartoshka.scanner.TokenType;
-import com._2gis.cartoshka.tree.Visitor;
 import com._2gis.cartoshka.tree.entities.Literal;
 
 public class Color extends Literal {

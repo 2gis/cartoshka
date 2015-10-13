@@ -1,6 +1,7 @@
 package com._2gis.cartoshka.tree;
 
 import com._2gis.cartoshka.Location;
+import com._2gis.cartoshka.Visitor;
 import com._2gis.cartoshka.tree.entities.Value;
 
 public class Rule extends Node {
