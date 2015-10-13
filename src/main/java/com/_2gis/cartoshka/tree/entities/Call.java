@@ -5,7 +5,6 @@ import com._2gis.cartoshka.Function;
 import com._2gis.cartoshka.Location;
 import com._2gis.cartoshka.Visitor;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -16,6 +15,14 @@ public class Call extends Expression {
     public Call(Location location, Function function, Collection<Expression> args) {
         super(location);
         this.function = function;
+        this.args = args;
+    }
+
+    public Collection<Expression> getArgs() {
+        return args;
+    }
+
+    public void setArgs(Collection<Expression> args) {
         this.args = args;
     }
 
@@ -42,23 +49,8 @@ public class Call extends Expression {
     }
 
     @Override
-    public boolean isDynamic() {
-        return hasDynamicExpression(args);
-    }
-
-    @Override
-    public void fold() {
-        Collection<Expression> newArgs = new ArrayList<>();
-        for (Expression expression : args) {
-            newArgs.add(fold(expression));
-        }
-
-        args = newArgs;
-    }
-
-    @Override
     public <R, P> R accept(Visitor<R, P> visitor, P params) {
-        return visitor.visitCall(this, params);
+        return visitor.visitCallExpression(this, params);
     }
 
     @Override

@@ -1,5 +1,5 @@
 Scenario: Unary Operation
-Given a parser with folding
+Given an evaluating parser
 When the following source is parsed:
     @one: 1;
     y: -@one;
@@ -10,7 +10,7 @@ Then rule z is:
     -[two]
 
 Scenario: Binary Operation
-Given a parser with folding
+Given an evaluating parser
 When the following source is parsed:
     @one: 1.0;
     @two: 2.0;
@@ -25,7 +25,7 @@ Then rule z is:
     [six] + 0.2
 
 Scenario: Variable
-Given a parser with folding
+Given an evaluating parser
 When the following source is parsed:
     @one: [field2];
     x: @one + [field];
@@ -33,13 +33,13 @@ Then rule x is:
     @one + [field]
 
 Scenario: Undefined Variable
-Given a parser without folding
+Given a parser
 When the following source is parsed:
     x: @one;
 Then variable is undefined
 
 Scenario: Expandable text
-Given a parser with folding
+Given an evaluating parser
 When the following source is parsed:
     @one: 0.5 + 0.5;
     @two: @one * 2;
@@ -59,21 +59,21 @@ Then rule d is: 2.0
 Then rule e is: [three] 2.0
 
 Scenario: Multiple Values Evaluation
-Given a parser without folding
+Given a parser
 When the following source is parsed:
     xyz: 1 + 2, 2 + 3, 3 + 4;
 Then rule xyz is: 1 + 2, 2 + 3, 3 + 4
 Then rule xyz evaluates into: [3, 5, 7]
 
 Scenario: Function call
-Given a parser with folding
+Given an evaluating parser
 When the following source is parsed:
     @one: 1;
     x: rgb(@one, [two], 3);
 Then rule x is: rgb(1, [two], 3)
 
 Scenario: Dimension
-Given a parser with folding
+Given an evaluating parser
 When the following source is parsed:
     a: 10%, 10m, 10cm, 10in, 10mm, 10pt, 10pc, 10px;
     b: 10.0%, 10.0m, 10.0cm, 10.0in, 10.0mm, 10.0pt, 10.0pc, 10.0px;

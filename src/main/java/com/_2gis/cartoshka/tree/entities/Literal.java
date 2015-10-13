@@ -68,16 +68,7 @@ public abstract class Literal extends Expression implements Comparable<Literal> 
     }
 
     @Override
-    public boolean isDynamic() {
-        return false;
-    }
-
-    @Override
     public boolean isLiteral() {
         return true;
-    }
-
-    @Override
-    public void fold() {
     }
 }

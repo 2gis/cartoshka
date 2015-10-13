@@ -19,6 +19,22 @@ public class BinaryOperation extends Expression {
         this.right = right;
     }
 
+    public Expression getLeft() {
+        return left;
+    }
+
+    public void setLeft(Expression left) {
+        this.left = left;
+    }
+
+    public Expression getRight() {
+        return right;
+    }
+
+    public void setRight(Expression right) {
+        this.right = right;
+    }
+
     @Override
     public Literal ev(Feature feature) {
         Literal leftOp = left.ev(feature);
@@ -34,22 +50,11 @@ public class BinaryOperation extends Expression {
 
     @Override
     public <R, P> R accept(Visitor<R, P> visitor, P params) {
-        return visitor.visitBinaryOperation(this, params);
+        return visitor.visitBinaryOperationExpression(this, params);
     }
 
     @Override
     public String toString() {
         return String.format("%s %s %s", left.toString(), operator.getStr(), right.toString());
-    }
-
-    @Override
-    public boolean isDynamic() {
-        return left.isDynamic() || right.isDynamic();
-    }
-
-    @Override
-    public void fold() {
-        left = fold(left);
-        right = fold(right);
     }
 }

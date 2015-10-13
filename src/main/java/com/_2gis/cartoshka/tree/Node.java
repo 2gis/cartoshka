@@ -2,9 +2,7 @@ package com._2gis.cartoshka.tree;
 
 import com._2gis.cartoshka.Location;
 import com._2gis.cartoshka.Visitor;
-import com._2gis.cartoshka.tree.entities.Expression;
 
-import java.util.Collection;
 import java.util.Iterator;
 
 public abstract class Node {
@@ -12,21 +10,6 @@ public abstract class Node {
 
     public Node(Location location) {
         this.location = location;
-    }
-
-    protected static Expression fold(Expression expression) {
-        if (!expression.isDynamic()) {
-            return expression.ev(null);
-        }
-
-        expression.fold();
-        return expression;
-    }
-
-    protected static void fold(Collection<? extends Node> nodes) {
-        for (Node node : nodes) {
-            node.fold();
-        }
     }
 
     protected static String collectionToString(Iterable<? extends Node> args, String delim) {
@@ -52,6 +35,4 @@ public abstract class Node {
 
     @Override
     public abstract String toString();
-
-    public abstract void fold();
 }

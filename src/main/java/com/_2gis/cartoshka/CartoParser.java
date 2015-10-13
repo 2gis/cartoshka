@@ -21,35 +21,13 @@ public final class CartoParser extends com._2gis.cartoshka.scanner.Scanner {
 
     private Context context;
 
-    private boolean includeVariables;
-
-    private boolean foldNodes;
-
     public CartoParser() {
         this.functions = new HashMap<>();
         this.sources = new LinkedList<>();
         this.context = new Context();
-        this.includeVariables = false;
-        this.foldNodes = true;
         for (Function function : Functions.BUILTIN_FUNCTIONS) {
             addOrReplaceFunction(function);
         }
-    }
-
-    public boolean getIncludeVariables() {
-        return includeVariables;
-    }
-
-    public void setIncludeVariables(boolean includeVariables) {
-        this.includeVariables = includeVariables;
-    }
-
-    public boolean getFoldNodes() {
-        return foldNodes;
-    }
-
-    public void setFoldNodes(boolean foldNodes) {
-        this.foldNodes = foldNodes;
     }
 
     public CartoParser addSource(String name, Reader reader) {
@@ -57,20 +35,14 @@ public final class CartoParser extends com._2gis.cartoshka.scanner.Scanner {
         return this;
     }
 
-    public List<Node> parse() {
+    public Style parse() {
         List<Node> root = new ArrayList<>();
         for (Source source : sources) {
             initialize(source);
             root.addAll(parsePrimary());
         }
 
-        if (foldNodes) {
-            for (Node node : root) {
-                node.fold();
-            }
-        }
-
-        return root;
+        return new Style(root, context);
     }
 
     public void addOrReplaceFunction(Function function) {
@@ -85,10 +57,7 @@ public final class CartoParser extends com._2gis.cartoshka.scanner.Scanner {
             switch (peek().getType()) {
                 case VARIABLE:
                     Rule variable = context.setVariable(parseRule());
-                    if (includeVariables) {
-                        nodes.add(variable);
-                    }
-
+                    nodes.add(variable);
                     break;
 
                 case IDENTIFIER:
@@ -308,21 +277,21 @@ public final class CartoParser extends com._2gis.cartoshka.scanner.Scanner {
     private Node parseRuleSet() {
         // selectors block
         Location location = peek().getLocation();
-        Collection<Selector> selectors = parseSelectors();
-        Collection<Node> rules = parseBlock();
-        return new Ruleset(location, selectors, rules);
+        List<Selector> selectors = parseSelectors();
+        List<Node> block = parseBlock();
+        return new Ruleset(location, selectors, block);
     }
 
-    private Collection<Node> parseBlock() {
+    private List<Node> parseBlock() {
         expect(TokenType.LBRACE);
-        Collection<Node> rules = parsePrimary();
+        List<Node> block = parsePrimary();
         expect(TokenType.RBRACE);
-        return rules;
+        return block;
     }
 
     // Selectors are made out of one or more Elements, see above.
-    private Collection<Selector> parseSelectors() {
-        Collection<Selector> selectors = new ArrayList<>();
+    private List<Selector> parseSelectors() {
+        List<Selector> selectors = new ArrayList<>();
         while (true) {
             selectors.add(parseSelector());
             if (peek().getType() != TokenType.COMMA) {

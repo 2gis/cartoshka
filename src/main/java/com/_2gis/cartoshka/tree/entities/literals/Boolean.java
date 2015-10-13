@@ -24,7 +24,7 @@ public class Boolean extends Literal {
 
     @Override
     public <R, P> R accept(Visitor<R, P> visitor, P params) {
-        return visitor.visitBoolean(this, params);
+        return visitor.visitBooleanLiteral(this, params);
     }
 
     @Override

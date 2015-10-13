@@ -15,7 +15,7 @@ public class Variable extends Expression {
 
     @Override
     public <R, P> R accept(Visitor<R, P> visitor, P params) {
-        return visitor.visitVariable(this, params);
+        return visitor.visitVariableExpression(this, params);
     }
 
     @Override
@@ -28,12 +28,7 @@ public class Variable extends Expression {
         return getValue().ev(feature);
     }
 
-    @Override
-    public boolean isDynamic() {
-        return getValue().isDynamic();
-    }
-
-    private synchronized Value getValue() {
+    public Value getValue() {
         if (value == null) {
             value = context.getVariable(name);
             if (value == null) {
@@ -42,10 +37,5 @@ public class Variable extends Expression {
         }
 
         return value;
-    }
-
-    @Override
-    public void fold() {
-        getValue().fold();
     }
 }

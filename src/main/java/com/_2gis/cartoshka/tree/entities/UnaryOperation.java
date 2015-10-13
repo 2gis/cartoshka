@@ -16,9 +16,22 @@ public class UnaryOperation extends Expression {
         this.expression = expression;
     }
 
+    public TokenType getOperator() {
+        return operator;
+    }
+
+    public Expression getExpression() {
+
+        return expression;
+    }
+
+    public void setExpression(Expression expression) {
+        this.expression = expression;
+    }
+
     @Override
     public <R, P> R accept(Visitor<R, P> visitor, P params) {
-        return visitor.visitUnaryOperation(this, params);
+        return visitor.visitUnaryOperationExpression(this, params);
     }
 
     @Override
@@ -29,15 +42,5 @@ public class UnaryOperation extends Expression {
     @Override
     public Literal ev(Feature feature) {
         return expression.ev(feature).operate(operator);
-    }
-
-    @Override
-    public boolean isDynamic() {
-        return expression.isDynamic();
-    }
-
-    @Override
-    public void fold() {
-        expression = fold(expression);
     }
 }

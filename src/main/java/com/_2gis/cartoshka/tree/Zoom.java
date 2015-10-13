@@ -19,6 +19,14 @@ public class Zoom extends Node implements Evaluable<Double> {
         return operator;
     }
 
+    public Expression getExpression() {
+        return expression;
+    }
+
+    public void setExpression(Expression expression) {
+        this.expression = expression;
+    }
+
     @Override
     public <R, P> R accept(Visitor<R, P> visitor, P params) {
         return visitor.visitZoom(this, params);
@@ -27,11 +35,6 @@ public class Zoom extends Node implements Evaluable<Double> {
     @Override
     public String toString() {
         return String.format("[zoom %s %s]", operator.getStr(), expression.toString());
-    }
-
-    @Override
-    public void fold() {
-        expression = fold(expression);
     }
 
     @Override

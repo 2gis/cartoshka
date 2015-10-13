@@ -5,24 +5,24 @@ import com._2gis.cartoshka.Feature;
 import com._2gis.cartoshka.Location;
 import com._2gis.cartoshka.Visitor;
 
-import java.util.Collection;
+import java.util.List;
 
 public class Ruleset extends Node implements Evaluable<Boolean> {
-    private final Collection<Selector> selectors;
-    private final Collection<Node> rules;
+    private final List<Selector> selectors;
+    private final List<Node> block;
 
-    public Ruleset(Location location, Collection<Selector> selectors, Collection<Node> rules) {
+    public Ruleset(Location location, List<Selector> selectors, List<Node> block) {
         super(location);
         this.selectors = selectors;
-        this.rules = rules;
+        this.block = block;
     }
 
-    public Collection<Selector> getSelectors() {
+    public List<Selector> getSelectors() {
         return selectors;
     }
 
-    public Collection<Node> getRules() {
-        return rules;
+    public List<Node> getBlock() {
+        return block;
     }
 
     @Override
@@ -32,13 +32,7 @@ public class Ruleset extends Node implements Evaluable<Boolean> {
 
     @Override
     public String toString() {
-        return String.format("%s {\n%s\n}", collectionToString(selectors, ", "), collectionToString(rules, "\n"));
-    }
-
-    @Override
-    public void fold() {
-        fold(rules);
-        fold(selectors);
+        return String.format("%s {\n%s\n}", collectionToString(selectors, ", "), collectionToString(block, "\n"));
     }
 
     @Override

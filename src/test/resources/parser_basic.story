@@ -1,5 +1,5 @@
 Scenario: Simple
-Given a parser without folding
+Given a parser
 When the following source is parsed:
     a: true;
     b: false;
@@ -11,7 +11,7 @@ Then color c as hex is: #AABBCC
 Then color d as hex is: #AABBCC
 
 Scenario: Ruleset
-Given a parser with folding
+Given an evaluating parser
 When the following source is parsed:
     @some-color: #abc;
     .class-1, .class-2, .class-3 {
@@ -42,7 +42,7 @@ Then rule a/line-join is: miter
 Then rule b/line-join is: round
 
 Scenario: Map
-Given a parser with folding
+Given an evaluating parser
 When the following source is parsed:
     Map {
       a/line-join: miter;
@@ -50,4 +50,3 @@ When the following source is parsed:
     }
 Then rule a/line-join is: miter
 Then rule b/line-join is: round
-

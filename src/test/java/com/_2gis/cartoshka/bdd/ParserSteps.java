@@ -5,6 +5,7 @@ import com._2gis.cartoshka.CartoshkaException;
 import com._2gis.cartoshka.tree.*;
 import com._2gis.cartoshka.tree.entities.Literal;
 import com._2gis.cartoshka.tree.entities.literals.Color;
+import com._2gis.cartoshka.visitors.EvaluatingVisitor;
 import org.jbehave.core.annotations.Given;
 import org.jbehave.core.annotations.Named;
 import org.jbehave.core.annotations.Then;
@@ -19,25 +20,29 @@ import java.util.concurrent.LinkedBlockingQueue;
 public class ParserSteps {
     private CartoParser parser = null;
     private List<Node> nodes = null;
+    private boolean evaluate = false;
 
-    @Given("a parser without folding")
-    public void givenParserWithoutFolding() {
+    @Given("a parser")
+    public void givenParser() {
         parser = new CartoParser();
-        parser.setFoldNodes(false);
-        parser.setIncludeVariables(true);
+        evaluate = false;
     }
 
-    @Given("a parser with folding")
-    public void givenParserWithFolding() {
+    @Given("an evaluating parser")
+    public void givenEvaluatingParser() {
         parser = new CartoParser();
-        parser.setFoldNodes(true);
-        parser.setIncludeVariables(true);
+        evaluate = true;
     }
 
     @When("the following source is parsed:$src")
     public void whenSourceIsParsed(@Named("src") String src) {
         parser.addSource(String.valueOf(src.hashCode()), new StringReader(src.trim()));
-        nodes = parser.parse();
+        Style style = parser.parse();
+        if (evaluate) {
+            style.accept(new EvaluatingVisitor(), null);
+        }
+
+        nodes = style.getBlock();
     }
 
     @Then("rule $rule is:$value")
@@ -54,7 +59,7 @@ public class ParserSteps {
                     return;
                 }
             } else if (node instanceof Ruleset) {
-                queue.addAll(((Ruleset) node).getRules());
+                queue.addAll(((Ruleset) node).getBlock());
             }
         }
 
@@ -75,7 +80,7 @@ public class ParserSteps {
                     return;
                 }
             } else if (node instanceof Ruleset) {
-                queue.addAll(((Ruleset) node).getRules());
+                queue.addAll(((Ruleset) node).getBlock());
             }
         }
 
@@ -100,7 +105,7 @@ public class ParserSteps {
                     }
                 }
             } else if (node instanceof Ruleset) {
-                queue.addAll(((Ruleset) node).getRules());
+                queue.addAll(((Ruleset) node).getBlock());
             }
         }
 
@@ -110,8 +115,9 @@ public class ParserSteps {
     @Then("variable is undefined")
     public void thenVariableUndefined() {
         try {
+            EvaluatingVisitor ev = new EvaluatingVisitor();
             for (Node node : nodes) {
-                node.fold();
+                node.accept(ev, null);
             }
         } catch (CartoshkaException ex) {
             if (ex.toString().contains("Undefined variable")) {
@@ -133,7 +139,7 @@ public class ParserSteps {
                 if (index == num) {
                     return ruleset;
                 } else {
-                    queue.addAll(ruleset.getRules());
+                    queue.addAll(ruleset.getBlock());
                 }
             }
         }

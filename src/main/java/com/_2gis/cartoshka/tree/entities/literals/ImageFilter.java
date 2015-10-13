@@ -18,7 +18,7 @@ public class ImageFilter extends Literal {
 
     @Override
     public <R, P> R accept(Visitor<R, P> visitor, P params) {
-        return visitor.visitImageFilter(this, params);
+        return visitor.visitImageFilterLiteral(this, params);
     }
 
     @Override

@@ -67,7 +67,7 @@ public class Numeric extends Literal {
 
     @Override
     public <R, P> R accept(Visitor<R, P> visitor, P params) {
-        return visitor.visitNumber(this, params);
+        return visitor.visitNumericLiteral(this, params);
     }
 
     @Override

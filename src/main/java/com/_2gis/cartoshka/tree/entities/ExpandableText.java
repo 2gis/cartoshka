@@ -8,20 +8,25 @@ import com._2gis.cartoshka.tree.entities.literals.Text;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Stack;
 
 public class ExpandableText extends Expression {
     private final Context context;
-
-    private final List<Expression> expressions;
-
     private final boolean isURL;
+    private List<Expression> expressions;
 
     public ExpandableText(Location location, Context context, String value, boolean isURL) {
         super(location);
         this.context = context;
         this.isURL = isURL;
         this.expressions = parse(value);
+    }
+
+    public List<Expression> getExpressions() {
+        return expressions;
+    }
+
+    public void setExpressions(List<Expression> expressions) {
+        this.expressions = expressions;
     }
 
     private List<Expression> parse(String value) {
@@ -86,7 +91,7 @@ public class ExpandableText extends Expression {
 
     @Override
     public <R, P> R accept(Visitor<R, P> visitor, P params) {
-        return visitor.visitExpandableText(this, params);
+        return visitor.visitExpandableTextExpression(this, params);
     }
 
     @Override
@@ -106,28 +111,6 @@ public class ExpandableText extends Expression {
 
     public boolean isPlain() {
         return expressions.size() == 1 && (expressions.get(0).isLiteral());
-    }
-
-    @Override
-    public boolean isDynamic() {
-        return hasDynamicExpression(expressions);
-    }
-
-    @Override
-    public void fold() {
-        Stack<Expression> stack = new Stack<>();
-        for (Expression ex : expressions) {
-            ex.fold();
-            if (!stack.isEmpty() && !stack.peek().isDynamic() && !ex.isDynamic()) {
-                Expression nex = stack.pop();
-                stack.push(new Text(null, nex.ev(null).toString() + ex.ev(null).toString(), false, false));
-            } else {
-                stack.push(ex);
-            }
-        }
-
-        expressions.clear();
-        expressions.addAll(stack);
     }
 
     private Location getSubLocation(int start) {

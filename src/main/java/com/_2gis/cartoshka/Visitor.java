@@ -5,6 +5,8 @@ import com._2gis.cartoshka.tree.entities.*;
 import com._2gis.cartoshka.tree.entities.literals.*;
 
 public interface Visitor<R, P> {
+    R visitStyle(Style style, P params);
+
     R visitRuleset(Ruleset ruleset, P params);
 
     R visitRule(Rule rule, P params);
@@ -19,33 +21,33 @@ public interface Visitor<R, P> {
 
     // E X P R E S S I O N S
 
-    R visitValue(Value value, P params);
+    R visitValueExpression(Value value, P params);
 
-    R visitVariable(Variable variable, P params);
+    R visitVariableExpression(Variable variable, P params);
 
-    R visitUnaryOperation(UnaryOperation operation, P params);
+    R visitUnaryOperationExpression(UnaryOperation operation, P params);
 
-    R visitField(Field field, P params);
+    R visitFieldExpression(Field field, P params);
 
-    R visitExpandableText(ExpandableText text, P params);
+    R visitExpandableTextExpression(ExpandableText text, P params);
 
-    R visitCall(Call call, P params);
+    R visitCallExpression(Call call, P params);
 
-    R visitBinaryOperation(BinaryOperation operation, P params);
+    R visitBinaryOperationExpression(BinaryOperation operation, P params);
 
     // L I T E R A L S
 
-    R visitBoolean(com._2gis.cartoshka.tree.entities.literals.Boolean value, P params);
+    R visitBooleanLiteral(com._2gis.cartoshka.tree.entities.literals.Boolean value, P params);
 
-    R visitColor(Color color, P params);
+    R visitColorLiteral(Color color, P params);
 
-    R visitDimension(Dimension dimension, P params);
+    R visitDimensionLiteral(Dimension dimension, P params);
 
-    R visitImageFilter(ImageFilter filter, P params);
+    R visitImageFilterLiteral(ImageFilter filter, P params);
 
     R visitMultiLiteral(MultiLiteral multiLiteral, P params);
 
-    R visitNumber(Numeric number, P params);
+    R visitNumericLiteral(Numeric number, P params);
 
-    R visitText(Text text, P params);
+    R visitTextLiteral(Text text, P params);
 }

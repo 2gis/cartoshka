@@ -27,8 +27,16 @@ public class Filter extends Node implements Evaluable<Boolean> {
         return left;
     }
 
+    public void setLeft(Expression left) {
+        this.left = left;
+    }
+
     public Expression getRight() {
         return right;
+    }
+
+    public void setRight(Expression right) {
+        this.right = right;
     }
 
     @Override
@@ -39,12 +47,6 @@ public class Filter extends Node implements Evaluable<Boolean> {
     @Override
     public String toString() {
         return String.format("[%s %s %s]", left.toString(), operator.getStr(), right.toString());
-    }
-
-    @Override
-    public void fold() {
-        left = fold(left);
-        right = fold(right);
     }
 
     @Override

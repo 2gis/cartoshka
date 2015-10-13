@@ -69,17 +69,4 @@ public class ExpandableTextTest {
         ExpandableText et = new ExpandableText(null, context, "@{a} @{a} @{b} @{a} @{b}", false);
         Assert.assertEquals("1 1 2 1 2", et.ev(null).toString());
     }
-
-    @Test
-    public void testIsDynamic() {
-        Context context = new Context();
-        Collection<Expression> expressions = new LinkedList<>();
-        expressions.add(new Field(null, "f"));
-        context.setVariable(new Rule(null, "@b", new Value(null, expressions), true));
-        context.setVariable(createRule("@a", 1, true));
-
-        Assert.assertFalse(new ExpandableText(null, context, "@{a}", false).isDynamic());
-        Assert.assertTrue(new ExpandableText(null, context, "@{b}", false).isDynamic());
-        Assert.assertTrue(new ExpandableText(null, context, "@{a} [f]", false).isDynamic());
-    }
 }

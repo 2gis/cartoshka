@@ -19,12 +19,20 @@ public class Value extends Expression {
 
     @Override
     public <R, P> R accept(Visitor<R, P> visitor, P params) {
-        return visitor.visitValue(this, params);
+        return visitor.visitValueExpression(this, params);
     }
 
     @Override
     public String toString() {
         return collectionToString(expressions, ", ");
+    }
+
+    public Collection<Expression> getExpressions() {
+        return expressions;
+    }
+
+    public void setExpressions(Collection<Expression> expressions) {
+        this.expressions = expressions;
     }
 
     @Override
@@ -39,20 +47,5 @@ public class Value extends Expression {
         }
 
         return new MultiLiteral(getLocation(), literals);
-    }
-
-    @Override
-    public boolean isDynamic() {
-        return hasDynamicExpression(expressions);
-    }
-
-    @Override
-    public void fold() {
-        Collection<Expression> newExpressions = new ArrayList<>();
-        for (Expression expression : expressions) {
-            newExpressions.add(fold(expression));
-        }
-
-        expressions = newExpressions;
     }
 }

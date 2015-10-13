@@ -19,7 +19,7 @@ public class Field extends Expression {
 
     @Override
     public <R, P> R accept(Visitor<R, P> visitor, P params) {
-        return visitor.visitField(this, params);
+        return visitor.visitFieldExpression(this, params);
     }
 
     @Override
@@ -39,14 +39,5 @@ public class Field extends Expression {
         }
 
         return field;
-    }
-
-    @Override
-    public boolean isDynamic() {
-        return true;
-    }
-
-    @Override
-    public void fold() {
     }
 }

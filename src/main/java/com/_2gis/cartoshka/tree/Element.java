@@ -56,10 +56,6 @@ public class Element extends Node implements Evaluable<Boolean> {
         return value;
     }
 
-    @Override
-    public void fold() {
-    }
-
     public enum ElementType {
         MAP,
         ID,
