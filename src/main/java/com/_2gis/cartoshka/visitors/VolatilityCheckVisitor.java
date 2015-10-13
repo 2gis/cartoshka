@@ -8,7 +8,7 @@ import com._2gis.cartoshka.tree.entities.literals.*;
 import java.lang.Boolean;
 import java.util.Collection;
 
-public class DynamicityCheckVisitor implements Visitor<Boolean, Object> {
+public class VolatilityCheckVisitor implements Visitor<Boolean, Object> {
     private boolean visitAll(Collection<? extends Node> nodes, Object params) {
         for (Node node : nodes) {
             if (node.accept(this, params)) {

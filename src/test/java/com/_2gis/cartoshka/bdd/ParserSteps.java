@@ -5,7 +5,7 @@ import com._2gis.cartoshka.CartoshkaException;
 import com._2gis.cartoshka.tree.*;
 import com._2gis.cartoshka.tree.entities.Literal;
 import com._2gis.cartoshka.tree.entities.literals.Color;
-import com._2gis.cartoshka.visitors.EvaluatingVisitor;
+import com._2gis.cartoshka.visitors.ConstantFoldingVisitor;
 import org.jbehave.core.annotations.Given;
 import org.jbehave.core.annotations.Named;
 import org.jbehave.core.annotations.Then;
@@ -28,7 +28,7 @@ public class ParserSteps {
         evaluate = false;
     }
 
-    @Given("an evaluating parser")
+    @Given("a parser with constant folding")
     public void givenEvaluatingParser() {
         parser = new CartoParser();
         evaluate = true;
@@ -39,7 +39,7 @@ public class ParserSteps {
         parser.addSource(String.valueOf(src.hashCode()), new StringReader(src.trim()));
         Style style = parser.parse();
         if (evaluate) {
-            style.accept(new EvaluatingVisitor(), null);
+            style.accept(new ConstantFoldingVisitor(), null);
         }
 
         nodes = style.getBlock();
@@ -115,7 +115,7 @@ public class ParserSteps {
     @Then("variable is undefined")
     public void thenVariableUndefined() {
         try {
-            EvaluatingVisitor ev = new EvaluatingVisitor();
+            ConstantFoldingVisitor ev = new ConstantFoldingVisitor();
             for (Node node : nodes) {
                 node.accept(ev, null);
             }

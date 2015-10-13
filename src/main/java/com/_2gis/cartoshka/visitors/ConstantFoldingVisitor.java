@@ -11,8 +11,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Stack;
 
-public class EvaluatingVisitor implements Visitor<Expression, Object> {
-    private final DynamicityCheckVisitor dynamicityCheck = new DynamicityCheckVisitor();
+public class ConstantFoldingVisitor implements Visitor<Expression, Object> {
+    private final VolatilityCheckVisitor checkIfVolatile = new VolatilityCheckVisitor();
 
     private void visitAll(Collection<? extends Node> nodes, Object params) {
         for (Node node : nodes) {
@@ -79,7 +79,7 @@ public class EvaluatingVisitor implements Visitor<Expression, Object> {
 
     @Override
     public Expression visitVariableExpression(Variable variable, Object params) {
-        if (variable.accept(dynamicityCheck, params)) {
+        if (variable.accept(checkIfVolatile, params)) {
             variable.getValue().accept(this, params);
             return variable;
         }
@@ -89,7 +89,7 @@ public class EvaluatingVisitor implements Visitor<Expression, Object> {
 
     @Override
     public Expression visitUnaryOperationExpression(UnaryOperation operation, Object params) {
-        if (operation.accept(dynamicityCheck, params)) {
+        if (operation.accept(checkIfVolatile, params)) {
             operation.setExpression(operation.getExpression().accept(this, params));
             return operation;
         }
@@ -104,11 +104,11 @@ public class EvaluatingVisitor implements Visitor<Expression, Object> {
 
     @Override
     public Expression visitExpandableTextExpression(ExpandableText text, Object params) {
-        if (text.accept(dynamicityCheck, params)) {
+        if (text.accept(checkIfVolatile, params)) {
             Stack<Expression> stack = new Stack<>();
             for (Expression ex : text.getExpressions()) {
                 ex = ex.accept(this, params);
-                if (!stack.isEmpty() && !stack.peek().accept(dynamicityCheck, params) && !ex.accept(dynamicityCheck, params)) {
+                if (!stack.isEmpty() && !stack.peek().accept(checkIfVolatile, params) && !ex.accept(checkIfVolatile, params)) {
                     Expression nex = stack.pop();
                     stack.push(new Text(null, nex.ev(null).toString() + ex.ev(null).toString(), false, false));
                 } else {
@@ -125,7 +125,7 @@ public class EvaluatingVisitor implements Visitor<Expression, Object> {
 
     @Override
     public Expression visitCallExpression(Call call, Object params) {
-        if (call.accept(dynamicityCheck, params)) {
+        if (call.accept(checkIfVolatile, params)) {
             List<Expression> newArgs = new ArrayList<>();
             for (Expression arg : call.getArgs()) {
                 newArgs.add(arg.accept(this, params));
@@ -140,7 +140,7 @@ public class EvaluatingVisitor implements Visitor<Expression, Object> {
 
     @Override
     public Expression visitBinaryOperationExpression(BinaryOperation operation, Object params) {
-        if (operation.accept(dynamicityCheck, params)) {
+        if (operation.accept(checkIfVolatile, params)) {
             operation.setLeft(operation.getLeft().accept(this, params));
             operation.setRight(operation.getRight().accept(this, params));
             return operation;

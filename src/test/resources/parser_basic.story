@@ -11,7 +11,7 @@ Then color c as hex is: #AABBCC
 Then color d as hex is: #AABBCC
 
 Scenario: Ruleset
-Given an evaluating parser
+Given a parser with constant folding
 When the following source is parsed:
     @some-color: #abc;
     .class-1, .class-2, .class-3 {
@@ -42,7 +42,7 @@ Then rule a/line-join is: miter
 Then rule b/line-join is: round
 
 Scenario: Map
-Given an evaluating parser
+Given a parser with constant folding
 When the following source is parsed:
     Map {
       a/line-join: miter;

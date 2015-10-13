@@ -1,5 +1,5 @@
 Scenario: Text colors
-Given an evaluating parser
+Given a parser with constant folding
 When the following source is parsed:
     Black: black;
     Navy: navy;

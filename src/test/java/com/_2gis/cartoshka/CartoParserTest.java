@@ -3,7 +3,7 @@ package com._2gis.cartoshka;
 import com._2gis.cartoshka.tree.Style;
 import com._2gis.cartoshka.tree.entities.Literal;
 import com._2gis.cartoshka.tree.entities.literals.Numeric;
-import com._2gis.cartoshka.visitors.EvaluatingVisitor;
+import com._2gis.cartoshka.visitors.ConstantFoldingVisitor;
 import org.junit.Test;
 
 import java.io.StringReader;
@@ -34,7 +34,7 @@ public class CartoParserTest {
     public void test() {
 
         CartoParser parser = new CartoParser();
-        EvaluatingVisitor ev = new EvaluatingVisitor();
+        ConstantFoldingVisitor ev = new ConstantFoldingVisitor();
         parser.addSource("test", new StringReader("@a: 10% + 20%; b: @a + 1;"));
         Style style = parser.parse();
         style.accept(ev, null);
