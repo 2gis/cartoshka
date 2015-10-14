@@ -14,7 +14,7 @@ import java.util.List;
 public class EvaluateVisitor implements Visitor<Literal, Feature> {
 
     @Override
-    public Literal visitStyle(Style style, Feature feature) {
+    public Literal visitBlock(Block block, Feature feature) {
         return null;
     }
 

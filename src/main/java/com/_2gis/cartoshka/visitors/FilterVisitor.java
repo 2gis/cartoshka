@@ -24,7 +24,7 @@ public class FilterVisitor implements Visitor<Boolean, Feature> {
     }
 
     @Override
-    public Boolean visitStyle(Style style, Feature feature) {
+    public Boolean visitBlock(Block block, Feature feature) {
         return null;
     }
 

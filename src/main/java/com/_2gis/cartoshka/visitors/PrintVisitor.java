@@ -72,9 +72,9 @@ public class PrintVisitor implements Visitor<String, Object> {
     }
 
     @Override
-    public String visitStyle(Style style, Object params) {
+    public String visitBlock(Block block, Object params) {
         enterSection();
-        visitAll(style.getBlock(), params, "\n");
+        visitAll(block.getNodes(), params, "\n");
         return leaveSection();
     }
 
@@ -85,7 +85,7 @@ public class PrintVisitor implements Visitor<String, Object> {
 
         increaseIndent();
         print(" {\n");
-        visitAll(ruleset.getBlock(), params, "\n");
+        ruleset.getBlock().accept(this, params);
         decreaseIndent();
         print("\n}");
 

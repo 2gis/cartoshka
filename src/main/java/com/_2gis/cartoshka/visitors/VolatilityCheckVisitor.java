@@ -20,13 +20,13 @@ public class VolatilityCheckVisitor implements Visitor<Boolean, Object> {
     }
 
     @Override
-    public Boolean visitStyle(Style style, Object params) {
-        return visitAll(style.getBlock(), params);
+    public Boolean visitBlock(Block block, Object params) {
+        return visitAll(block.getNodes(), params);
     }
 
     @Override
     public Boolean visitRuleset(Ruleset ruleset, Object params) {
-        return visitAll(ruleset.getSelectors(), params) || visitAll(ruleset.getBlock(), params);
+        return visitAll(ruleset.getSelectors(), params) || ruleset.getBlock().accept(this, params);
     }
 
     @Override

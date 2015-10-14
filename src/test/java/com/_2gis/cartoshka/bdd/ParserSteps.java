@@ -39,13 +39,12 @@ public class ParserSteps {
 
     @When("the following source is parsed:$src")
     public void whenSourceIsParsed(@Named("src") String src) {
-        parser.addSource(String.valueOf(src.hashCode()), new StringReader(src.trim()));
-        Style style = parser.parse();
+        Block style = parser.parse(String.valueOf(src.hashCode()), new StringReader(src.trim()));
         if (evaluate) {
             style.accept(new ConstantFoldVisitor(), null);
         }
 
-        nodes = style.getBlock();
+        nodes = style.getNodes();
     }
 
     @Then("rule $rule is:$value")
@@ -62,7 +61,9 @@ public class ParserSteps {
                     return;
                 }
             } else if (node instanceof Ruleset) {
-                queue.addAll(((Ruleset) node).getBlock());
+                queue.add(((Ruleset) node).getBlock());
+            } else if (node instanceof Block) {
+                queue.addAll(((Block) node).getNodes());
             }
         }
 
@@ -87,7 +88,9 @@ public class ParserSteps {
                     }
                 }
             } else if (node instanceof Ruleset) {
-                queue.addAll(((Ruleset) node).getBlock());
+                queue.add(((Ruleset) node).getBlock());
+            } else if (node instanceof Block) {
+                queue.addAll(((Block) node).getNodes());
             }
         }
 
@@ -121,8 +124,10 @@ public class ParserSteps {
                 if (index == num) {
                     return ruleset;
                 } else {
-                    queue.addAll(ruleset.getBlock());
+                    queue.add(ruleset.getBlock());
                 }
+            } else if (node instanceof Block) {
+                queue.addAll(((Block) node).getNodes());
             }
         }
 

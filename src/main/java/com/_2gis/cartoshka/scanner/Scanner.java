@@ -38,15 +38,15 @@ public class Scanner {
         return c == '\n' || c == '\r';
     }
 
-    protected void initialize(Source source) {
+    protected void initialize(String name, Reader reader) {
         this.offset = -1;
         this.eos = false;
         this.current = null;
-        this.reader = source.reader;
+        this.reader = reader;
         this.literal.setLength(0);
         this.line = 1;
         this.lineOffset = 0;
-        this.sourceName = source.name;
+        this.sourceName = name;
         advance();
         skipWhiteSpace();
         scan();

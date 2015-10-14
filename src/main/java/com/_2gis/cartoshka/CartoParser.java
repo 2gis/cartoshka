@@ -1,7 +1,6 @@
 package com._2gis.cartoshka;
 
 import com._2gis.cartoshka.function.Functions;
-import com._2gis.cartoshka.scanner.Source;
 import com._2gis.cartoshka.scanner.Token;
 import com._2gis.cartoshka.scanner.TokenType;
 import com._2gis.cartoshka.tree.*;
@@ -17,42 +16,28 @@ public final class CartoParser extends com._2gis.cartoshka.scanner.Scanner {
 
     private final Map<String, Function> functions;
 
-    private final Collection<Source> sources;
-
     private SymbolTable symbolTable;
 
     public CartoParser() {
         this.functions = new HashMap<>();
-        this.sources = new LinkedList<>();
         this.symbolTable = new SymbolTable();
         for (Function function : Functions.BUILTIN_FUNCTIONS) {
             addOrReplaceFunction(function);
         }
     }
 
-    public CartoParser addSource(String name, Reader reader) {
-        sources.add(new Source(name, reader));
-        return this;
-    }
-
-    public Style parse() {
-        List<Node> root = new ArrayList<>();
-        for (Source source : sources) {
-            initialize(source);
-            root.addAll(parsePrimary());
-        }
-
-        return new Style(root, symbolTable);
+    public Block parse(String name, Reader reader) {
+        initialize(name, reader);
+        return parseBlock();
     }
 
     public void addOrReplaceFunction(Function function) {
         functions.put(function.getName(), function);
     }
 
-    // The `primary` rule is the *entry* and *exit* point of the parser.
-    // The rules here can appear at any level of the parse tree.
-    private List<Node> parsePrimary() {
+    private Block parseBlock() {
         List<Node> nodes = new ArrayList<>();
+        Location location = peek().getLocation();
         while (peek().getType() != TokenType.EOS && peek().getType() != TokenType.RBRACE) {
             switch (peek().getType()) {
                 case VARIABLE:
@@ -71,7 +56,7 @@ public final class CartoParser extends com._2gis.cartoshka.scanner.Scanner {
             }
         }
 
-        return nodes;
+        return new Block(location, nodes, symbolTable);
     }
 
     private Rule parseRule() {
@@ -278,15 +263,10 @@ public final class CartoParser extends com._2gis.cartoshka.scanner.Scanner {
         // selectors block
         Location location = peek().getLocation();
         List<Selector> selectors = parseSelectors();
-        List<Node> block = parseBlock();
-        return new Ruleset(location, selectors, block);
-    }
-
-    private List<Node> parseBlock() {
         expect(TokenType.LBRACE);
-        List<Node> block = parsePrimary();
+        Block block = parseBlock();
         expect(TokenType.RBRACE);
-        return block;
+        return new Ruleset(location, selectors, block);
     }
 
     // Selectors are made out of one or more Elements, see above.

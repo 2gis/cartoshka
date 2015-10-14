@@ -7,9 +7,9 @@ import java.util.List;
 
 public class Ruleset extends Node {
     private final List<Selector> selectors;
-    private final List<Node> block;
+    private final Block block;
 
-    public Ruleset(Location location, List<Selector> selectors, List<Node> block) {
+    public Ruleset(Location location, List<Selector> selectors, Block block) {
         super(location);
         this.selectors = selectors;
         this.block = block;
@@ -19,7 +19,7 @@ public class Ruleset extends Node {
         return selectors;
     }
 
-    public List<Node> getBlock() {
+    public Block getBlock() {
         return block;
     }
 

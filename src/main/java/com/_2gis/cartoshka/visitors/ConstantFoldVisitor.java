@@ -23,15 +23,15 @@ public class ConstantFoldVisitor implements Visitor<Expression, Object> {
     }
 
     @Override
-    public Expression visitStyle(Style style, Object params) {
-        visitAll(style.getBlock(), params);
+    public Expression visitBlock(Block block, Object params) {
+        visitAll(block.getNodes(), params);
         return null;
     }
 
     @Override
     public Expression visitRuleset(Ruleset ruleset, Object params) {
         visitAll(ruleset.getSelectors(), params);
-        visitAll(ruleset.getBlock(), params);
+        ruleset.getBlock().accept(this, params);
         return null;
     }
 

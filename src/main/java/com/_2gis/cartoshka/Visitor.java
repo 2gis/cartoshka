@@ -5,7 +5,7 @@ import com._2gis.cartoshka.tree.entities.*;
 import com._2gis.cartoshka.tree.entities.literals.*;
 
 public interface Visitor<R, P> {
-    R visitStyle(Style style, P params);
+    R visitBlock(Block block, P params);
 
     R visitRuleset(Ruleset ruleset, P params);
 
