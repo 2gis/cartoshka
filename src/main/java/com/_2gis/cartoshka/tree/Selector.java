@@ -35,7 +35,6 @@ public class Selector extends Node {
         return attachment;
     }
 
-
     @Override
     public <R, P> R accept(Visitor<R, P> visitor, P params) {
         return visitor.visitSelector(this, params);
