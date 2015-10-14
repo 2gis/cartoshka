@@ -18,12 +18,12 @@
 The project binaries are not published yet since development is in progress.
 
 ## Quickstart
+Look at the simple example below
 ```Java
 CartoParser parser = new CartoParser();
-File source = new File("style.mss");
-try (FileReader reader = new FileReader(source)) {
+try (FileReader reader = new FileReader(file)) {
     // parsing the file
-    Block style = parser.parse(source.getName(), reader);
+    Block style = parser.parse(file.getName(), reader);
 
     // constant folding
     style.accept(new ConstantFoldVisitor(), null);
@@ -31,7 +31,6 @@ try (FileReader reader = new FileReader(source)) {
     // pretty print
     String pretty = style.accept(new PrintVisitor(2), null);
     System.out.println(pretty);
-    
 } catch (IOException e) {
     e.printStackTrace();
 }
