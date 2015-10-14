@@ -1,18 +1,12 @@
 package com._2gis.cartoshka.tree.entities;
 
 import com._2gis.cartoshka.CartoshkaException;
-import com._2gis.cartoshka.Feature;
 import com._2gis.cartoshka.Location;
 import com._2gis.cartoshka.scanner.TokenType;
 
 public abstract class Literal extends Expression implements Comparable<Literal> {
     public Literal(Location location) {
         super(location);
-    }
-
-    @Override
-    public Literal ev(Feature feature) {
-        return this;
     }
 
     public Literal operate(TokenType operator, Literal operand) {

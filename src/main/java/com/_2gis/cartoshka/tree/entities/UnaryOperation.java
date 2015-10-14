@@ -1,6 +1,5 @@
 package com._2gis.cartoshka.tree.entities;
 
-import com._2gis.cartoshka.Feature;
 import com._2gis.cartoshka.Location;
 import com._2gis.cartoshka.Visitor;
 import com._2gis.cartoshka.scanner.TokenType;
@@ -32,10 +31,5 @@ public class UnaryOperation extends Expression {
     @Override
     public <R, P> R accept(Visitor<R, P> visitor, P params) {
         return visitor.visitUnaryOperationExpression(this, params);
-    }
-
-    @Override
-    public Literal ev(Feature feature) {
-        return expression.ev(feature).operate(operator);
     }
 }

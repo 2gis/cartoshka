@@ -59,11 +59,10 @@ Then rule d is: "2.0"
 Then rule e is: "[three] 2.0"
 
 Scenario: Multiple Values Evaluation
-Given a parser
+Given a parser with constant folding
 When the following source is parsed:
     xyz: 1 + 2, 2 + 3, 3 + 4;
-Then rule xyz is: 1 + 2, 2 + 3, 3 + 4
-Then rule xyz evaluates into: 3, 5, 7
+Then rule xyz is: 3, 5, 7
 
 Scenario: Function call
 Given a parser with constant folding

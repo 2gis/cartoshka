@@ -1,7 +1,6 @@
 package com._2gis.cartoshka.tree.entities;
 
 import com._2gis.cartoshka.Context;
-import com._2gis.cartoshka.Feature;
 import com._2gis.cartoshka.Location;
 import com._2gis.cartoshka.Visitor;
 import com._2gis.cartoshka.tree.entities.literals.Text;
@@ -19,6 +18,10 @@ public class ExpandableText extends Expression {
         this.context = context;
         this.isURL = isURL;
         this.expressions = parse(value);
+    }
+
+    public boolean isURL() {
+        return isURL;
     }
 
     public List<Expression> getExpressions() {
@@ -47,7 +50,7 @@ public class ExpandableText extends Expression {
                         if (start < end) {
                             String name = value.substring(start, end);
                             if (sb.length() > 0) {
-                                expressions.add(new Text(getLocation(), sb.toString(), false, false));
+                                expressions.add(new Text(getLocation(), sb.toString(), isURL, false));
                                 sb.setLength(0);
                             }
 
@@ -65,7 +68,7 @@ public class ExpandableText extends Expression {
                     if (start < end) {
                         String name = value.substring(start, end);
                         if (sb.length() > 0) {
-                            expressions.add(new Text(getLocation(), sb.toString(), false, false));
+                            expressions.add(new Text(getLocation(), sb.toString(), isURL, false));
                             sb.setLength(0);
                         }
 
@@ -83,7 +86,7 @@ public class ExpandableText extends Expression {
         }
 
         if (sb.length() > 0) {
-            expressions.add(new Text(null, sb.toString(), false, false));
+            expressions.add(new Text(getLocation(), sb.toString(), isURL, false));
         }
 
         return expressions;
@@ -92,16 +95,6 @@ public class ExpandableText extends Expression {
     @Override
     public <R, P> R accept(Visitor<R, P> visitor, P params) {
         return visitor.visitExpandableTextExpression(this, params);
-    }
-
-    @Override
-    public Literal ev(Feature feature) {
-        StringBuilder builder = new StringBuilder();
-        for (Expression expression : expressions) {
-            builder.append(expression.ev(feature).toString());
-        }
-
-        return new Text(getLocation(), builder.toString(), isURL, false);
     }
 
     public boolean isPlain() {

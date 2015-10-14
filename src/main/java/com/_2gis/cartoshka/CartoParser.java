@@ -196,7 +196,7 @@ public final class CartoParser extends com._2gis.cartoshka.scanner.Scanner {
         Token token = next();
         ExpandableText text = new ExpandableText(token.getLocation(), context, token.getText(), isURL);
         if (text.isPlain()) {
-            return text.ev(null);
+            return text.getExpressions().get(0);
         }
 
         return text;

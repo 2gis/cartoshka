@@ -1,11 +1,11 @@
 package com._2gis.cartoshka.tree;
 
-import com._2gis.cartoshka.*;
+import com._2gis.cartoshka.Location;
+import com._2gis.cartoshka.Visitor;
 import com._2gis.cartoshka.scanner.TokenType;
 import com._2gis.cartoshka.tree.entities.Expression;
-import com._2gis.cartoshka.tree.entities.Literal;
 
-public class Filter extends Node implements Evaluable<Boolean> {
+public class Filter extends Node {
     private final TokenType operator;
 
     private Expression left;
@@ -42,32 +42,5 @@ public class Filter extends Node implements Evaluable<Boolean> {
     @Override
     public <R, P> R accept(Visitor<R, P> visitor, P params) {
         return visitor.visitFilter(this, params);
-    }
-
-    @Override
-    public Boolean ev(Feature feature) {
-        Literal lh = left.ev(feature);
-        Literal rh = right.ev(feature);
-        switch (operator) {
-            case EQ:
-                return lh.compareTo(rh) == 0;
-
-            case NE:
-                return lh.compareTo(rh) != 0;
-
-            case LT:
-                return lh.compareTo(rh) < 0;
-
-            case GT:
-                return lh.compareTo(rh) > 0;
-
-            case LTE:
-                return lh.compareTo(rh) <= 0;
-
-            case GTE:
-                return lh.compareTo(rh) >= 0;
-        }
-
-        throw CartoshkaException.invalidOperation(getLocation());
     }
 }

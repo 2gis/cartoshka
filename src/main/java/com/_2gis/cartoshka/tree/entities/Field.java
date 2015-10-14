@@ -1,7 +1,5 @@
 package com._2gis.cartoshka.tree.entities;
 
-import com._2gis.cartoshka.CartoshkaException;
-import com._2gis.cartoshka.Feature;
 import com._2gis.cartoshka.Location;
 import com._2gis.cartoshka.Visitor;
 
@@ -20,19 +18,5 @@ public class Field extends Expression {
     @Override
     public <R, P> R accept(Visitor<R, P> visitor, P params) {
         return visitor.visitFieldExpression(this, params);
-    }
-
-    @Override
-    public Literal ev(Feature feature) {
-        if (feature == null) {
-            throw CartoshkaException.featureIsNotProvided(getLocation());
-        }
-
-        Literal field = feature.getField(name);
-        if (field == null) {
-            throw CartoshkaException.fieldNotFound(getLocation());
-        }
-
-        return field;
     }
 }

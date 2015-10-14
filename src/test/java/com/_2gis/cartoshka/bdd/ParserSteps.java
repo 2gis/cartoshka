@@ -5,7 +5,8 @@ import com._2gis.cartoshka.CartoshkaException;
 import com._2gis.cartoshka.tree.*;
 import com._2gis.cartoshka.tree.entities.Literal;
 import com._2gis.cartoshka.tree.entities.literals.Color;
-import com._2gis.cartoshka.visitors.ConstantFoldingVisitor;
+import com._2gis.cartoshka.visitors.ConstantFoldVisitor;
+import com._2gis.cartoshka.visitors.EvaluateVisitor;
 import com._2gis.cartoshka.visitors.PrintVisitor;
 import org.jbehave.core.annotations.Given;
 import org.jbehave.core.annotations.Named;
@@ -41,7 +42,7 @@ public class ParserSteps {
         parser.addSource(String.valueOf(src.hashCode()), new StringReader(src.trim()));
         Style style = parser.parse();
         if (evaluate) {
-            style.accept(new ConstantFoldingVisitor(), null);
+            style.accept(new ConstantFoldVisitor(), null);
         }
 
         nodes = style.getBlock();
@@ -68,27 +69,6 @@ public class ParserSteps {
         Assert.fail(String.format("Rule %s not found", rule));
     }
 
-    @Then("rule $rule evaluates into:$value")
-    public void thenEvaluatesInto(@Named("rule") String rule, @Named("value") String value) {
-        Queue<Node> queue = new LinkedBlockingQueue<>(nodes);
-        while (!queue.isEmpty()) {
-            Node node = queue.poll();
-            if (node instanceof Rule) {
-                Rule r = (Rule) node;
-                if (r.getFullName().equals(rule)) {
-                    String expected = value.trim();
-                    String given = r.getValue().ev(null).accept(pv, null).trim();
-                    Assert.assertEquals(expected, given);
-                    return;
-                }
-            } else if (node instanceof Ruleset) {
-                queue.addAll(((Ruleset) node).getBlock());
-            }
-        }
-
-        Assert.fail(String.format("Rule %s not found", rule));
-    }
-
     @Then("color $rule as hex is:$value")
     public void thenColorAsHex(@Named("rule") String rule, @Named("value") String value) {
         Queue<Node> queue = new LinkedBlockingQueue<>(nodes);
@@ -97,7 +77,7 @@ public class ParserSteps {
             if (node instanceof Rule) {
                 Rule r = (Rule) node;
                 if (r.getFullName().equals(rule)) {
-                    Literal literal = r.getValue().ev(null);
+                    Literal literal = r.getValue().accept(new EvaluateVisitor(), null);
                     if (literal.isColor()) {
                         Color color = (Color) literal;
                         String expected = value.trim();
@@ -117,7 +97,7 @@ public class ParserSteps {
     @Then("variable is undefined")
     public void thenVariableUndefined() {
         try {
-            ConstantFoldingVisitor ev = new ConstantFoldingVisitor();
+            ConstantFoldVisitor ev = new ConstantFoldVisitor();
             for (Node node : nodes) {
                 node.accept(ev, null);
             }

@@ -11,8 +11,10 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Stack;
 
-public class ConstantFoldingVisitor implements Visitor<Expression, Object> {
+public class ConstantFoldVisitor implements Visitor<Expression, Object> {
     private final VolatilityCheckVisitor checkIfVolatile = new VolatilityCheckVisitor();
+
+    private final EvaluateVisitor evaluate = new EvaluateVisitor();
 
     private void visitAll(Collection<? extends Node> nodes, Object params) {
         for (Node node : nodes) {
@@ -84,7 +86,7 @@ public class ConstantFoldingVisitor implements Visitor<Expression, Object> {
             return variable;
         }
 
-        return variable.ev(null);
+        return variable.accept(evaluate, null);
     }
 
     @Override
@@ -94,7 +96,7 @@ public class ConstantFoldingVisitor implements Visitor<Expression, Object> {
             return operation;
         }
 
-        return operation.ev(null);
+        return operation.accept(evaluate, null);
     }
 
     @Override
@@ -110,7 +112,7 @@ public class ConstantFoldingVisitor implements Visitor<Expression, Object> {
                 ex = ex.accept(this, params);
                 if (!stack.isEmpty() && !stack.peek().accept(checkIfVolatile, params) && !ex.accept(checkIfVolatile, params)) {
                     Expression nex = stack.pop();
-                    stack.push(new Text(null, nex.ev(null).toString() + ex.ev(null).toString(), false, false));
+                    stack.push(new Text(null, nex.accept(evaluate, null).toString() + ex.accept(evaluate, null).toString(), false, false));
                 } else {
                     stack.push(ex);
                 }
@@ -120,7 +122,7 @@ public class ConstantFoldingVisitor implements Visitor<Expression, Object> {
             return text;
         }
 
-        return text.ev(null);
+        return text.accept(evaluate, null);
     }
 
     @Override
@@ -135,7 +137,7 @@ public class ConstantFoldingVisitor implements Visitor<Expression, Object> {
             return call;
         }
 
-        return call.ev(null);
+        return call.accept(evaluate, null);
     }
 
     @Override
@@ -146,7 +148,7 @@ public class ConstantFoldingVisitor implements Visitor<Expression, Object> {
             return operation;
         }
 
-        return operation.ev(null);
+        return operation.accept(evaluate, null);
     }
 
     // L I T E R A L S

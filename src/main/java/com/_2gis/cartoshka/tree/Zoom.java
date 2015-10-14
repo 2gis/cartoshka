@@ -1,11 +1,11 @@
 package com._2gis.cartoshka.tree;
 
-import com._2gis.cartoshka.*;
+import com._2gis.cartoshka.Location;
+import com._2gis.cartoshka.Visitor;
 import com._2gis.cartoshka.scanner.TokenType;
 import com._2gis.cartoshka.tree.entities.Expression;
-import com._2gis.cartoshka.tree.entities.Literal;
 
-public class Zoom extends Node implements Evaluable<Double> {
+public class Zoom extends Node {
     private final TokenType operator;
     private Expression expression;
 
@@ -30,15 +30,5 @@ public class Zoom extends Node implements Evaluable<Double> {
     @Override
     public <R, P> R accept(Visitor<R, P> visitor, P params) {
         return visitor.visitZoom(this, params);
-    }
-
-    @Override
-    public Double ev(Feature feature) {
-        Literal literal = expression.ev(feature);
-        if (literal.isNumeric()) {
-            return literal.toNumber();
-        }
-
-        throw CartoshkaException.invalidOperation(getLocation());
     }
 }

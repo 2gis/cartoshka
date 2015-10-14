@@ -1,13 +1,11 @@
 package com._2gis.cartoshka.tree;
 
-import com._2gis.cartoshka.Evaluable;
-import com._2gis.cartoshka.Feature;
 import com._2gis.cartoshka.Location;
 import com._2gis.cartoshka.Visitor;
 
 import java.util.List;
 
-public class Ruleset extends Node implements Evaluable<Boolean> {
+public class Ruleset extends Node {
     private final List<Selector> selectors;
     private final List<Node> block;
 
@@ -28,20 +26,5 @@ public class Ruleset extends Node implements Evaluable<Boolean> {
     @Override
     public <R, P> R accept(Visitor<R, P> visitor, P params) {
         return visitor.visitRuleset(this, params);
-    }
-
-    @Override
-    public Boolean ev(Feature feature) {
-        if (selectors.isEmpty()) {
-            return true;
-        }
-
-        for (Evaluable<Boolean> item : selectors) {
-            if (item.ev(feature)) {
-                return true;
-            }
-        }
-
-        return false;
     }
 }

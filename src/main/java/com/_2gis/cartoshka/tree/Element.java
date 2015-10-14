@@ -1,11 +1,9 @@
 package com._2gis.cartoshka.tree;
 
-import com._2gis.cartoshka.Evaluable;
-import com._2gis.cartoshka.Feature;
 import com._2gis.cartoshka.Location;
 import com._2gis.cartoshka.Visitor;
 
-public class Element extends Node implements Evaluable<Boolean> {
+public class Element extends Node {
     private final String value;
     private final ElementType type;
 
@@ -21,29 +19,6 @@ public class Element extends Node implements Evaluable<Boolean> {
 
     public ElementType getType() {
         return type;
-    }
-
-    public Boolean ev(Feature feature) {
-        switch (getType()) {
-            case CLASS:
-                if (feature.getClasses().contains(value)) {
-                    return true;
-                }
-
-                break;
-
-            case ID:
-                if (value.equals(feature.getLayer())) {
-                    return true;
-                }
-
-                break;
-
-            case WILDCARD:
-                return true;
-        }
-
-        return false;
     }
 
     @Override

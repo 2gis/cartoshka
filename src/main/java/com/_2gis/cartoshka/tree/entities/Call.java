@@ -1,12 +1,10 @@
 package com._2gis.cartoshka.tree.entities;
 
-import com._2gis.cartoshka.Feature;
 import com._2gis.cartoshka.Function;
 import com._2gis.cartoshka.Location;
 import com._2gis.cartoshka.Visitor;
 
 import java.util.Collection;
-import java.util.Iterator;
 
 public class Call extends Expression {
     private final Function function;
@@ -28,28 +26,6 @@ public class Call extends Expression {
 
     public void setArgs(Collection<Expression> args) {
         this.args = args;
-    }
-
-    @Override
-    public Literal ev(final Feature feature) {
-        return function.apply(getLocation(), new Iterator<Literal>() {
-            Iterator<Expression> iterator = args.iterator();
-
-            @Override
-            public boolean hasNext() {
-                return iterator.hasNext();
-            }
-
-            @Override
-            public Literal next() {
-                return iterator.next().ev(feature);
-            }
-
-            @Override
-            public void remove() {
-                throw new UnsupportedOperationException();
-            }
-        });
     }
 
     @Override
