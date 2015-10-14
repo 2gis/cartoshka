@@ -18,5 +18,21 @@
 The project binaries are not published yet since development is in progress.
 
 ## Quickstart
+```Java
+CartoParser parser = new CartoParser();
+File source = new File("style.mss");
+try (FileReader reader = new FileReader(source)) {
+    // parsing the file
+    Block style = parser.parse(source.getName(), reader);
 
-Not yet.
+    // constant folding
+    style.accept(new ConstantFoldVisitor(), null);
+
+    // pretty print
+    String pretty = style.accept(new PrintVisitor(2), null);
+    System.out.println(pretty);
+    
+} catch (IOException e) {
+    e.printStackTrace();
+}
+```
