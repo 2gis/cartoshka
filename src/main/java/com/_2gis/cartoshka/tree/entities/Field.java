@@ -23,11 +23,6 @@ public class Field extends Expression {
     }
 
     @Override
-    public String toString() {
-        return String.format("[%s]", getName());
-    }
-
-    @Override
     public Literal ev(Feature feature) {
         if (feature == null) {
             throw CartoshkaException.featureIsNotProvided(getLocation());

@@ -63,6 +63,9 @@ public abstract class Literal extends Expression implements Comparable<Literal> 
         return null;
     }
 
+    @Override
+    public abstract String toString();
+
     public boolean isURL() {
         return false;
     }

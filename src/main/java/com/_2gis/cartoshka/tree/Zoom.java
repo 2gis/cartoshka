@@ -33,11 +33,6 @@ public class Zoom extends Node implements Evaluable<Double> {
     }
 
     @Override
-    public String toString() {
-        return String.format("[zoom %s %s]", operator.getStr(), expression.toString());
-    }
-
-    @Override
     public Double ev(Feature feature) {
         Literal literal = expression.ev(feature);
         if (literal.isNumeric()) {

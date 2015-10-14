@@ -51,11 +51,6 @@ public class Element extends Node implements Evaluable<Boolean> {
         return visitor.visitElement(this, params);
     }
 
-    @Override
-    public String toString() {
-        return value;
-    }
-
     public enum ElementType {
         MAP,
         ID,

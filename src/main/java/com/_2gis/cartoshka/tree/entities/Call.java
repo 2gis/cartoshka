@@ -18,6 +18,10 @@ public class Call extends Expression {
         this.args = args;
     }
 
+    public Function getFunction() {
+        return function;
+    }
+
     public Collection<Expression> getArgs() {
         return args;
     }
@@ -51,10 +55,5 @@ public class Call extends Expression {
     @Override
     public <R, P> R accept(Visitor<R, P> visitor, P params) {
         return visitor.visitCallExpression(this, params);
-    }
-
-    @Override
-    public String toString() {
-        return String.format("%s(%s)", function.getName(), collectionToString(args, ", "));
     }
 }

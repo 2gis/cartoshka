@@ -45,11 +45,6 @@ public class Filter extends Node implements Evaluable<Boolean> {
     }
 
     @Override
-    public String toString() {
-        return String.format("[%s %s %s]", left.toString(), operator.getStr(), right.toString());
-    }
-
-    @Override
     public Boolean ev(Feature feature) {
         Literal lh = left.ev(feature);
         Literal rh = right.ev(feature);

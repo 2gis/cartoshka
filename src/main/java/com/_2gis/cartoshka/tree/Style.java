@@ -30,9 +30,4 @@ public class Style extends Node {
     public <R, P> R accept(Visitor<R, P> visitor, P params) {
         return visitor.visitStyle(this, params);
     }
-
-    @Override
-    public String toString() {
-        return collectionToString(block, "\n");
-    }
 }

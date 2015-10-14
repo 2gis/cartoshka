@@ -22,11 +22,6 @@ public class Value extends Expression {
         return visitor.visitValueExpression(this, params);
     }
 
-    @Override
-    public String toString() {
-        return collectionToString(expressions, ", ");
-    }
-
     public Collection<Expression> getExpressions() {
         return expressions;
     }

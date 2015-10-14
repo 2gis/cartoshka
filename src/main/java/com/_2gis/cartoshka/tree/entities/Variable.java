@@ -19,13 +19,12 @@ public class Variable extends Expression {
     }
 
     @Override
-    public String toString() {
-        return name;
-    }
-
-    @Override
     public Literal ev(Feature feature) {
         return getValue().ev(feature);
+    }
+
+    public String getName() {
+        return name;
     }
 
     public Value getValue() {

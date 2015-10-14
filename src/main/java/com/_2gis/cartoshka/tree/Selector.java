@@ -55,9 +55,4 @@ public class Selector extends Node implements Evaluable<Boolean> {
     public <R, P> R accept(Visitor<R, P> visitor, P params) {
         return visitor.visitSelector(this, params);
     }
-
-    @Override
-    public String toString() {
-        return String.format("%s%s%s%s", collectionToString(elements, " "), collectionToString(filters, ""), collectionToString(zooms, ""), attachment);
-    }
 }

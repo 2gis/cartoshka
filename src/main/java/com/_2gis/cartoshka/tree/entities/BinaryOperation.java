@@ -19,6 +19,10 @@ public class BinaryOperation extends Expression {
         this.right = right;
     }
 
+    public TokenType getOperator() {
+        return operator;
+    }
+
     public Expression getLeft() {
         return left;
     }
@@ -51,10 +55,5 @@ public class BinaryOperation extends Expression {
     @Override
     public <R, P> R accept(Visitor<R, P> visitor, P params) {
         return visitor.visitBinaryOperationExpression(this, params);
-    }
-
-    @Override
-    public String toString() {
-        return String.format("%s %s %s", left.toString(), operator.getStr(), right.toString());
     }
 }

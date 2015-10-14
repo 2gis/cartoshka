@@ -6,6 +6,7 @@ import com._2gis.cartoshka.tree.*;
 import com._2gis.cartoshka.tree.entities.Literal;
 import com._2gis.cartoshka.tree.entities.literals.Color;
 import com._2gis.cartoshka.visitors.ConstantFoldingVisitor;
+import com._2gis.cartoshka.visitors.PrintVisitor;
 import org.jbehave.core.annotations.Given;
 import org.jbehave.core.annotations.Named;
 import org.jbehave.core.annotations.Then;
@@ -21,6 +22,7 @@ public class ParserSteps {
     private CartoParser parser = null;
     private List<Node> nodes = null;
     private boolean evaluate = false;
+    private PrintVisitor pv = new PrintVisitor(2);
 
     @Given("a parser")
     public void givenParser() {
@@ -54,7 +56,7 @@ public class ParserSteps {
                 Rule r = (Rule) node;
                 if (r.getFullName().equals(rule)) {
                     String expected = value.trim();
-                    String given = r.getValue().toString().trim();
+                    String given = r.getValue().accept(pv, null).trim();
                     Assert.assertEquals(expected, given);
                     return;
                 }
@@ -75,7 +77,7 @@ public class ParserSteps {
                 Rule r = (Rule) node;
                 if (r.getFullName().equals(rule)) {
                     String expected = value.trim();
-                    String given = r.getValue().ev(null).toString().trim();
+                    String given = r.getValue().ev(null).accept(pv, null).trim();
                     Assert.assertEquals(expected, given);
                     return;
                 }
@@ -155,7 +157,7 @@ public class ParserSteps {
         for (Selector selector : ruleset.getSelectors()) {
             for (Element element : selector.getElements()) {
                 if (element.getType() == Element.ElementType.CLASS) {
-                    sb.append(element.toString());
+                    sb.append(element.accept(pv, null));
                     sb.append(", ");
                 }
             }
@@ -173,7 +175,7 @@ public class ParserSteps {
         for (Selector selector : ruleset.getSelectors()) {
             for (Element element : selector.getElements()) {
                 if (element.getType() == Element.ElementType.ID) {
-                    sb.append(element.toString());
+                    sb.append(element.accept(pv, null));
                     sb.append(", ");
                 }
             }
@@ -204,7 +206,7 @@ public class ParserSteps {
         StringBuilder sb = new StringBuilder();
         for (Selector selector : ruleset.getSelectors()) {
             for (Filter filter : selector.getFilters()) {
-                sb.append(filter.toString());
+                sb.append(filter.accept(pv, null));
                 sb.append(", ");
             }
         }
@@ -212,6 +214,4 @@ public class ParserSteps {
         sb.setLength(sb.length() - 2);
         Assert.assertEquals(filters.trim(), sb.toString());
     }
-//    Then ruleset 3 zoom >= 10
-
 }

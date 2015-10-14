@@ -31,11 +31,6 @@ public class Ruleset extends Node implements Evaluable<Boolean> {
     }
 
     @Override
-    public String toString() {
-        return String.format("%s {\n%s\n}", collectionToString(selectors, ", "), collectionToString(block, "\n"));
-    }
-
-    @Override
     public Boolean ev(Feature feature) {
         if (selectors.isEmpty()) {
             return true;

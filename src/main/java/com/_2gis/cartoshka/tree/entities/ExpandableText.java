@@ -95,11 +95,6 @@ public class ExpandableText extends Expression {
     }
 
     @Override
-    public String toString() {
-        return collectionToString(expressions, "");
-    }
-
-    @Override
     public Literal ev(Feature feature) {
         StringBuilder builder = new StringBuilder();
         for (Expression expression : expressions) {

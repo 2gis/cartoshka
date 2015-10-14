@@ -50,20 +50,20 @@ When the following source is parsed:
     c: '[';
     d: '@{two}';
     e: '[three] @{two}';
-Then rule x is: @ one = 1.0, two = 2.0, three = [field]
-Then rule y is: @ one = [one], two = @{two}
-Then rule a is: @
-Then rule b is: @{
-Then rule c is: [
-Then rule d is: 2.0
-Then rule e is: [three] 2.0
+Then rule x is: "@ one = 1.0, two = 2.0, three = [field]"
+Then rule y is: "@ one = [one], two = @{two}"
+Then rule a is: "@"
+Then rule b is: "@{"
+Then rule c is: "["
+Then rule d is: "2.0"
+Then rule e is: "[three] 2.0"
 
 Scenario: Multiple Values Evaluation
 Given a parser
 When the following source is parsed:
     xyz: 1 + 2, 2 + 3, 3 + 4;
 Then rule xyz is: 1 + 2, 2 + 3, 3 + 4
-Then rule xyz evaluates into: [3, 5, 7]
+Then rule xyz evaluates into: 3, 5, 7
 
 Scenario: Function call
 Given a parser with constant folding

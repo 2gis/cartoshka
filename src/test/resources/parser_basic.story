@@ -31,10 +31,10 @@ When the following source is parsed:
         }
       }
     }
-Then ruleset 1 contains classes: class-1, class-2, class-3
-Then ruleset 2 contains ids: id1, id2
+Then ruleset 1 contains classes: .class-1, .class-2, .class-3
+Then ruleset 2 contains ids: #id1, #id2
 Then ruleset 2 contains attachments: x/attachment-1, attachment-2, attachment-3
-Then ruleset 3 contains filters: [[f1] = v1], [[f2] > 10]
+Then ruleset 3 contains filters: [f1 = "v1"], [f2 > 10]
 Then color line-color as hex is: #AABBCC
 Then rule line-width is: 2.2
 Then rule line-opacity is: 0.4
