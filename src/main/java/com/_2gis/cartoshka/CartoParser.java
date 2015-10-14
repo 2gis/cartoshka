@@ -19,12 +19,12 @@ public final class CartoParser extends com._2gis.cartoshka.scanner.Scanner {
 
     private final Collection<Source> sources;
 
-    private Context context;
+    private SymbolTable symbolTable;
 
     public CartoParser() {
         this.functions = new HashMap<>();
         this.sources = new LinkedList<>();
-        this.context = new Context();
+        this.symbolTable = new SymbolTable();
         for (Function function : Functions.BUILTIN_FUNCTIONS) {
             addOrReplaceFunction(function);
         }
@@ -42,7 +42,7 @@ public final class CartoParser extends com._2gis.cartoshka.scanner.Scanner {
             root.addAll(parsePrimary());
         }
 
-        return new Style(root, context);
+        return new Style(root, symbolTable);
     }
 
     public void addOrReplaceFunction(Function function) {
@@ -56,7 +56,7 @@ public final class CartoParser extends com._2gis.cartoshka.scanner.Scanner {
         while (peek().getType() != TokenType.EOS && peek().getType() != TokenType.RBRACE) {
             switch (peek().getType()) {
                 case VARIABLE:
-                    Rule variable = context.setVariable(parseRule());
+                    Rule variable = symbolTable.setVariable(parseRule());
                     nodes.add(variable);
                     break;
 
@@ -65,9 +65,9 @@ public final class CartoParser extends com._2gis.cartoshka.scanner.Scanner {
                     break;
 
                 default:
-                    context = context.createNestedBlockContext();
+                    symbolTable = symbolTable.createNested();
                     nodes.add(parseRuleSet());
-                    context = context.getParent();
+                    symbolTable = symbolTable.getParent();
             }
         }
 
@@ -150,7 +150,7 @@ public final class CartoParser extends com._2gis.cartoshka.scanner.Scanner {
 
             case VARIABLE:
                 Token variable = next();
-                return new Variable(variable.getLocation(), context, variable.getText());
+                return new Variable(variable.getLocation(), symbolTable, variable.getText());
 
             case DIMENSION_LITERAL:
                 return parseDimension();
@@ -194,7 +194,7 @@ public final class CartoParser extends com._2gis.cartoshka.scanner.Scanner {
 
     private Expression parseString(boolean isURL) {
         Token token = next();
-        ExpandableText text = new ExpandableText(token.getLocation(), context, token.getText(), isURL);
+        ExpandableText text = new ExpandableText(token.getLocation(), symbolTable, token.getText(), isURL);
         if (text.isPlain()) {
             return text.getExpressions().get(0);
         }

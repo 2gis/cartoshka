@@ -1,6 +1,6 @@
 package com._2gis.cartoshka.tree;
 
-import com._2gis.cartoshka.Context;
+import com._2gis.cartoshka.SymbolTable;
 import com._2gis.cartoshka.Visitor;
 
 import java.util.List;
@@ -9,17 +9,16 @@ import java.util.List;
 public class Style extends Node {
     private final List<Node> block;
 
-    private final Context context;
+    private final SymbolTable symbolTable;
 
-    public Style(List<Node> block, Context context) {
+    public Style(List<Node> block, SymbolTable symbolTable) {
         super(null);
         this.block = block;
-        this.context = context;
-
+        this.symbolTable = symbolTable;
     }
 
-    public Context getContext() {
-        return context;
+    public SymbolTable getSymbolTable() {
+        return symbolTable;
     }
 
     public List<Node> getBlock() {

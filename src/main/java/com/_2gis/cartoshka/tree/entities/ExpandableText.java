@@ -1,7 +1,7 @@
 package com._2gis.cartoshka.tree.entities;
 
-import com._2gis.cartoshka.Context;
 import com._2gis.cartoshka.Location;
+import com._2gis.cartoshka.SymbolTable;
 import com._2gis.cartoshka.Visitor;
 import com._2gis.cartoshka.tree.entities.literals.Text;
 
@@ -9,13 +9,13 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class ExpandableText extends Expression {
-    private final Context context;
+    private final SymbolTable symbolTable;
     private final boolean isURL;
     private List<Expression> expressions;
 
-    public ExpandableText(Location location, Context context, String value, boolean isURL) {
+    public ExpandableText(Location location, SymbolTable symbolTable, String value, boolean isURL) {
         super(location);
-        this.context = context;
+        this.symbolTable = symbolTable;
         this.isURL = isURL;
         this.expressions = parse(value);
     }
@@ -54,7 +54,7 @@ public class ExpandableText extends Expression {
                                 sb.setLength(0);
                             }
 
-                            expressions.add(new Variable(getSubLocation(start), context, "@" + name));
+                            expressions.add(new Variable(getSubLocation(start), symbolTable, "@" + name));
                         }
 
                         start = end + 1;

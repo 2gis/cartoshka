@@ -5,16 +5,16 @@ import com._2gis.cartoshka.tree.entities.Value;
 
 import java.util.HashMap;
 
-public class Context {
+public class SymbolTable {
     private final HashMap<String, Value> variables = new HashMap<>();
 
-    private final Context parent;
+    private final SymbolTable parent;
 
-    public Context() {
+    public SymbolTable() {
         this.parent = null;
     }
 
-    protected Context(Context parent) {
+    protected SymbolTable(SymbolTable parent) {
         this.parent = parent;
     }
 
@@ -36,11 +36,11 @@ public class Context {
         return value;
     }
 
-    public Context createNestedBlockContext() {
-        return new Context(this);
+    public SymbolTable createNested() {
+        return new SymbolTable(this);
     }
 
-    public Context getParent() {
+    public SymbolTable getParent() {
         return parent;
     }
 
