@@ -26,6 +26,11 @@ public class Block extends Node {
     }
 
     @Override
+    public NodeType type() {
+        return NodeType.BLOCK;
+    }
+
+    @Override
     public <R, P> R accept(Visitor<R, P> visitor, P params) {
         return visitor.visitBlock(this, params);
     }

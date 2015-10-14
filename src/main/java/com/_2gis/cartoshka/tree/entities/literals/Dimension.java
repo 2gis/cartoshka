@@ -4,6 +4,7 @@ import com._2gis.cartoshka.CartoshkaException;
 import com._2gis.cartoshka.Location;
 import com._2gis.cartoshka.Visitor;
 import com._2gis.cartoshka.scanner.TokenType;
+import com._2gis.cartoshka.tree.NodeType;
 import com._2gis.cartoshka.tree.entities.Literal;
 
 public class Dimension extends Literal {
@@ -39,10 +40,10 @@ public class Dimension extends Literal {
 
     @Override
     public Literal operate(TokenType operator, Literal operand) {
-        if (operand.isDimension() || operand.isNumeric()) {
+        if (operand.type() == NodeType.DIMENSION || operand.type() == NodeType.NUMBER) {
             Double left = this.getValue();
             Double right = null;
-            if (operand.isDimension()) {
+            if (operand.type() == NodeType.DIMENSION) {
                 Dimension dimension = (Dimension) operand;
                 if (unit.equals(dimension.getUnit())) {
                     right = dimension.getValue();
@@ -71,11 +72,6 @@ public class Dimension extends Literal {
     }
 
     @Override
-    public boolean isDimension() {
-        return true;
-    }
-
-    @Override
     public Double toNumber() {
         if (unit.equals("%")) {
             return value / 100.0;
@@ -87,6 +83,11 @@ public class Dimension extends Literal {
     @Override
     public boolean hasDot() {
         return hasDot;
+    }
+
+    @Override
+    public NodeType type() {
+        return NodeType.DIMENSION;
     }
 
     @Override
@@ -105,7 +106,7 @@ public class Dimension extends Literal {
 
     @Override
     public int compareTo(Literal o) {
-        if (o.isDimension()) {
+        if (o.type() == NodeType.DIMENSION) {
             Dimension other = (Dimension) o;
             if (other.getUnit().equals(unit)) {
                 return Double.compare(value, other.getValue());

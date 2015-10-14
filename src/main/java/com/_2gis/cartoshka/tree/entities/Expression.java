@@ -7,8 +7,4 @@ public abstract class Expression extends Node {
     public Expression(Location location) {
         super(location);
     }
-
-    public boolean isLiteral() {
-        return false;
-    }
 }

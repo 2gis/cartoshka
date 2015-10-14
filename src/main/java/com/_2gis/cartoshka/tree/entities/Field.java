@@ -2,6 +2,7 @@ package com._2gis.cartoshka.tree.entities;
 
 import com._2gis.cartoshka.Location;
 import com._2gis.cartoshka.Visitor;
+import com._2gis.cartoshka.tree.NodeType;
 
 public class Field extends Expression {
     private final String name;
@@ -13,6 +14,11 @@ public class Field extends Expression {
 
     public String getName() {
         return name;
+    }
+
+    @Override
+    public NodeType type() {
+        return NodeType.FIELD;
     }
 
     @Override

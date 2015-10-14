@@ -1,6 +1,7 @@
 package com._2gis.cartoshka.function;
 
 import com._2gis.cartoshka.CartoshkaException;
+import com._2gis.cartoshka.tree.NodeType;
 import com._2gis.cartoshka.tree.entities.Literal;
 import com._2gis.cartoshka.tree.entities.literals.Color;
 
@@ -14,12 +15,12 @@ public class Arguments {
             throw CartoshkaException.functionIncorrectArgumentType(literal.getLocation());
         }
 
-        return ((literal.hasDot() || literal.isDimension()) && mapTo255) ? arg * 0xFF : arg;
+        return ((literal.hasDot() || literal.type() == NodeType.DIMENSION) && mapTo255) ? arg * 0xFF : arg;
     }
 
     public static Double percent(Iterator<Literal> args) {
         Literal literal = args.next();
-        if (literal.isDimension()) {
+        if (literal.type() == NodeType.DIMENSION) {
             // only percent-unit dimension should return a numeric value
             return literal.toNumber();
         }
@@ -29,7 +30,7 @@ public class Arguments {
 
     public static Color color(Iterator<Literal> args) {
         Literal arg = args.next();
-        if (!arg.isColor()) {
+        if (arg.type() != NodeType.COLOR) {
             throw CartoshkaException.functionIncorrectArgumentType(arg.getLocation());
         }
 

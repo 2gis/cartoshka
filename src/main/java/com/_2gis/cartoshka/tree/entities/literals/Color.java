@@ -4,6 +4,7 @@ import com._2gis.cartoshka.CartoshkaException;
 import com._2gis.cartoshka.Location;
 import com._2gis.cartoshka.Visitor;
 import com._2gis.cartoshka.scanner.TokenType;
+import com._2gis.cartoshka.tree.NodeType;
 import com._2gis.cartoshka.tree.entities.Literal;
 
 public class Color extends Literal {
@@ -115,8 +116,8 @@ public class Color extends Literal {
     }
 
     @Override
-    public boolean isColor() {
-        return true;
+    public NodeType type() {
+        return NodeType.COLOR;
     }
 
     @Override
@@ -136,9 +137,9 @@ public class Color extends Literal {
     @Override
     public Literal operate(TokenType operator, Literal operand) {
         Color right = null;
-        if (operand.isColor()) {
+        if (operand.type() == NodeType.COLOR) {
             right = (Color) operand;
-        } else if (operand.isDimension() && operand.toNumber() != null) {
+        } else if (operand.type() == NodeType.DIMENSION && operand.toNumber() != null) {
             int v = (int) (operand.toNumber() * 0xFF);
             right = fromRGBA(Location.min(getLocation(), operand.getLocation()), v, v, v, 1.0);
         }
@@ -161,7 +162,7 @@ public class Color extends Literal {
 
     @Override
     public int compareTo(Literal o) {
-        if (o.isColor()) {
+        if (o.type() == NodeType.COLOR) {
             Color other = (Color) o;
             return (int) Math.round(1000 * Math.sqrt(
                     Math.pow(getRed() - other.getRed(), 2)

@@ -125,7 +125,7 @@ public class EvaluateVisitor implements Visitor<Literal, Feature> {
     public Literal visitBinaryOperationExpression(BinaryOperation operation, Feature feature) {
         Literal leftOp = operation.getLeft().accept(this, feature);
         Literal rightOp = operation.getRight().accept(this, feature);
-        if ((!leftOp.isColor() && rightOp.isColor()) || (leftOp.isNumeric() && rightOp.isDimension())) {
+        if ((leftOp.type() != NodeType.COLOR && rightOp.type() == NodeType.COLOR) || (leftOp.type() == NodeType.NUMBER && rightOp.type() == NodeType.DIMENSION)) {
             Literal tmp = leftOp;
             leftOp = rightOp;
             rightOp = tmp;

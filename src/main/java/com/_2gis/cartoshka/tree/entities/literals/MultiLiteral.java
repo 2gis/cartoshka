@@ -3,6 +3,7 @@ package com._2gis.cartoshka.tree.entities.literals;
 import com._2gis.cartoshka.CartoshkaException;
 import com._2gis.cartoshka.Location;
 import com._2gis.cartoshka.Visitor;
+import com._2gis.cartoshka.tree.NodeType;
 import com._2gis.cartoshka.tree.entities.Literal;
 
 import java.util.Collection;
@@ -16,6 +17,11 @@ public class MultiLiteral extends Literal {
         this.value = literals;
     }
 
+
+    @Override
+    public NodeType type() {
+        return NodeType.MULTI_LITERAL;
+    }
 
     @Override
     public <R, P> R accept(Visitor<R, P> visitor, P params) {
@@ -40,11 +46,6 @@ public class MultiLiteral extends Literal {
 
     public Collection<Literal> getValue() {
         return value;
-    }
-
-    @Override
-    public boolean isMulti() {
-        return true;
     }
 
     @Override

@@ -17,39 +17,7 @@ public abstract class Literal extends Expression implements Comparable<Literal> 
         throw CartoshkaException.invalidOperation(getLocation());
     }
 
-    public boolean isBoolean() {
-        return false;
-    }
-
-    public boolean isColor() {
-        return false;
-    }
-
-    public boolean isDimension() {
-        return false;
-    }
-
-    public boolean isKeyword() {
-        return false;
-    }
-
-    public boolean isNumeric() {
-        return false;
-    }
-
-    public boolean isImageFilter() {
-        return false;
-    }
-
-    public boolean isText() {
-        return false;
-    }
-
     public boolean hasDot() {
-        return false;
-    }
-
-    public boolean isMulti() {
         return false;
     }
 
@@ -59,13 +27,4 @@ public abstract class Literal extends Expression implements Comparable<Literal> 
 
     @Override
     public abstract String toString();
-
-    public boolean isURL() {
-        return false;
-    }
-
-    @Override
-    public boolean isLiteral() {
-        return true;
-    }
 }

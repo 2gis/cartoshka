@@ -3,6 +3,7 @@ package com._2gis.cartoshka.tree.entities.literals;
 import com._2gis.cartoshka.CartoshkaException;
 import com._2gis.cartoshka.Location;
 import com._2gis.cartoshka.Visitor;
+import com._2gis.cartoshka.tree.NodeType;
 import com._2gis.cartoshka.tree.entities.Literal;
 
 public class ImageFilter extends Literal {
@@ -17,6 +18,11 @@ public class ImageFilter extends Literal {
     }
 
     @Override
+    public NodeType type() {
+        return NodeType.IMAGE_FILTER;
+    }
+
+    @Override
     public <R, P> R accept(Visitor<R, P> visitor, P params) {
         return visitor.visitImageFilterLiteral(this, params);
     }
@@ -24,11 +30,6 @@ public class ImageFilter extends Literal {
     @Override
     public String toString() {
         return String.format("%s(%s)", name, args.toString());
-    }
-
-    @Override
-    public boolean isImageFilter() {
-        return true;
     }
 
     public String getName() {

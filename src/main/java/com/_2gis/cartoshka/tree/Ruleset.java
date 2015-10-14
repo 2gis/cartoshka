@@ -24,6 +24,11 @@ public class Ruleset extends Node {
     }
 
     @Override
+    public NodeType type() {
+        return NodeType.RULESET;
+    }
+
+    @Override
     public <R, P> R accept(Visitor<R, P> visitor, P params) {
         return visitor.visitRuleset(this, params);
     }

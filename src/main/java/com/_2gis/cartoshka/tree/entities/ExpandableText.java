@@ -3,6 +3,7 @@ package com._2gis.cartoshka.tree.entities;
 import com._2gis.cartoshka.Location;
 import com._2gis.cartoshka.SymbolTable;
 import com._2gis.cartoshka.Visitor;
+import com._2gis.cartoshka.tree.NodeType;
 import com._2gis.cartoshka.tree.entities.literals.Text;
 
 import java.util.LinkedList;
@@ -93,12 +94,17 @@ public class ExpandableText extends Expression {
     }
 
     @Override
+    public NodeType type() {
+        return NodeType.EXPANDABLE_TEXT;
+    }
+
+    @Override
     public <R, P> R accept(Visitor<R, P> visitor, P params) {
         return visitor.visitExpandableTextExpression(this, params);
     }
 
     public boolean isPlain() {
-        return expressions.size() == 1 && (expressions.get(0).isLiteral());
+        return expressions.size() == 1 && (expressions.get(0).type() == NodeType.TEXT);
     }
 
     private Location getSubLocation(int start) {

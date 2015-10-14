@@ -22,6 +22,11 @@ public class Element extends Node {
     }
 
     @Override
+    public NodeType type() {
+        return NodeType.ELEMENT;
+    }
+
+    @Override
     public <R, P> R accept(Visitor<R, P> visitor, P params) {
         return visitor.visitElement(this, params);
     }

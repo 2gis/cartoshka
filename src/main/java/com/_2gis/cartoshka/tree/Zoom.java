@@ -28,6 +28,11 @@ public class Zoom extends Node {
     }
 
     @Override
+    public NodeType type() {
+        return NodeType.ZOOM;
+    }
+
+    @Override
     public <R, P> R accept(Visitor<R, P> visitor, P params) {
         return visitor.visitZoom(this, params);
     }

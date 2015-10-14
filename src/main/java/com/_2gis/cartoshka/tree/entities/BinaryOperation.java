@@ -3,6 +3,7 @@ package com._2gis.cartoshka.tree.entities;
 import com._2gis.cartoshka.Location;
 import com._2gis.cartoshka.Visitor;
 import com._2gis.cartoshka.scanner.TokenType;
+import com._2gis.cartoshka.tree.NodeType;
 
 public class BinaryOperation extends Expression {
     private final TokenType operator;
@@ -36,6 +37,11 @@ public class BinaryOperation extends Expression {
 
     public void setRight(Expression right) {
         this.right = right;
+    }
+
+    @Override
+    public NodeType type() {
+        return NodeType.BINARY_OPERATION;
     }
 
     @Override

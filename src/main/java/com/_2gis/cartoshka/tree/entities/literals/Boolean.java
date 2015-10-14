@@ -3,6 +3,7 @@ package com._2gis.cartoshka.tree.entities.literals;
 import com._2gis.cartoshka.CartoshkaException;
 import com._2gis.cartoshka.Location;
 import com._2gis.cartoshka.Visitor;
+import com._2gis.cartoshka.tree.NodeType;
 import com._2gis.cartoshka.tree.entities.Literal;
 
 public class Boolean extends Literal {
@@ -18,8 +19,8 @@ public class Boolean extends Literal {
     }
 
     @Override
-    public boolean isBoolean() {
-        return true;
+    public NodeType type() {
+        return NodeType.BOOLEAN;
     }
 
     @Override
@@ -34,7 +35,7 @@ public class Boolean extends Literal {
 
     @Override
     public int compareTo(Literal o) {
-        if (o.isBoolean()) {
+        if (o.type() == NodeType.BOOLEAN) {
             Boolean other = (Boolean) o;
             return java.lang.Boolean.compare(getValue(), other.getValue());
         }

@@ -3,6 +3,7 @@ package com._2gis.cartoshka.tree.entities;
 import com._2gis.cartoshka.Function;
 import com._2gis.cartoshka.Location;
 import com._2gis.cartoshka.Visitor;
+import com._2gis.cartoshka.tree.NodeType;
 
 import java.util.Collection;
 
@@ -26,6 +27,11 @@ public class Call extends Expression {
 
     public void setArgs(Collection<Expression> args) {
         this.args = args;
+    }
+
+    @Override
+    public NodeType type() {
+        return NodeType.CALL;
     }
 
     @Override

@@ -3,6 +3,7 @@ package com._2gis.cartoshka.tree.entities;
 import com._2gis.cartoshka.Location;
 import com._2gis.cartoshka.Visitor;
 import com._2gis.cartoshka.scanner.TokenType;
+import com._2gis.cartoshka.tree.NodeType;
 
 public class UnaryOperation extends Expression {
     private final TokenType operator;
@@ -26,6 +27,11 @@ public class UnaryOperation extends Expression {
 
     public void setExpression(Expression expression) {
         this.expression = expression;
+    }
+
+    @Override
+    public NodeType type() {
+        return NodeType.UNARY_OPERATION;
     }
 
     @Override

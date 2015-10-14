@@ -79,7 +79,7 @@ public class ParserSteps {
                 Rule r = (Rule) node;
                 if (r.getFullName().equals(rule)) {
                     Literal literal = r.getValue().accept(new EvaluateVisitor(), null);
-                    if (literal.isColor()) {
+                    if (literal.type() == NodeType.COLOR) {
                         Color color = (Color) literal;
                         String expected = value.trim();
                         String given = String.format("#%02X%02X%02X", color.getRed(), color.getGreen(), color.getBlue());

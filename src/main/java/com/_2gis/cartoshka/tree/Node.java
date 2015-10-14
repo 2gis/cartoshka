@@ -14,5 +14,7 @@ public abstract class Node {
         return location;
     }
 
+    public abstract NodeType type();
+
     public abstract <R, P> R accept(Visitor<R, P> visitor, P params);
 }

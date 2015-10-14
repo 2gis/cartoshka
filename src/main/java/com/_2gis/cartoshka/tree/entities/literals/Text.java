@@ -3,6 +3,7 @@ package com._2gis.cartoshka.tree.entities.literals;
 import com._2gis.cartoshka.Location;
 import com._2gis.cartoshka.Visitor;
 import com._2gis.cartoshka.scanner.TokenType;
+import com._2gis.cartoshka.tree.NodeType;
 import com._2gis.cartoshka.tree.entities.Literal;
 
 public class Text extends Literal {
@@ -20,6 +21,11 @@ public class Text extends Literal {
     }
 
     @Override
+    public NodeType type() {
+        return NodeType.TEXT;
+    }
+
+    @Override
     public <R, P> R accept(Visitor<R, P> visitor, P params) {
         return visitor.visitTextLiteral(this, params);
     }
@@ -30,13 +36,8 @@ public class Text extends Literal {
     }
 
     @Override
-    public boolean isText() {
-        return true;
-    }
-
-    @Override
     public Literal operate(TokenType operator, Literal operand) {
-        if (operator == TokenType.ADD && (operand.isNumeric() || operand.isText() || operand.isURL())) {
+        if (operator == TokenType.ADD && (operand.type() == NodeType.NUMBER || operand.type() == NodeType.TEXT)) {
             return new Text(Location.min(getLocation(), operand.getLocation()), this.toString() + operand.toString(), isURL, false);
         }
 
@@ -47,12 +48,10 @@ public class Text extends Literal {
         return value;
     }
 
-    @Override
     public boolean isURL() {
         return isURL;
     }
 
-    @Override
     public boolean isKeyword() {
         return isKeyword;
     }

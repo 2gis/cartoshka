@@ -3,6 +3,7 @@ package com._2gis.cartoshka.tree.entities.literals;
 import com._2gis.cartoshka.Location;
 import com._2gis.cartoshka.Visitor;
 import com._2gis.cartoshka.scanner.TokenType;
+import com._2gis.cartoshka.tree.NodeType;
 import com._2gis.cartoshka.tree.entities.Literal;
 
 public class Numeric extends Literal {
@@ -35,7 +36,7 @@ public class Numeric extends Literal {
 
     @Override
     public Literal operate(TokenType operator, Literal operand) {
-        if (operand.isNumeric()) {
+        if (operand.type() == NodeType.NUMBER) {
             switch (operator) {
                 case ADD:
                     return new Numeric(Location.min(getLocation(), operand.getLocation()), value + operand.toNumber(), hasDot || operand.hasDot());
@@ -48,7 +49,7 @@ public class Numeric extends Literal {
                 case MOD:
                     return new Numeric(Location.min(getLocation(), operand.getLocation()), value % operand.toNumber(), hasDot || operand.hasDot());
             }
-        } else if (operand.isText() && operator == TokenType.ADD) {
+        } else if (operand.type() == NodeType.TEXT && operator == TokenType.ADD) {
             return new Text(Location.min(getLocation(), operand.getLocation()), toString() + operand.toString(), false, false);
         }
 
@@ -56,13 +57,13 @@ public class Numeric extends Literal {
     }
 
     @Override
-    public boolean isNumeric() {
-        return true;
+    public Double toNumber() {
+        return value;
     }
 
     @Override
-    public Double toNumber() {
-        return value;
+    public NodeType type() {
+        return NodeType.NUMBER;
     }
 
     @Override

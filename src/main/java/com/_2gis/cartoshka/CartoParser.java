@@ -371,11 +371,8 @@ public final class CartoParser extends com._2gis.cartoshka.scanner.Scanner {
         Token op = expect(TokenType.EQ, TokenType.NE, TokenType.LT, TokenType.GT, TokenType.LTE, TokenType.GTE);
         Expression right = parseExpression();
         expect(TokenType.RBRACK);
-        if (left.isLiteral()) {
-            Literal literal = (Literal) left;
-            if (literal.isText()) {
-                left = new Field(literal.getLocation(), literal.toString());
-            }
+        if (left.type() == NodeType.TEXT) {
+            left = new Field(left.getLocation(), left.toString());
         }
 
         return new Filter(location, op.getType(), left, right);

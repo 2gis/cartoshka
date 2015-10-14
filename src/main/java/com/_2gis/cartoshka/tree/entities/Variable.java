@@ -4,6 +4,7 @@ import com._2gis.cartoshka.CartoshkaException;
 import com._2gis.cartoshka.Location;
 import com._2gis.cartoshka.SymbolTable;
 import com._2gis.cartoshka.Visitor;
+import com._2gis.cartoshka.tree.NodeType;
 
 public class Variable extends Expression {
     private final String name;
@@ -14,6 +15,11 @@ public class Variable extends Expression {
         super(location);
         this.symbolTable = symbolTable;
         this.name = name;
+    }
+
+    @Override
+    public NodeType type() {
+        return NodeType.VARIABLE;
     }
 
     @Override
