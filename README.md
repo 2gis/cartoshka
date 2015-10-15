@@ -14,8 +14,29 @@
 *   Single jar with no additional dependencies
 
 ## Setup
+WARNING: It's a development version and it may not work as expected.
 
-The project binaries are not published yet since development is in progress.
+Add the following to your maven configuration or taylor to your own dependency management system.
+```xml
+<repositories>
+    <repository>
+        <id>sonatype-nexus-snapshots</id>
+        <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+        <snapshots>
+            <enabled>true</enabled>
+        </snapshots>
+    </repository>
+</repositories>
+```
+```xml
+<dependencies>
+    <dependency>
+        <groupId>com.2gis</groupId>
+        <artifactId>cartoshka</artifactId>
+        <version>0.1-SNAPSHOT</version>
+    </dependency>
+</dependencies>
+```
 
 ## Quickstart
 Look at the simple example below
