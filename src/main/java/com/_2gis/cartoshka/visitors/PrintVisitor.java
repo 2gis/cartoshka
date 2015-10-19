@@ -81,7 +81,7 @@ public class PrintVisitor implements Visitor<String, Object> {
     @Override
     public String visitRuleset(Ruleset ruleset, Object params) {
         enterSection();
-        visitAll(ruleset.getSelectors(), params, ", ");
+        visitAll(ruleset.getSelectors(), params, ",\n");
 
         increaseIndent();
         print(" {\n");
