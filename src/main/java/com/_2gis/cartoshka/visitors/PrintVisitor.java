@@ -1,6 +1,7 @@
 package com._2gis.cartoshka.visitors;
 
 import com._2gis.cartoshka.Visitor;
+import com._2gis.cartoshka.scanner.TokenType;
 import com._2gis.cartoshka.tree.*;
 import com._2gis.cartoshka.tree.entities.*;
 import com._2gis.cartoshka.tree.entities.literals.Boolean;
@@ -25,6 +26,19 @@ public class PrintVisitor implements Visitor<String, Object> {
 
     public PrintVisitor(int indentSize) {
         this.indentSize = indentSize;
+    }
+
+    private static boolean needParenthesis(TokenType operator, Expression expression, boolean left) {
+        if (expression.type() == NodeType.BINARY_OPERATION) {
+            BinaryOperation bop = (BinaryOperation) expression;
+            int p0 = operator.getPrecedence();
+            int p1 = bop.getOperator().getPrecedence();
+            if (p1 < p0 || (p1 == p0 && !left)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private void print(String format, Object... args) {
@@ -218,9 +232,26 @@ public class PrintVisitor implements Visitor<String, Object> {
     @Override
     public String visitBinaryOperationExpression(BinaryOperation operation, Object params) {
         enterSection();
+        boolean parenthesis = needParenthesis(operation.getOperator(), operation.getLeft(), true);
+        if (parenthesis) {
+            print("(");
+        }
         operation.getLeft().accept(this, params);
+        if (parenthesis) {
+            print(")");
+        }
+
         print(" %s ", operation.getOperator().getStr());
+
+        parenthesis = needParenthesis(operation.getOperator(), operation.getRight(), false);
+        if (parenthesis) {
+            print("(");
+        }
         operation.getRight().accept(this, params);
+        if (parenthesis) {
+            print(")");
+        }
+
         return leaveSection();
     }
 
