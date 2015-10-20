@@ -31,7 +31,7 @@ Add the following to your maven configuration or taylor to your own dependency m
 ```xml
 <dependencies>
     <dependency>
-        <groupId>com.2gis</groupId>
+        <groupId>com.2gis.cartoshka</groupId>
         <artifactId>cartoshka</artifactId>
         <version>0.1-SNAPSHOT</version>
     </dependency>
