@@ -11,7 +11,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Stack;
 
-public class PrintVisitor implements Visitor<String, Object> {
+public class PrintVisitor implements Visitor<String, Void> {
     private final StringBuilder out = new StringBuilder();
 
     private final Stack<Integer> sections = new Stack<>();
@@ -75,7 +75,7 @@ public class PrintVisitor implements Visitor<String, Object> {
         indent -= indentSize;
     }
 
-    private void visitAll(Collection<? extends Node> nodes, Object params, String delim) {
+    private void visitAll(Collection<? extends Node> nodes, Void params, String delim) {
         Iterator<? extends Node> iterator = nodes.iterator();
         while (iterator.hasNext()) {
             iterator.next().accept(this, params);
@@ -86,14 +86,14 @@ public class PrintVisitor implements Visitor<String, Object> {
     }
 
     @Override
-    public String visitBlock(Block block, Object params) {
+    public String visitBlock(Block block, Void params) {
         enterSection();
         visitAll(block.getNodes(), params, "\n");
         return leaveSection();
     }
 
     @Override
-    public String visitRuleset(Ruleset ruleset, Object params) {
+    public String visitRuleset(Ruleset ruleset, Void params) {
         enterSection();
         visitAll(ruleset.getSelectors(), params, ",\n");
 
@@ -107,7 +107,7 @@ public class PrintVisitor implements Visitor<String, Object> {
     }
 
     @Override
-    public String visitRule(Rule rule, Object params) {
+    public String visitRule(Rule rule, Void params) {
         enterSection();
         print("%s: ", rule.getFullName());
         rule.getValue().accept(this, params);
@@ -116,7 +116,7 @@ public class PrintVisitor implements Visitor<String, Object> {
     }
 
     @Override
-    public String visitSelector(Selector selector, Object params) {
+    public String visitSelector(Selector selector, Void params) {
         enterSection();
         visitAll(selector.getElements(), params, "");
         visitAll(selector.getFilters(), params, "");
@@ -129,7 +129,7 @@ public class PrintVisitor implements Visitor<String, Object> {
     }
 
     @Override
-    public String visitZoom(Zoom zoom, Object params) {
+    public String visitZoom(Zoom zoom, Void params) {
         enterSection();
         print("[zoom %s ", zoom.getOperator().getStr());
         zoom.getExpression().accept(this, params);
@@ -138,7 +138,7 @@ public class PrintVisitor implements Visitor<String, Object> {
     }
 
     @Override
-    public String visitFilter(Filter filter, Object params) {
+    public String visitFilter(Filter filter, Void params) {
         enterSection();
         print("[");
         insideFilter = true;
@@ -151,7 +151,7 @@ public class PrintVisitor implements Visitor<String, Object> {
     }
 
     @Override
-    public String visitElement(Element element, Object params) {
+    public String visitElement(Element element, Void params) {
         enterSection();
         switch (element.getType()) {
             case CLASS:
@@ -167,14 +167,14 @@ public class PrintVisitor implements Visitor<String, Object> {
     }
 
     @Override
-    public String visitValueExpression(Value value, Object params) {
+    public String visitValueExpression(Value value, Void params) {
         enterSection();
         visitAll(value.getExpressions(), params, ", ");
         return leaveSection();
     }
 
     @Override
-    public String visitVariableExpression(Variable variable, Object params) {
+    public String visitVariableExpression(Variable variable, Void params) {
         enterSection();
         if (insideExpandableText) {
             print("@{%s}", variable.getName().substring(1));
@@ -186,7 +186,7 @@ public class PrintVisitor implements Visitor<String, Object> {
     }
 
     @Override
-    public String visitUnaryOperationExpression(UnaryOperation operation, Object params) {
+    public String visitUnaryOperationExpression(UnaryOperation operation, Void params) {
         enterSection();
         print(operation.getOperator().getStr());
         operation.getExpression().accept(this, params);
@@ -194,7 +194,7 @@ public class PrintVisitor implements Visitor<String, Object> {
     }
 
     @Override
-    public String visitFieldExpression(Field field, Object params) {
+    public String visitFieldExpression(Field field, Void params) {
         enterSection();
         if (!insideFilter) {
             print("[");
@@ -209,7 +209,7 @@ public class PrintVisitor implements Visitor<String, Object> {
     }
 
     @Override
-    public String visitExpandableTextExpression(ExpandableText text, Object params) {
+    public String visitExpandableTextExpression(ExpandableText text, Void params) {
         enterSection();
         print("\"");
         insideExpandableText = true;
@@ -221,7 +221,7 @@ public class PrintVisitor implements Visitor<String, Object> {
     }
 
     @Override
-    public String visitCallExpression(Call call, Object params) {
+    public String visitCallExpression(Call call, Void params) {
         enterSection();
         print("%s(", call.getFunction().getName());
         visitAll(call.getArgs(), params, ", ");
@@ -230,7 +230,7 @@ public class PrintVisitor implements Visitor<String, Object> {
     }
 
     @Override
-    public String visitBinaryOperationExpression(BinaryOperation operation, Object params) {
+    public String visitBinaryOperationExpression(BinaryOperation operation, Void params) {
         enterSection();
         boolean parenthesis = needParenthesis(operation.getOperator(), operation.getLeft(), true);
         if (parenthesis) {
@@ -256,49 +256,49 @@ public class PrintVisitor implements Visitor<String, Object> {
     }
 
     @Override
-    public String visitBooleanLiteral(Boolean value, Object params) {
+    public String visitBooleanLiteral(Boolean value, Void params) {
         enterSection();
         print(value.toString());
         return leaveSection();
     }
 
     @Override
-    public String visitColorLiteral(Color color, Object params) {
+    public String visitColorLiteral(Color color, Void params) {
         enterSection();
         print(color.toString());
         return leaveSection();
     }
 
     @Override
-    public String visitDimensionLiteral(Dimension dimension, Object params) {
+    public String visitDimensionLiteral(Dimension dimension, Void params) {
         enterSection();
         print(dimension.toString());
         return leaveSection();
     }
 
     @Override
-    public String visitImageFilterLiteral(ImageFilter filter, Object params) {
+    public String visitImageFilterLiteral(ImageFilter filter, Void params) {
         enterSection();
         print(filter.toString());
         return leaveSection();
     }
 
     @Override
-    public String visitMultiLiteral(MultiLiteral multiLiteral, Object params) {
+    public String visitMultiLiteral(MultiLiteral multiLiteral, Void params) {
         enterSection();
         print(multiLiteral.toString());
         return leaveSection();
     }
 
     @Override
-    public String visitNumericLiteral(Numeric number, Object params) {
+    public String visitNumericLiteral(Numeric number, Void params) {
         enterSection();
         print(number.toString());
         return leaveSection();
     }
 
     @Override
-    public String visitTextLiteral(Text text, Object params) {
+    public String visitTextLiteral(Text text, Void params) {
         enterSection();
         if (!insideExpandableText && !text.isKeyword()) {
             print("\"");

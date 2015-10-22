@@ -11,56 +11,56 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Stack;
 
-public class ConstantFoldVisitor implements Visitor<Expression, Object> {
+public class ConstantFoldVisitor implements Visitor<Expression, Void> {
     private final VolatilityCheckVisitor checkIfVolatile = new VolatilityCheckVisitor();
 
     private final EvaluateVisitor evaluate = new EvaluateVisitor();
 
-    private void visitAll(Collection<? extends Node> nodes, Object params) {
+    private void visitAll(Collection<? extends Node> nodes, Void params) {
         for (Node node : nodes) {
             node.accept(this, params);
         }
     }
 
     @Override
-    public Expression visitBlock(Block block, Object params) {
+    public Expression visitBlock(Block block, Void params) {
         visitAll(block.getNodes(), params);
         return null;
     }
 
     @Override
-    public Expression visitRuleset(Ruleset ruleset, Object params) {
+    public Expression visitRuleset(Ruleset ruleset, Void params) {
         visitAll(ruleset.getSelectors(), params);
         ruleset.getBlock().accept(this, params);
         return null;
     }
 
     @Override
-    public Expression visitRule(Rule rule, Object params) {
+    public Expression visitRule(Rule rule, Void params) {
         rule.getValue().accept(this, params);
         return null;
     }
 
     @Override
-    public Expression visitElement(Element element, Object params) {
+    public Expression visitElement(Element element, Void params) {
         return null;
     }
 
     @Override
-    public Expression visitSelector(Selector selector, Object params) {
+    public Expression visitSelector(Selector selector, Void params) {
         visitAll(selector.getFilters(), params);
         visitAll(selector.getZooms(), params);
         return null;
     }
 
     @Override
-    public Expression visitZoom(Zoom zoom, Object params) {
+    public Expression visitZoom(Zoom zoom, Void params) {
         zoom.setExpression(zoom.getExpression().accept(this, params));
         return null;
     }
 
     @Override
-    public Expression visitFilter(Filter filter, Object params) {
+    public Expression visitFilter(Filter filter, Void params) {
         filter.setLeft(filter.getLeft().accept(this, params));
         filter.setRight(filter.getRight().accept(this, params));
         return null;
@@ -69,7 +69,7 @@ public class ConstantFoldVisitor implements Visitor<Expression, Object> {
     // E X P R E S S I O N S
 
     @Override
-    public Expression visitValueExpression(Value value, Object params) {
+    public Expression visitValueExpression(Value value, Void params) {
         List<Expression> newExpressions = new ArrayList<>();
         for (Expression expression : value.getExpressions()) {
             newExpressions.add(expression.accept(this, params));
@@ -80,7 +80,7 @@ public class ConstantFoldVisitor implements Visitor<Expression, Object> {
     }
 
     @Override
-    public Expression visitVariableExpression(Variable variable, Object params) {
+    public Expression visitVariableExpression(Variable variable, Void params) {
         if (variable.accept(checkIfVolatile, params)) {
             variable.getValue().accept(this, params);
             return variable;
@@ -90,7 +90,7 @@ public class ConstantFoldVisitor implements Visitor<Expression, Object> {
     }
 
     @Override
-    public Expression visitUnaryOperationExpression(UnaryOperation operation, Object params) {
+    public Expression visitUnaryOperationExpression(UnaryOperation operation, Void params) {
         if (operation.accept(checkIfVolatile, params)) {
             operation.setExpression(operation.getExpression().accept(this, params));
             return operation;
@@ -100,12 +100,12 @@ public class ConstantFoldVisitor implements Visitor<Expression, Object> {
     }
 
     @Override
-    public Expression visitFieldExpression(Field field, Object params) {
+    public Expression visitFieldExpression(Field field, Void params) {
         return field;
     }
 
     @Override
-    public Expression visitExpandableTextExpression(ExpandableText text, Object params) {
+    public Expression visitExpandableTextExpression(ExpandableText text, Void params) {
         if (text.accept(checkIfVolatile, params)) {
             Stack<Expression> stack = new Stack<>();
             for (Expression ex : text.getExpressions()) {
@@ -126,7 +126,7 @@ public class ConstantFoldVisitor implements Visitor<Expression, Object> {
     }
 
     @Override
-    public Expression visitCallExpression(Call call, Object params) {
+    public Expression visitCallExpression(Call call, Void params) {
         if (call.accept(checkIfVolatile, params)) {
             List<Expression> newArgs = new ArrayList<>();
             for (Expression arg : call.getArgs()) {
@@ -141,7 +141,7 @@ public class ConstantFoldVisitor implements Visitor<Expression, Object> {
     }
 
     @Override
-    public Expression visitBinaryOperationExpression(BinaryOperation operation, Object params) {
+    public Expression visitBinaryOperationExpression(BinaryOperation operation, Void params) {
         if (operation.accept(checkIfVolatile, params)) {
             operation.setLeft(operation.getLeft().accept(this, params));
             operation.setRight(operation.getRight().accept(this, params));
@@ -154,37 +154,37 @@ public class ConstantFoldVisitor implements Visitor<Expression, Object> {
     // L I T E R A L S
 
     @Override
-    public Expression visitBooleanLiteral(Boolean value, Object params) {
+    public Expression visitBooleanLiteral(Boolean value, Void params) {
         return value;
     }
 
     @Override
-    public Expression visitColorLiteral(Color color, Object params) {
+    public Expression visitColorLiteral(Color color, Void params) {
         return color;
     }
 
     @Override
-    public Expression visitDimensionLiteral(Dimension dimension, Object params) {
+    public Expression visitDimensionLiteral(Dimension dimension, Void params) {
         return dimension;
     }
 
     @Override
-    public Expression visitImageFilterLiteral(ImageFilter filter, Object params) {
+    public Expression visitImageFilterLiteral(ImageFilter filter, Void params) {
         return filter;
     }
 
     @Override
-    public Expression visitMultiLiteral(MultiLiteral multiLiteral, Object params) {
+    public Expression visitMultiLiteral(MultiLiteral multiLiteral, Void params) {
         return multiLiteral;
     }
 
     @Override
-    public Expression visitNumericLiteral(Numeric number, Object params) {
+    public Expression visitNumericLiteral(Numeric number, Void params) {
         return number;
     }
 
     @Override
-    public Expression visitTextLiteral(Text text, Object params) {
+    public Expression visitTextLiteral(Text text, Void params) {
         return text;
     }
 }
