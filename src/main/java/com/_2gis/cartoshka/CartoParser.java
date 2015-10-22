@@ -359,7 +359,7 @@ public final class CartoParser extends com._2gis.cartoshka.scanner.Scanner {
 
     private Zoom parseZoom() {
         Token zoom = expect(TokenType.ZOOM_KEYWORD);
-        Token op = expect(TokenType.EQ, TokenType.LT, TokenType.GT, TokenType.LTE, TokenType.GTE);
+        Token op = expect(TokenType.EQ, TokenType.NE, TokenType.LT, TokenType.GT, TokenType.LTE, TokenType.GTE);
         Expression expression = parseExpression();
         expect(TokenType.RBRACK);
         return new Zoom(zoom.getLocation(), op.getType(), expression);
