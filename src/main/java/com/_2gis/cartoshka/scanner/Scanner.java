@@ -24,7 +24,7 @@ public class Scanner {
     }
 
     private final StringBuilder literal = new StringBuilder();
-    protected char c0_;
+    private char c0_;
     private Reader reader;
     private Token next;
     private Token current;
@@ -67,7 +67,7 @@ public class Scanner {
         return current;
     }
 
-    protected boolean advance() {
+    private boolean advance() {
         try {
             int c = this.reader.read();
             if (c < 0) {
@@ -91,27 +91,27 @@ public class Scanner {
         }
     }
 
-    protected int getOffset() {
+    private int getOffset() {
         return this.offset;
     }
 
-    protected int getLine() {
+    private int getLine() {
         return this.line;
     }
 
-    protected int getLinePosition() {
+    private int getLinePosition() {
         return this.offset - this.lineOffset;
     }
 
-    public String getSourceName() {
+    private String getSourceName() {
         return sourceName;
     }
 
-    protected boolean isEOS() {
+    private boolean isEOS() {
         return this.eos;
     }
 
-    protected void scan() {
+    private void scan() {
         int tokenOffset;
         int tokenLineStart;
         int tokenLinePosition;

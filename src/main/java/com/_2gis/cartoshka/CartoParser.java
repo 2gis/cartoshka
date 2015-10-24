@@ -11,6 +11,11 @@ import com._2gis.cartoshka.tree.entities.literals.*;
 import java.io.Reader;
 import java.util.*;
 
+/**
+ * CartoCSS parser for Java. Builds AST-trees for given styles.
+ * All AST-trees parsed by one instance have a common symbol table.
+ * This parser does not verify CartoCSS properties.
+ */
 public final class CartoParser extends com._2gis.cartoshka.scanner.Scanner {
     private static final int MaxArguments = 32;
 
@@ -26,11 +31,24 @@ public final class CartoParser extends com._2gis.cartoshka.scanner.Scanner {
         }
     }
 
+    /**
+     * Parse an input data into an abstract syntax tree.
+     *
+     * @param name   Source name (e.g. file path, or URL). This parameter is used for debug.
+     * @param reader Source reader
+     * @return An instance of {@link Block}, which is root of an abstract syntax tree.
+     * @throws CartoshkaException
+     */
     public Block parse(String name, Reader reader) {
         initialize(name, reader);
         return parseBlock();
     }
 
+    /**
+     * Adds a custom function or replaces built-in.
+     *
+     * @param function An instance of {@link Function}.
+     */
     public void addOrReplaceFunction(Function function) {
         functions.put(function.getName(), function);
     }
