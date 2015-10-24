@@ -1,5 +1,6 @@
 package com._2gis.cartoshka.scanner;
 
+import com._2gis.cartoshka.CartoshkaException;
 import com._2gis.cartoshka.Location;
 
 import java.io.IOException;
@@ -87,7 +88,8 @@ public class Scanner {
 
             return true;
         } catch (IOException ex) {
-            throw new RuntimeException(ex);
+            Location location = new Location(getSourceName(), offset, line, lineOffset);
+            throw CartoshkaException.ioException(location, ex);
         }
     }
 

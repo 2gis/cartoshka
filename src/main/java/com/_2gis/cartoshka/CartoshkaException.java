@@ -2,11 +2,18 @@ package com._2gis.cartoshka;
 
 import com._2gis.cartoshka.scanner.Token;
 
+import java.io.IOException;
+
 public class CartoshkaException extends RuntimeException {
     private final Location location;
 
     public CartoshkaException(Location location, String format, Object... args) {
         super(String.format("%s line %d position %d: %s", location.name, location.line, location.linePos, String.format(format, args)));
+        this.location = location;
+    }
+
+    public CartoshkaException(Throwable cause, Location location, String format, Object... args) {
+        super(String.format("%s line %d position %d: %s", location.name, location.line, location.linePos, String.format(format, args)), cause);
         this.location = location;
     }
 
@@ -62,8 +69,8 @@ public class CartoshkaException extends RuntimeException {
         return new CartoshkaException(token.getLocation(), "Unexpected token %s", token.getType().name());
     }
 
-    public static CartoshkaException unexpectedChar(Location location, char c) {
-        return new CartoshkaException(location, "Unexpected char %c", c);
+    public static CartoshkaException ioException(Location location, IOException exception) {
+        return new CartoshkaException(exception, location, "IOException: %s", exception.getMessage());
     }
 
     public Location getLocation() {
