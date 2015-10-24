@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>Cartoshka by 2gis</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">Cartoshka</h1>
+      <h2 class="project-tagline">CartoCSS parser for Java (JVM)</h2>
+      <a href="https://github.com/2gis/cartoshka" class="btn">View on GitHub</a>
+      <a href="https://github.com/2gis/cartoshka/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/2gis/cartoshka/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <h1>
+<a id="cartoshka" class="anchor" href="#cartoshka" aria-hidden="true"><span class="octicon octicon-link"></span></a>cartoshka</h1>
+
+<p><a href="https://github.com/mapbox/carto">CartoCSS (carto)</a> parser for Java. All it does is translate CartoCSS to a traversable hierarchy of Java classes.</p>
+
+<p><a href="LICENSE"><img src="https://img.shields.io/badge/license-MPL%202.0-blue.svg?style=flat-square" alt="GitHub license"></a>
+<a href="https://travis-ci.org/2gis/cartoshka"><img src="https://travis-ci.org/2gis/cartoshka.svg?branch=master" alt="Build status"></a>
+<a href="https://coveralls.io/github/2gis/cartoshka?branch=master"><img src="https://coveralls.io/repos/2gis/cartoshka/badge.svg?branch=master&amp;service=github" alt="Coverage Status"></a></p>
+
+<h2>
+<a id="features" class="anchor" href="#features" aria-hidden="true"><span class="octicon octicon-link"></span></a>Features</h2>
+
+<ul>
+<li>  Light weight</li>
+<li>  High Performance</li>
+<li>  Full support of CartoCSS syntax</li>
+<li>  Single jar with no additional dependencies</li>
+</ul>
+
+<h2>
+<a id="setup" class="anchor" href="#setup" aria-hidden="true"><span class="octicon octicon-link"></span></a>Setup</h2>
+
+<p>WARNING: It's a development version and it may not work as expected.</p>
+
+<p>Add the following to your maven configuration or taylor to your own dependency management system.</p>
+
+<div class="highlight highlight-text-xml"><pre>&lt;<span class="pl-ent">repositories</span>&gt;
+    &lt;<span class="pl-ent">repository</span>&gt;
+        &lt;<span class="pl-ent">id</span>&gt;sonatype-nexus-snapshots&lt;/<span class="pl-ent">id</span>&gt;
+        &lt;<span class="pl-ent">url</span>&gt;https://oss.sonatype.org/content/repositories/snapshots/&lt;/<span class="pl-ent">url</span>&gt;
+        &lt;<span class="pl-ent">snapshots</span>&gt;
+            &lt;<span class="pl-ent">enabled</span>&gt;true&lt;/<span class="pl-ent">enabled</span>&gt;
+        &lt;/<span class="pl-ent">snapshots</span>&gt;
+    &lt;/<span class="pl-ent">repository</span>&gt;
+&lt;/<span class="pl-ent">repositories</span>&gt;</pre></div>
+
+<div class="highlight highlight-text-xml"><pre>&lt;<span class="pl-ent">dependencies</span>&gt;
+    &lt;<span class="pl-ent">dependency</span>&gt;
+        &lt;<span class="pl-ent">groupId</span>&gt;com.2gis.cartoshka&lt;/<span class="pl-ent">groupId</span>&gt;
+        &lt;<span class="pl-ent">artifactId</span>&gt;cartoshka&lt;/<span class="pl-ent">artifactId</span>&gt;
+        &lt;<span class="pl-ent">version</span>&gt;0.1-SNAPSHOT&lt;/<span class="pl-ent">version</span>&gt;
+    &lt;/<span class="pl-ent">dependency</span>&gt;
+&lt;/<span class="pl-ent">dependencies</span>&gt;</pre></div>
+
+<h2>
+<a id="quickstart" class="anchor" href="#quickstart" aria-hidden="true"><span class="octicon octicon-link"></span></a>Quickstart</h2>
+
+<p>Look at the simple example below</p>
+
+<div class="highlight highlight-source-java"><pre><span class="pl-smi">CartoParser</span> parser <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-smi">CartoParser</span>();
+<span class="pl-k">try</span> (<span class="pl-smi">FileReader</span> reader <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-smi">FileReader</span>(file)) {
+    <span class="pl-c">// parsing the file</span>
+    <span class="pl-smi">Block</span> style <span class="pl-k">=</span> parser<span class="pl-k">.</span>parse(file<span class="pl-k">.</span>getName(), reader);
+
+    <span class="pl-c">// constant folding</span>
+    style<span class="pl-k">.</span>accept(<span class="pl-k">new</span> <span class="pl-smi">ConstantFoldVisitor</span>(), <span class="pl-c1">null</span>);
+
+    <span class="pl-c">// pretty print</span>
+    <span class="pl-smi">String</span> pretty <span class="pl-k">=</span> style<span class="pl-k">.</span>accept(<span class="pl-k">new</span> <span class="pl-smi">PrintVisitor</span>(<span class="pl-c1">2</span>), <span class="pl-c1">null</span>);
+    <span class="pl-smi">System</span><span class="pl-k">.</span>out<span class="pl-k">.</span>println(pretty);
+} <span class="pl-k">catch</span> (<span class="pl-smi">IOException</span> e) {
+    e<span class="pl-k">.</span>printStackTrace();
+}</pre></div>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/2gis/cartoshka">Cartoshka</a> is maintained by <a href="https://github.com/2gis">2gis</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+  
+  </body>
+</html>
