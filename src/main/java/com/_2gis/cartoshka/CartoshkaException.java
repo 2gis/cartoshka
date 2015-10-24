@@ -6,7 +6,7 @@ public class CartoshkaException extends RuntimeException {
     private final Location location;
 
     public CartoshkaException(Location location, String format, Object... args) {
-        super(String.format("%s. Line %d position %d", String.format(format, args), location.line, location.linePos));
+        super(String.format("%s line %d position %d: %s", location.name, location.line, location.linePos, String.format(format, args)));
         this.location = location;
     }
 
