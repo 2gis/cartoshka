@@ -31,6 +31,10 @@ public class PrintVisitor implements Visitor<String, Void> {
         this.indentSize = indentSize;
     }
 
+    public PrintVisitor() {
+        this(2);
+    }
+
     private static boolean needParenthesis(TokenType operator, Expression expression, boolean left) {
         if (expression.type() == NodeType.BINARY_OPERATION) {
             BinaryOperation bop = (BinaryOperation) expression;
