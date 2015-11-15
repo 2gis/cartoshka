@@ -27,7 +27,7 @@ public class Text extends Literal {
 
     @Override
     public <R, P> R accept(Visitor<R, P> visitor, P params) {
-        return visitor.visitTextLiteral(this, params);
+        return visitor.visit(this, params);
     }
 
     @Override

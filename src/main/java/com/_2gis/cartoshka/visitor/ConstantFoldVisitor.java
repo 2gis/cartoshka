@@ -1,4 +1,4 @@
-package com._2gis.cartoshka.visitors;
+package com._2gis.cartoshka.visitor;
 
 import com._2gis.cartoshka.Visitor;
 import com._2gis.cartoshka.tree.*;
@@ -23,44 +23,44 @@ public class ConstantFoldVisitor implements Visitor<Expression, Void> {
     }
 
     @Override
-    public Expression visitBlock(Block block, Void params) {
+    public Expression visit(Block block, Void params) {
         visitAll(block.getNodes(), params);
         return null;
     }
 
     @Override
-    public Expression visitRuleset(Ruleset ruleset, Void params) {
+    public Expression visit(Ruleset ruleset, Void params) {
         visitAll(ruleset.getSelectors(), params);
         ruleset.getBlock().accept(this, params);
         return null;
     }
 
     @Override
-    public Expression visitRule(Rule rule, Void params) {
+    public Expression visit(Rule rule, Void params) {
         rule.getValue().accept(this, params);
         return null;
     }
 
     @Override
-    public Expression visitElement(Element element, Void params) {
+    public Expression visit(Element element, Void params) {
         return null;
     }
 
     @Override
-    public Expression visitSelector(Selector selector, Void params) {
+    public Expression visit(Selector selector, Void params) {
         visitAll(selector.getFilters(), params);
         visitAll(selector.getZooms(), params);
         return null;
     }
 
     @Override
-    public Expression visitZoom(Zoom zoom, Void params) {
+    public Expression visit(Zoom zoom, Void params) {
         zoom.setExpression(zoom.getExpression().accept(this, params));
         return null;
     }
 
     @Override
-    public Expression visitFilter(Filter filter, Void params) {
+    public Expression visit(Filter filter, Void params) {
         filter.setLeft(filter.getLeft().accept(this, params));
         filter.setRight(filter.getRight().accept(this, params));
         return null;
@@ -69,7 +69,7 @@ public class ConstantFoldVisitor implements Visitor<Expression, Void> {
     // E X P R E S S I O N S
 
     @Override
-    public Expression visitValueExpression(Value value, Void params) {
+    public Expression visit(Value value, Void params) {
         List<Expression> newExpressions = new ArrayList<>();
         for (Expression expression : value.getExpressions()) {
             newExpressions.add(expression.accept(this, params));
@@ -80,7 +80,7 @@ public class ConstantFoldVisitor implements Visitor<Expression, Void> {
     }
 
     @Override
-    public Expression visitVariableExpression(Variable variable, Void params) {
+    public Expression visit(Variable variable, Void params) {
         if (variable.accept(checkIfVolatile, params)) {
             variable.getValue().accept(this, params);
             return variable;
@@ -90,7 +90,7 @@ public class ConstantFoldVisitor implements Visitor<Expression, Void> {
     }
 
     @Override
-    public Expression visitUnaryOperationExpression(UnaryOperation operation, Void params) {
+    public Expression visit(UnaryOperation operation, Void params) {
         if (operation.accept(checkIfVolatile, params)) {
             operation.setExpression(operation.getExpression().accept(this, params));
             return operation;
@@ -100,12 +100,12 @@ public class ConstantFoldVisitor implements Visitor<Expression, Void> {
     }
 
     @Override
-    public Expression visitFieldExpression(Field field, Void params) {
+    public Expression visit(Field field, Void params) {
         return field;
     }
 
     @Override
-    public Expression visitExpandableTextExpression(ExpandableText text, Void params) {
+    public Expression visit(ExpandableText text, Void params) {
         if (text.accept(checkIfVolatile, params)) {
             Stack<Expression> stack = new Stack<>();
             for (Expression ex : text.getExpressions()) {
@@ -126,7 +126,7 @@ public class ConstantFoldVisitor implements Visitor<Expression, Void> {
     }
 
     @Override
-    public Expression visitCallExpression(Call call, Void params) {
+    public Expression visit(Call call, Void params) {
         if (call.accept(checkIfVolatile, params)) {
             List<Expression> newArgs = new ArrayList<>();
             for (Expression arg : call.getArgs()) {
@@ -141,7 +141,7 @@ public class ConstantFoldVisitor implements Visitor<Expression, Void> {
     }
 
     @Override
-    public Expression visitBinaryOperationExpression(BinaryOperation operation, Void params) {
+    public Expression visit(BinaryOperation operation, Void params) {
         if (operation.accept(checkIfVolatile, params)) {
             operation.setLeft(operation.getLeft().accept(this, params));
             operation.setRight(operation.getRight().accept(this, params));
@@ -154,37 +154,37 @@ public class ConstantFoldVisitor implements Visitor<Expression, Void> {
     // L I T E R A L S
 
     @Override
-    public Expression visitBooleanLiteral(Boolean value, Void params) {
+    public Expression visit(Boolean value, Void params) {
         return value;
     }
 
     @Override
-    public Expression visitColorLiteral(Color color, Void params) {
+    public Expression visit(Color color, Void params) {
         return color;
     }
 
     @Override
-    public Expression visitDimensionLiteral(Dimension dimension, Void params) {
+    public Expression visit(Dimension dimension, Void params) {
         return dimension;
     }
 
     @Override
-    public Expression visitImageFilterLiteral(ImageFilter filter, Void params) {
+    public Expression visit(ImageFilter filter, Void params) {
         return filter;
     }
 
     @Override
-    public Expression visitMultiLiteral(MultiLiteral multiLiteral, Void params) {
+    public Expression visit(MultiLiteral multiLiteral, Void params) {
         return multiLiteral;
     }
 
     @Override
-    public Expression visitNumericLiteral(Numeric number, Void params) {
+    public Expression visit(Numeric number, Void params) {
         return number;
     }
 
     @Override
-    public Expression visitTextLiteral(Text text, Void params) {
+    public Expression visit(Text text, Void params) {
         return text;
     }
 }

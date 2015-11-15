@@ -46,6 +46,6 @@ public class Filter extends Node {
 
     @Override
     public <R, P> R accept(Visitor<R, P> visitor, P params) {
-        return visitor.visitFilter(this, params);
+        return visitor.visit(this, params);
     }
 }

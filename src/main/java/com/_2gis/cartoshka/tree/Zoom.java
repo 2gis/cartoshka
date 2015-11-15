@@ -34,6 +34,6 @@ public class Zoom extends Node {
 
     @Override
     public <R, P> R accept(Visitor<R, P> visitor, P params) {
-        return visitor.visitZoom(this, params);
+        return visitor.visit(this, params);
     }
 }

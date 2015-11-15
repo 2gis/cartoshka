@@ -21,7 +21,7 @@ public class Value extends Expression {
 
     @Override
     public <R, P> R accept(Visitor<R, P> visitor, P params) {
-        return visitor.visitValueExpression(this, params);
+        return visitor.visit(this, params);
     }
 
     public Collection<Expression> getExpressions() {

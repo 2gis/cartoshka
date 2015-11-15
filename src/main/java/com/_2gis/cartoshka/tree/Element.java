@@ -28,7 +28,7 @@ public class Element extends Node {
 
     @Override
     public <R, P> R accept(Visitor<R, P> visitor, P params) {
-        return visitor.visitElement(this, params);
+        return visitor.visit(this, params);
     }
 
     public enum ElementType {

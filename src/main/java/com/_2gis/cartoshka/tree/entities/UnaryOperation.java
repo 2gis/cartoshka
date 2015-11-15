@@ -36,6 +36,6 @@ public class UnaryOperation extends Expression {
 
     @Override
     public <R, P> R accept(Visitor<R, P> visitor, P params) {
-        return visitor.visitUnaryOperationExpression(this, params);
+        return visitor.visit(this, params);
     }
 }

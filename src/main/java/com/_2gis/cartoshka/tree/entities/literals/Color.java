@@ -122,7 +122,7 @@ public class Color extends Literal {
 
     @Override
     public <R, P> R accept(Visitor<R, P> visitor, P params) {
-        return visitor.visitColorLiteral(this, params);
+        return visitor.visit(this, params);
     }
 
     @Override

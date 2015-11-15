@@ -1,4 +1,4 @@
-package com._2gis.cartoshka.visitors;
+package com._2gis.cartoshka.visitor;
 
 import com._2gis.cartoshka.Visitor;
 import com._2gis.cartoshka.scanner.TokenType;
@@ -86,14 +86,14 @@ public class PrintVisitor implements Visitor<String, Void> {
     }
 
     @Override
-    public String visitBlock(Block block, Void params) {
+    public String visit(Block block, Void params) {
         enterSection();
         visitAll(block.getNodes(), params, "\n");
         return leaveSection();
     }
 
     @Override
-    public String visitRuleset(Ruleset ruleset, Void params) {
+    public String visit(Ruleset ruleset, Void params) {
         enterSection();
         visitAll(ruleset.getSelectors(), params, ",\n");
 
@@ -107,7 +107,7 @@ public class PrintVisitor implements Visitor<String, Void> {
     }
 
     @Override
-    public String visitRule(Rule rule, Void params) {
+    public String visit(Rule rule, Void params) {
         enterSection();
         print("%s: ", rule.getFullName());
         rule.getValue().accept(this, params);
@@ -116,7 +116,7 @@ public class PrintVisitor implements Visitor<String, Void> {
     }
 
     @Override
-    public String visitSelector(Selector selector, Void params) {
+    public String visit(Selector selector, Void params) {
         enterSection();
         visitAll(selector.getElements(), params, "");
         visitAll(selector.getFilters(), params, "");
@@ -129,7 +129,7 @@ public class PrintVisitor implements Visitor<String, Void> {
     }
 
     @Override
-    public String visitZoom(Zoom zoom, Void params) {
+    public String visit(Zoom zoom, Void params) {
         enterSection();
         print("[zoom %s ", zoom.getOperator().getStr());
         zoom.getExpression().accept(this, params);
@@ -138,7 +138,7 @@ public class PrintVisitor implements Visitor<String, Void> {
     }
 
     @Override
-    public String visitFilter(Filter filter, Void params) {
+    public String visit(Filter filter, Void params) {
         enterSection();
         print("[");
         insideFilter = true;
@@ -151,7 +151,7 @@ public class PrintVisitor implements Visitor<String, Void> {
     }
 
     @Override
-    public String visitElement(Element element, Void params) {
+    public String visit(Element element, Void params) {
         enterSection();
         switch (element.getType()) {
             case CLASS:
@@ -167,14 +167,14 @@ public class PrintVisitor implements Visitor<String, Void> {
     }
 
     @Override
-    public String visitValueExpression(Value value, Void params) {
+    public String visit(Value value, Void params) {
         enterSection();
         visitAll(value.getExpressions(), params, ", ");
         return leaveSection();
     }
 
     @Override
-    public String visitVariableExpression(Variable variable, Void params) {
+    public String visit(Variable variable, Void params) {
         enterSection();
         if (insideExpandableText) {
             print("@{%s}", variable.getName().substring(1));
@@ -186,7 +186,7 @@ public class PrintVisitor implements Visitor<String, Void> {
     }
 
     @Override
-    public String visitUnaryOperationExpression(UnaryOperation operation, Void params) {
+    public String visit(UnaryOperation operation, Void params) {
         enterSection();
         print(operation.getOperator().getStr());
         operation.getExpression().accept(this, params);
@@ -194,7 +194,7 @@ public class PrintVisitor implements Visitor<String, Void> {
     }
 
     @Override
-    public String visitFieldExpression(Field field, Void params) {
+    public String visit(Field field, Void params) {
         enterSection();
         if (!insideFilter) {
             print("[");
@@ -209,7 +209,7 @@ public class PrintVisitor implements Visitor<String, Void> {
     }
 
     @Override
-    public String visitExpandableTextExpression(ExpandableText text, Void params) {
+    public String visit(ExpandableText text, Void params) {
         enterSection();
         print("\"");
         insideExpandableText = true;
@@ -221,7 +221,7 @@ public class PrintVisitor implements Visitor<String, Void> {
     }
 
     @Override
-    public String visitCallExpression(Call call, Void params) {
+    public String visit(Call call, Void params) {
         enterSection();
         print("%s(", call.getFunction().getName());
         visitAll(call.getArgs(), params, ", ");
@@ -230,7 +230,7 @@ public class PrintVisitor implements Visitor<String, Void> {
     }
 
     @Override
-    public String visitBinaryOperationExpression(BinaryOperation operation, Void params) {
+    public String visit(BinaryOperation operation, Void params) {
         enterSection();
         boolean parenthesis = needParenthesis(operation.getOperator(), operation.getLeft(), true);
         if (parenthesis) {
@@ -256,49 +256,49 @@ public class PrintVisitor implements Visitor<String, Void> {
     }
 
     @Override
-    public String visitBooleanLiteral(Boolean value, Void params) {
+    public String visit(Boolean value, Void params) {
         enterSection();
         print(value.toString());
         return leaveSection();
     }
 
     @Override
-    public String visitColorLiteral(Color color, Void params) {
+    public String visit(Color color, Void params) {
         enterSection();
         print(color.toString());
         return leaveSection();
     }
 
     @Override
-    public String visitDimensionLiteral(Dimension dimension, Void params) {
+    public String visit(Dimension dimension, Void params) {
         enterSection();
         print(dimension.toString());
         return leaveSection();
     }
 
     @Override
-    public String visitImageFilterLiteral(ImageFilter filter, Void params) {
+    public String visit(ImageFilter filter, Void params) {
         enterSection();
         print(filter.toString());
         return leaveSection();
     }
 
     @Override
-    public String visitMultiLiteral(MultiLiteral multiLiteral, Void params) {
+    public String visit(MultiLiteral multiLiteral, Void params) {
         enterSection();
         print(multiLiteral.toString());
         return leaveSection();
     }
 
     @Override
-    public String visitNumericLiteral(Numeric number, Void params) {
+    public String visit(Numeric number, Void params) {
         enterSection();
         print(number.toString());
         return leaveSection();
     }
 
     @Override
-    public String visitTextLiteral(Text text, Void params) {
+    public String visit(Text text, Void params) {
         enterSection();
         if (!insideExpandableText && !text.isKeyword()) {
             print("\"");

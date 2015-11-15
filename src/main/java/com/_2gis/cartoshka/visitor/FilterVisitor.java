@@ -1,4 +1,4 @@
-package com._2gis.cartoshka.visitors;
+package com._2gis.cartoshka.visitor;
 
 import com._2gis.cartoshka.CartoshkaException;
 import com._2gis.cartoshka.Feature;
@@ -24,12 +24,12 @@ public class FilterVisitor implements Visitor<Boolean, Feature> {
     }
 
     @Override
-    public Boolean visitBlock(Block block, Feature feature) {
+    public Boolean visit(Block block, Feature feature) {
         return null;
     }
 
     @Override
-    public Boolean visitRuleset(Ruleset ruleset, Feature feature) {
+    public Boolean visit(Ruleset ruleset, Feature feature) {
         if (ruleset.getSelectors().isEmpty()) {
             return true;
         }
@@ -44,22 +44,22 @@ public class FilterVisitor implements Visitor<Boolean, Feature> {
     }
 
     @Override
-    public Boolean visitRule(Rule rule, Feature feature) {
+    public Boolean visit(Rule rule, Feature feature) {
         return null;
     }
 
     @Override
-    public Boolean visitSelector(Selector selector, Feature feature) {
+    public Boolean visit(Selector selector, Feature feature) {
         return match(selector.getElements(), feature) && match(selector.getFilters(), feature);
     }
 
     @Override
-    public Boolean visitZoom(Zoom zoom, Feature feature) {
+    public Boolean visit(Zoom zoom, Feature feature) {
         return null;
     }
 
     @Override
-    public Boolean visitFilter(Filter filter, Feature feature) {
+    public Boolean visit(Filter filter, Feature feature) {
         Literal lh = filter.getLeft().accept(evaluate, feature);
         Literal rh = filter.getLeft().accept(evaluate, feature);
         switch (filter.getOperator()) {
@@ -86,7 +86,7 @@ public class FilterVisitor implements Visitor<Boolean, Feature> {
     }
 
     @Override
-    public Boolean visitElement(Element element, Feature feature) {
+    public Boolean visit(Element element, Feature feature) {
         switch (element.getType()) {
             case CLASS:
                 if (feature.getClasses().contains(element.getValue())) {
@@ -110,72 +110,72 @@ public class FilterVisitor implements Visitor<Boolean, Feature> {
     }
 
     @Override
-    public Boolean visitValueExpression(Value value, Feature feature) {
+    public Boolean visit(Value value, Feature feature) {
         return null;
     }
 
     @Override
-    public Boolean visitVariableExpression(Variable variable, Feature feature) {
+    public Boolean visit(Variable variable, Feature feature) {
         return null;
     }
 
     @Override
-    public Boolean visitUnaryOperationExpression(UnaryOperation operation, Feature feature) {
+    public Boolean visit(UnaryOperation operation, Feature feature) {
         return null;
     }
 
     @Override
-    public Boolean visitFieldExpression(Field field, Feature feature) {
+    public Boolean visit(Field field, Feature feature) {
         return null;
     }
 
     @Override
-    public Boolean visitExpandableTextExpression(ExpandableText text, Feature feature) {
+    public Boolean visit(ExpandableText text, Feature feature) {
         return null;
     }
 
     @Override
-    public Boolean visitCallExpression(Call call, Feature feature) {
+    public Boolean visit(Call call, Feature feature) {
         return null;
     }
 
     @Override
-    public Boolean visitBinaryOperationExpression(BinaryOperation operation, Feature feature) {
+    public Boolean visit(BinaryOperation operation, Feature feature) {
         return null;
     }
 
     @Override
-    public Boolean visitBooleanLiteral(com._2gis.cartoshka.tree.entities.literals.Boolean value, Feature feature) {
+    public Boolean visit(com._2gis.cartoshka.tree.entities.literals.Boolean value, Feature feature) {
         return null;
     }
 
     @Override
-    public Boolean visitColorLiteral(Color color, Feature feature) {
+    public Boolean visit(Color color, Feature feature) {
         return null;
     }
 
     @Override
-    public Boolean visitDimensionLiteral(Dimension dimension, Feature feature) {
+    public Boolean visit(Dimension dimension, Feature feature) {
         return null;
     }
 
     @Override
-    public Boolean visitImageFilterLiteral(ImageFilter filter, Feature feature) {
+    public Boolean visit(ImageFilter filter, Feature feature) {
         return null;
     }
 
     @Override
-    public Boolean visitMultiLiteral(MultiLiteral multiLiteral, Feature feature) {
+    public Boolean visit(MultiLiteral multiLiteral, Feature feature) {
         return null;
     }
 
     @Override
-    public Boolean visitNumericLiteral(Numeric number, Feature feature) {
+    public Boolean visit(Numeric number, Feature feature) {
         return null;
     }
 
     @Override
-    public Boolean visitTextLiteral(Text text, Feature feature) {
+    public Boolean visit(Text text, Feature feature) {
         return null;
     }
 }

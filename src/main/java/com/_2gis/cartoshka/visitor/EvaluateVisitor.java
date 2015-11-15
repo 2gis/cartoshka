@@ -1,4 +1,4 @@
-package com._2gis.cartoshka.visitors;
+package com._2gis.cartoshka.visitor;
 
 import com._2gis.cartoshka.CartoshkaException;
 import com._2gis.cartoshka.Feature;
@@ -14,44 +14,44 @@ import java.util.List;
 public class EvaluateVisitor implements Visitor<Literal, Feature> {
 
     @Override
-    public Literal visitBlock(Block block, Feature feature) {
+    public Literal visit(Block block, Feature feature) {
         return null;
     }
 
     @Override
-    public Literal visitRuleset(Ruleset ruleset, Feature feature) {
+    public Literal visit(Ruleset ruleset, Feature feature) {
         return null;
     }
 
     @Override
-    public Literal visitRule(Rule rule, Feature feature) {
+    public Literal visit(Rule rule, Feature feature) {
         return null;
     }
 
     @Override
-    public Literal visitSelector(Selector selector, Feature feature) {
+    public Literal visit(Selector selector, Feature feature) {
         return null;
     }
 
     @Override
-    public Literal visitZoom(Zoom zoom, Feature feature) {
+    public Literal visit(Zoom zoom, Feature feature) {
         return null;
     }
 
     @Override
-    public Literal visitFilter(Filter filter, Feature feature) {
+    public Literal visit(Filter filter, Feature feature) {
         return null;
     }
 
     @Override
-    public Literal visitElement(Element element, Feature feature) {
+    public Literal visit(Element element, Feature feature) {
         return null;
     }
 
     // E X P R E S S I O N S
 
     @Override
-    public Literal visitValueExpression(Value value, Feature feature) {
+    public Literal visit(Value value, Feature feature) {
         if (value.getExpressions().size() == 1) {
             return value.getExpressions().iterator().next().accept(this, feature);
         }
@@ -65,17 +65,17 @@ public class EvaluateVisitor implements Visitor<Literal, Feature> {
     }
 
     @Override
-    public Literal visitVariableExpression(Variable variable, Feature feature) {
+    public Literal visit(Variable variable, Feature feature) {
         return variable.getValue().accept(this, feature);
     }
 
     @Override
-    public Literal visitUnaryOperationExpression(UnaryOperation operation, Feature feature) {
+    public Literal visit(UnaryOperation operation, Feature feature) {
         return operation.getExpression().accept(this, feature).operate(operation.getOperator());
     }
 
     @Override
-    public Literal visitFieldExpression(Field field, Feature feature) {
+    public Literal visit(Field field, Feature feature) {
         if (feature == null) {
             throw CartoshkaException.featureIsNotProvided(field.getLocation());
         }
@@ -89,7 +89,7 @@ public class EvaluateVisitor implements Visitor<Literal, Feature> {
     }
 
     @Override
-    public Literal visitExpandableTextExpression(ExpandableText text, Feature feature) {
+    public Literal visit(ExpandableText text, Feature feature) {
         StringBuilder builder = new StringBuilder();
         for (Expression expression : text.getExpressions()) {
             builder.append(expression.accept(this, feature).toString());
@@ -99,7 +99,7 @@ public class EvaluateVisitor implements Visitor<Literal, Feature> {
     }
 
     @Override
-    public Literal visitCallExpression(final Call call, final Feature feature) {
+    public Literal visit(final Call call, final Feature feature) {
         final EvaluateVisitor ev = this;
         return call.getFunction().apply(call.getLocation(), new Iterator<Literal>() {
             Iterator<Expression> iterator = call.getArgs().iterator();
@@ -122,7 +122,7 @@ public class EvaluateVisitor implements Visitor<Literal, Feature> {
     }
 
     @Override
-    public Literal visitBinaryOperationExpression(BinaryOperation operation, Feature feature) {
+    public Literal visit(BinaryOperation operation, Feature feature) {
         Literal leftOp = operation.getLeft().accept(this, feature);
         Literal rightOp = operation.getRight().accept(this, feature);
         if ((leftOp.type() != NodeType.COLOR && rightOp.type() == NodeType.COLOR) || (leftOp.type() == NodeType.NUMBER && rightOp.type() == NodeType.DIMENSION)) {
@@ -137,37 +137,37 @@ public class EvaluateVisitor implements Visitor<Literal, Feature> {
     // L I T E R A L S
 
     @Override
-    public Literal visitBooleanLiteral(com._2gis.cartoshka.tree.entities.literals.Boolean value, Feature feature) {
+    public Literal visit(com._2gis.cartoshka.tree.entities.literals.Boolean value, Feature feature) {
         return value;
     }
 
     @Override
-    public Literal visitColorLiteral(Color color, Feature feature) {
+    public Literal visit(Color color, Feature feature) {
         return color;
     }
 
     @Override
-    public Literal visitDimensionLiteral(Dimension dimension, Feature feature) {
+    public Literal visit(Dimension dimension, Feature feature) {
         return dimension;
     }
 
     @Override
-    public Literal visitImageFilterLiteral(ImageFilter filter, Feature feature) {
+    public Literal visit(ImageFilter filter, Feature feature) {
         return filter;
     }
 
     @Override
-    public Literal visitMultiLiteral(MultiLiteral multiLiteral, Feature feature) {
+    public Literal visit(MultiLiteral multiLiteral, Feature feature) {
         return multiLiteral;
     }
 
     @Override
-    public Literal visitNumericLiteral(Numeric number, Feature feature) {
+    public Literal visit(Numeric number, Feature feature) {
         return number;
     }
 
     @Override
-    public Literal visitTextLiteral(Text text, Feature feature) {
+    public Literal visit(Text text, Feature feature) {
         return text;
     }
 }
