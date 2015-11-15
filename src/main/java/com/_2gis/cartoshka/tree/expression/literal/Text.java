@@ -1,10 +1,10 @@
-package com._2gis.cartoshka.tree.entities.literals;
+package com._2gis.cartoshka.tree.expression.literal;
 
 import com._2gis.cartoshka.Location;
 import com._2gis.cartoshka.Visitor;
 import com._2gis.cartoshka.scanner.TokenType;
 import com._2gis.cartoshka.tree.NodeType;
-import com._2gis.cartoshka.tree.entities.Literal;
+import com._2gis.cartoshka.tree.expression.Literal;
 
 public class Text extends Literal {
     private final String value;

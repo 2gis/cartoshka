@@ -4,8 +4,8 @@ import com._2gis.cartoshka.CartoshkaException;
 import com._2gis.cartoshka.Feature;
 import com._2gis.cartoshka.Visitor;
 import com._2gis.cartoshka.tree.*;
-import com._2gis.cartoshka.tree.entities.*;
-import com._2gis.cartoshka.tree.entities.literals.*;
+import com._2gis.cartoshka.tree.expression.*;
+import com._2gis.cartoshka.tree.expression.literal.*;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -140,7 +140,7 @@ public class EvaluateVisitor implements Visitor<Literal, Feature> {
     // L I T E R A L S
 
     @Override
-    public Literal visit(com._2gis.cartoshka.tree.entities.literals.Boolean value, Feature feature) {
+    public Literal visit(com._2gis.cartoshka.tree.expression.literal.Boolean value, Feature feature) {
         return value;
     }
 

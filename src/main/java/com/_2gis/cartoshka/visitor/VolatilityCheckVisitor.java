@@ -2,8 +2,8 @@ package com._2gis.cartoshka.visitor;
 
 import com._2gis.cartoshka.Visitor;
 import com._2gis.cartoshka.tree.*;
-import com._2gis.cartoshka.tree.entities.*;
-import com._2gis.cartoshka.tree.entities.literals.*;
+import com._2gis.cartoshka.tree.expression.*;
+import com._2gis.cartoshka.tree.expression.literal.*;
 
 import java.lang.Boolean;
 import java.util.Collection;
@@ -94,7 +94,7 @@ public class VolatilityCheckVisitor implements Visitor<Boolean, Void> {
     }
 
     @Override
-    public Boolean visit(com._2gis.cartoshka.tree.entities.literals.Boolean value, Void params) {
+    public Boolean visit(com._2gis.cartoshka.tree.expression.literal.Boolean value, Void params) {
         return false;
     }
 

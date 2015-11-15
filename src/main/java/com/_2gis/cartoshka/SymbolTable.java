@@ -1,7 +1,7 @@
 package com._2gis.cartoshka;
 
 import com._2gis.cartoshka.tree.Rule;
-import com._2gis.cartoshka.tree.entities.Value;
+import com._2gis.cartoshka.tree.expression.Value;
 
 import java.util.HashMap;
 

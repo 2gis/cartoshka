@@ -1,8 +1,8 @@
 package com._2gis.cartoshka;
 
 import com._2gis.cartoshka.tree.*;
-import com._2gis.cartoshka.tree.entities.*;
-import com._2gis.cartoshka.tree.entities.literals.*;
+import com._2gis.cartoshka.tree.expression.*;
+import com._2gis.cartoshka.tree.expression.literal.*;
 
 public interface Visitor<R, P> {
     R visit(Block block, P params);
@@ -37,7 +37,7 @@ public interface Visitor<R, P> {
 
     // L I T E R A L S
 
-    R visit(com._2gis.cartoshka.tree.entities.literals.Boolean value, P params);
+    R visit(com._2gis.cartoshka.tree.expression.literal.Boolean value, P params);
 
     R visit(Color color, P params);
 

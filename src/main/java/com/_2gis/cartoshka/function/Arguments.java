@@ -2,8 +2,8 @@ package com._2gis.cartoshka.function;
 
 import com._2gis.cartoshka.CartoshkaException;
 import com._2gis.cartoshka.tree.NodeType;
-import com._2gis.cartoshka.tree.entities.Literal;
-import com._2gis.cartoshka.tree.entities.literals.Color;
+import com._2gis.cartoshka.tree.expression.Literal;
+import com._2gis.cartoshka.tree.expression.literal.Color;
 
 import java.util.Iterator;
 

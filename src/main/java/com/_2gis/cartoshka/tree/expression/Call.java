@@ -1,4 +1,4 @@
-package com._2gis.cartoshka.tree.entities;
+package com._2gis.cartoshka.tree.expression;
 
 import com._2gis.cartoshka.Function;
 import com._2gis.cartoshka.Location;

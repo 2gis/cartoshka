@@ -3,9 +3,9 @@ package com._2gis.cartoshka.visitor;
 import com._2gis.cartoshka.Visitor;
 import com._2gis.cartoshka.scanner.TokenType;
 import com._2gis.cartoshka.tree.*;
-import com._2gis.cartoshka.tree.entities.*;
-import com._2gis.cartoshka.tree.entities.literals.Boolean;
-import com._2gis.cartoshka.tree.entities.literals.*;
+import com._2gis.cartoshka.tree.expression.*;
+import com._2gis.cartoshka.tree.expression.literal.Boolean;
+import com._2gis.cartoshka.tree.expression.literal.*;
 
 import java.util.Collection;
 import java.util.Iterator;

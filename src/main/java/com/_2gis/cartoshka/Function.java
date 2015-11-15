@@ -1,6 +1,6 @@
 package com._2gis.cartoshka;
 
-import com._2gis.cartoshka.tree.entities.Literal;
+import com._2gis.cartoshka.tree.expression.Literal;
 
 import java.util.Iterator;
 
