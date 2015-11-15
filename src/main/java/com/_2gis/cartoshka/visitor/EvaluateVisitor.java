@@ -11,6 +11,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+/**
+ * Evaluates given {@link Expression} and returns {@link Literal} it represents.
+ */
 public class EvaluateVisitor implements Visitor<Literal, Feature> {
 
     @Override

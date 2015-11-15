@@ -8,6 +8,10 @@ import com._2gis.cartoshka.tree.entities.literals.*;
 import java.lang.Boolean;
 import java.util.Collection;
 
+/**
+ * Checks if given branch of the AST is volatile. The branch is volatile if it contains {@link Field}
+ * which value depends on {@link com._2gis.cartoshka.Feature}.
+ */
 public class VolatilityCheckVisitor implements Visitor<Boolean, Void> {
     private boolean visitAll(Collection<? extends Node> nodes, Void params) {
         for (Node node : nodes) {

@@ -11,6 +11,9 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Stack;
 
+/**
+ * Prints the AST to indented source code.
+ */
 public class PrintVisitor implements Visitor<String, Void> {
     private final StringBuilder out = new StringBuilder();
 

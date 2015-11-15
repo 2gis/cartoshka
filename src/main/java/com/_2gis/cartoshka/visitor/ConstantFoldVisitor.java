@@ -11,6 +11,9 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Stack;
 
+/**
+ * Traversing the AST and folds constant expressions.
+ */
 public class ConstantFoldVisitor implements Visitor<Expression, Void> {
     private final VolatilityCheckVisitor checkIfVolatile = new VolatilityCheckVisitor();
 
