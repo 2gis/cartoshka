@@ -1,11 +1,7 @@
 package com._2gis.cartoshka.tree.expression;
 
-import com._2gis.cartoshka.CartoshkaException;
-import com._2gis.cartoshka.Location;
-import com._2gis.cartoshka.SymbolTable;
+import com._2gis.cartoshka.*;
 import com._2gis.cartoshka.tree.NodeType;
-import com._2gis.cartoshka.GenericVisitor;
-import com._2gis.cartoshka.Visitor;
 
 public class Variable extends Expression {
     private final String name;

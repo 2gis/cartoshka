@@ -1,9 +1,9 @@
 package com._2gis.cartoshka.tree;
 
-import com._2gis.cartoshka.Location;
-import com._2gis.cartoshka.tree.expression.Value;
 import com._2gis.cartoshka.GenericVisitor;
+import com._2gis.cartoshka.Location;
 import com._2gis.cartoshka.Visitor;
+import com._2gis.cartoshka.tree.expression.Value;
 
 public class Rule extends Node {
     private final String instance;

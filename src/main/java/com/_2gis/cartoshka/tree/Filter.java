@@ -1,10 +1,10 @@
 package com._2gis.cartoshka.tree;
 
+import com._2gis.cartoshka.GenericVisitor;
 import com._2gis.cartoshka.Location;
+import com._2gis.cartoshka.Visitor;
 import com._2gis.cartoshka.scanner.TokenType;
 import com._2gis.cartoshka.tree.expression.Expression;
-import com._2gis.cartoshka.GenericVisitor;
-import com._2gis.cartoshka.Visitor;
 
 public class Filter extends Node {
     private final TokenType operator;

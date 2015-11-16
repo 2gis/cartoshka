@@ -1,10 +1,10 @@
 package com._2gis.cartoshka.tree.expression;
 
+import com._2gis.cartoshka.GenericVisitor;
 import com._2gis.cartoshka.Location;
+import com._2gis.cartoshka.Visitor;
 import com._2gis.cartoshka.scanner.TokenType;
 import com._2gis.cartoshka.tree.NodeType;
-import com._2gis.cartoshka.GenericVisitor;
-import com._2gis.cartoshka.Visitor;
 
 public class UnaryOperation extends Expression {
     private final TokenType operator;

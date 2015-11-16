@@ -6,6 +6,7 @@ import com._2gis.cartoshka.tree.expression.literal.*;
 
 /**
  * A visitor with return value.
+ *
  * @param <R> Type of return type.
  * @param <P> Type of parameter.
  */

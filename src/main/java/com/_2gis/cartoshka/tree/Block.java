@@ -1,8 +1,8 @@
 package com._2gis.cartoshka.tree;
 
+import com._2gis.cartoshka.GenericVisitor;
 import com._2gis.cartoshka.Location;
 import com._2gis.cartoshka.SymbolTable;
-import com._2gis.cartoshka.GenericVisitor;
 import com._2gis.cartoshka.Visitor;
 
 import java.util.List;
