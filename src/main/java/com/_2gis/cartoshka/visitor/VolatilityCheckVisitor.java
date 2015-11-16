@@ -1,6 +1,6 @@
 package com._2gis.cartoshka.visitor;
 
-import com._2gis.cartoshka.Visitor;
+import com._2gis.cartoshka.GenericVisitor;
 import com._2gis.cartoshka.tree.*;
 import com._2gis.cartoshka.tree.expression.*;
 import com._2gis.cartoshka.tree.expression.literal.*;
@@ -12,7 +12,7 @@ import java.util.Collection;
  * Checks if given branch of the AST is volatile. The branch is volatile if it contains {@link Field}
  * which value depends on {@link com._2gis.cartoshka.Feature}.
  */
-public class VolatilityCheckVisitor implements Visitor<Boolean, Void> {
+public class VolatilityCheckVisitor implements GenericVisitor<Boolean, Void> {
     private boolean visitAll(Collection<? extends Node> nodes, Void params) {
         for (Node node : nodes) {
             if (node.accept(this, params)) {

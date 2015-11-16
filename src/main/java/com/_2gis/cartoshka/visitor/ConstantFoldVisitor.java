@@ -1,6 +1,6 @@
 package com._2gis.cartoshka.visitor;
 
-import com._2gis.cartoshka.Visitor;
+import com._2gis.cartoshka.GenericVisitor;
 import com._2gis.cartoshka.tree.*;
 import com._2gis.cartoshka.tree.expression.*;
 import com._2gis.cartoshka.tree.expression.literal.Boolean;
@@ -14,7 +14,7 @@ import java.util.Stack;
 /**
  * Traversing the AST and folds constant expressions.
  */
-public class ConstantFoldVisitor implements Visitor<Expression, Void> {
+public class ConstantFoldVisitor implements GenericVisitor<Expression, Void> {
     private final VolatilityCheckVisitor checkIfVolatile = new VolatilityCheckVisitor();
 
     private final EvaluateVisitor evaluate = new EvaluateVisitor();

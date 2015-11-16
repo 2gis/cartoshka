@@ -2,7 +2,7 @@ package com._2gis.cartoshka.visitor;
 
 import com._2gis.cartoshka.CartoshkaException;
 import com._2gis.cartoshka.Feature;
-import com._2gis.cartoshka.Visitor;
+import com._2gis.cartoshka.GenericVisitor;
 import com._2gis.cartoshka.tree.*;
 import com._2gis.cartoshka.tree.expression.*;
 import com._2gis.cartoshka.tree.expression.literal.*;
@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * Evaluates given {@link Expression} and returns {@link Literal} it represents.
  */
-public class EvaluateVisitor implements Visitor<Literal, Feature> {
+public class EvaluateVisitor implements GenericVisitor<Literal, Feature> {
 
     @Override
     public Literal visit(Block block, Feature feature) {

@@ -1,6 +1,6 @@
 package com._2gis.cartoshka.visitor;
 
-import com._2gis.cartoshka.Visitor;
+import com._2gis.cartoshka.GenericVisitor;
 import com._2gis.cartoshka.scanner.TokenType;
 import com._2gis.cartoshka.tree.*;
 import com._2gis.cartoshka.tree.expression.*;
@@ -14,7 +14,7 @@ import java.util.Stack;
 /**
  * Prints the AST to indented source code.
  */
-public class PrintVisitor implements Visitor<String, Void> {
+public class PrintVisitor implements GenericVisitor<String, Void> {
     private final StringBuilder out = new StringBuilder();
 
     private final Stack<Integer> sections = new Stack<>();

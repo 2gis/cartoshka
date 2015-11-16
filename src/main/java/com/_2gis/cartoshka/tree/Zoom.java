@@ -1,9 +1,10 @@
 package com._2gis.cartoshka.tree;
 
 import com._2gis.cartoshka.Location;
-import com._2gis.cartoshka.Visitor;
 import com._2gis.cartoshka.scanner.TokenType;
 import com._2gis.cartoshka.tree.expression.Expression;
+import com._2gis.cartoshka.GenericVisitor;
+import com._2gis.cartoshka.Visitor;
 
 public class Zoom extends Node {
     private final TokenType operator;
@@ -33,7 +34,12 @@ public class Zoom extends Node {
     }
 
     @Override
-    public <R, P> R accept(Visitor<R, P> visitor, P params) {
+    public <R, P> R accept(GenericVisitor<R, P> visitor, P params) {
         return visitor.visit(this, params);
+    }
+
+    @Override
+    public <P> void accept(Visitor<P> visitor, P params) {
+        visitor.visit(this, params);
     }
 }

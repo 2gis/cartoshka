@@ -4,50 +4,54 @@ import com._2gis.cartoshka.tree.*;
 import com._2gis.cartoshka.tree.expression.*;
 import com._2gis.cartoshka.tree.expression.literal.*;
 
-public interface Visitor<R, P> {
-    R visit(Block block, P params);
+/**
+ * A visitor without return value.
+ * @param <P> Type of parameter.
+ */
+public interface Visitor<P> {
+    void visit(Block block, P params);
 
-    R visit(Ruleset ruleset, P params);
+    void visit(Ruleset ruleset, P params);
 
-    R visit(Rule rule, P params);
+    void visit(Selector selector, P params);
 
-    R visit(Selector selector, P params);
+    void visit(Zoom zoom, P params);
 
-    R visit(Zoom zoom, P params);
+    void visit(Filter filter, P params);
 
-    R visit(Filter filter, P params);
+    void visit(Element element, P params);
 
-    R visit(Element element, P params);
+    void visit(Rule rule, P params);
 
     // E X P R E S S I O N S
 
-    R visit(Value value, P params);
+    void visit(Value value, P params);
 
-    R visit(Variable variable, P params);
+    void visit(Variable variable, P params);
 
-    R visit(UnaryOperation operation, P params);
+    void visit(UnaryOperation operation, P params);
 
-    R visit(Field field, P params);
+    void visit(Field field, P params);
 
-    R visit(ExpandableText text, P params);
+    void visit(ExpandableText text, P params);
 
-    R visit(Call call, P params);
+    void visit(Call call, P params);
 
-    R visit(BinaryOperation operation, P params);
+    void visit(BinaryOperation operation, P params);
 
     // L I T E R A L S
 
-    R visit(com._2gis.cartoshka.tree.expression.literal.Boolean value, P params);
+    void visit(com._2gis.cartoshka.tree.expression.literal.Boolean value, P params);
 
-    R visit(Color color, P params);
+    void visit(Color color, P params);
 
-    R visit(Dimension dimension, P params);
+    void visit(Dimension dimension, P params);
 
-    R visit(ImageFilter filter, P params);
+    void visit(ImageFilter filter, P params);
 
-    R visit(MultiLiteral multiLiteral, P params);
+    void visit(MultiLiteral multiLiteral, P params);
 
-    R visit(Numeric number, P params);
+    void visit(Numeric number, P params);
 
-    R visit(Text text, P params);
+    void visit(Text text, P params);
 }

@@ -1,6 +1,7 @@
 package com._2gis.cartoshka.tree;
 
 import com._2gis.cartoshka.Location;
+import com._2gis.cartoshka.GenericVisitor;
 import com._2gis.cartoshka.Visitor;
 
 public class Element extends Node {
@@ -27,8 +28,13 @@ public class Element extends Node {
     }
 
     @Override
-    public <R, P> R accept(Visitor<R, P> visitor, P params) {
+    public <R, P> R accept(GenericVisitor<R, P> visitor, P params) {
         return visitor.visit(this, params);
+    }
+
+    @Override
+    public <P> void accept(Visitor<P> visitor, P params) {
+        visitor.visit(this, params);
     }
 
     public enum ElementType {

@@ -1,6 +1,7 @@
 package com._2gis.cartoshka.tree;
 
 import com._2gis.cartoshka.Location;
+import com._2gis.cartoshka.GenericVisitor;
 import com._2gis.cartoshka.Visitor;
 
 public abstract class Node {
@@ -16,5 +17,7 @@ public abstract class Node {
 
     public abstract NodeType type();
 
-    public abstract <R, P> R accept(Visitor<R, P> visitor, P params);
+    public abstract <R, P> R accept(GenericVisitor<R, P> visitor, P params);
+
+    public abstract <P> void accept(Visitor<P> visitor, P params);
 }

@@ -1,8 +1,9 @@
 package com._2gis.cartoshka.tree.expression;
 
 import com._2gis.cartoshka.Location;
-import com._2gis.cartoshka.Visitor;
 import com._2gis.cartoshka.tree.NodeType;
+import com._2gis.cartoshka.GenericVisitor;
+import com._2gis.cartoshka.Visitor;
 
 public class Field extends Expression {
     private final String name;
@@ -22,7 +23,12 @@ public class Field extends Expression {
     }
 
     @Override
-    public <R, P> R accept(Visitor<R, P> visitor, P params) {
+    public <R, P> R accept(GenericVisitor<R, P> visitor, P params) {
         return visitor.visit(this, params);
+    }
+
+    @Override
+    public <P> void accept(Visitor<P> visitor, P params) {
+        visitor.visit(this, params);
     }
 }
