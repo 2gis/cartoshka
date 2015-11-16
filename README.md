@@ -33,7 +33,7 @@ Add the following to your maven configuration or taylor to your own dependency m
     <dependency>
         <groupId>com.2gis.cartoshka</groupId>
         <artifactId>cartoshka</artifactId>
-        <version>0.1-SNAPSHOT</version>
+        <version>0.2-SNAPSHOT</version>
     </dependency>
 </dependencies>
 ```
@@ -50,7 +50,7 @@ try (FileReader reader = new FileReader(file)) {
     style.accept(new ConstantFoldVisitor(), null);
 
     // pretty print
-    String pretty = style.accept(new PrintVisitor(2), null);
+    String pretty = style.accept(new PrintVisitor(), null);
     System.out.println(pretty);
 } catch (IOException e) {
     e.printStackTrace();
